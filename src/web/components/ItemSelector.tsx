@@ -47,6 +47,14 @@ export function ItemSelector({ items: allItems, value, onChange }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeGroup, setActiveGroup] = useState('intermediate-products');
   const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-focus input when opening from chip click
+  useEffect(() => {
+    if (isOpen) {
+      inputRef.current?.focus();
+    }
+  }, [isOpen]);
 
   // Close picker on click outside
   useEffect(() => {
@@ -126,28 +134,73 @@ export function ItemSelector({ items: allItems, value, onChange }: Props) {
         Target Item
       </label>
 
-      {/* Search bar */}
-      <input
-        type="text"
-        value={query}
-        placeholder="Search items..."
-        onFocus={() => setIsOpen(true)}
-        onChange={e => {
-          setQuery(e.target.value);
-          setIsOpen(true);
-          if (!e.target.value) onChange('');
-        }}
-        style={{
-          width: '100%',
-          padding: '8px 12px',
-          fontSize: 16,
-          border: '1px solid var(--border)',
-          borderRadius: 6,
-          boxSizing: 'border-box',
-          background: 'var(--card)',
-          color: 'var(--foreground)',
-        }}
-      />
+      {/* Selected chip or search input */}
+      {value && !isOpen ? (
+        <div
+          onClick={() => setIsOpen(true)}
+          style={{
+            width: '100%',
+            padding: '8px 12px',
+            fontSize: 16,
+            border: '1px solid var(--border)',
+            borderRadius: 6,
+            boxSizing: 'border-box',
+            background: 'var(--card)',
+            color: 'var(--foreground)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            cursor: 'pointer',
+          }}
+        >
+          <img
+            src={getIconUrl(value)}
+            alt={value.replace(/-/g, ' ')}
+            width={24}
+            height={24}
+            style={{ imageRendering: 'pixelated', flexShrink: 0 }}
+          />
+          <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {value.replace(/-/g, ' ')}
+          </span>
+          <span
+            onClick={e => { e.stopPropagation(); onChange(''); setQuery(''); }}
+            style={{
+              fontSize: 20,
+              color: 'var(--muted-foreground)',
+              cursor: 'pointer',
+              lineHeight: 1,
+              flexShrink: 0,
+              padding: '0 2px',
+            }}
+          >
+            ✕
+          </span>
+        </div>
+      ) : (
+        <input
+          ref={inputRef}
+          type="text"
+          value={query}
+          placeholder="Search items..."
+          onFocus={() => setIsOpen(true)}
+          onChange={e => {
+            setQuery(e.target.value);
+            setIsOpen(true);
+            if (!e.target.value) onChange('');
+          }}
+          style={{
+            width: '100%',
+            padding: '8px 12px',
+            fontSize: 16,
+            border: '1px solid var(--border)',
+            borderRadius: 6,
+            boxSizing: 'border-box',
+            background: 'var(--card)',
+            color: 'var(--foreground)',
+          }}
+        />
+      )}
 
       {/* Picker popover */}
       {isOpen && (
