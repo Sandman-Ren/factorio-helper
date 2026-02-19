@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import fluidsData from '../../data/generated/fluids.json';
 import itemsData from '../../data/generated/items.json';
 import itemGroupsData from '../../data/generated/item-groups.json';
@@ -36,7 +36,6 @@ function getIconUrl(item: string): string {
 function resolveGroup(name: string): string {
   const subgroup = itemSubgroupLookup.get(name) ?? '';
   const group = subgroupDefs[subgroup]?.group ?? 'intermediate-products';
-  // Merge fluids into intermediate-products (matches wiki layout)
   if (group === 'fluids') return 'intermediate-products';
   return group;
 }
@@ -51,7 +50,20 @@ interface Props {
 
 export function ItemSelector({ items: allItems, value, onChange }: Props) {
   const [query, setQuery] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
   const [activeGroup, setActiveGroup] = useState('intermediate-products');
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Close picker on click outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Organize items by group → subgroup
   const itemsByGroup = useMemo(() => {
@@ -110,11 +122,12 @@ export function ItemSelector({ items: allItems, value, onChange }: Props) {
 
   function selectItem(item: string) {
     setQuery('');
+    setIsOpen(false);
     onChange(item);
   }
 
   return (
-    <div style={{ flex: '1 1 300px' }}>
+    <div ref={containerRef} style={{ position: 'relative', flex: '1 1 300px' }}>
       <label style={{ display: 'block', fontSize: 14, fontWeight: 500, marginBottom: 4 }}>
         Target Item
       </label>
@@ -124,112 +137,122 @@ export function ItemSelector({ items: allItems, value, onChange }: Props) {
         type="text"
         value={query}
         placeholder="Search items..."
+        onFocus={() => setIsOpen(true)}
         onChange={e => {
           setQuery(e.target.value);
+          setIsOpen(true);
           if (!e.target.value) onChange('');
         }}
         style={{
           width: '100%',
           padding: '8px 12px',
           fontSize: 16,
-          border: '1px solid #555',
-          borderRadius: '6px 6px 0 0',
+          border: '1px solid #ccc',
+          borderRadius: 6,
           boxSizing: 'border-box',
           background: '#fff',
         }}
       />
 
-      {/* Inventory container */}
-      <div style={{
-        border: '1px solid #555',
-        borderTop: 'none',
-        borderRadius: '0 0 6px 6px',
-        background: '#3d3d3d',
-        overflow: 'hidden',
-      }}>
-
-        {/* Tab bar (hidden during search) */}
-        {!isSearching && (
-          <div style={{
-            display: 'flex',
-            background: '#2a2a2a',
-            borderBottom: '2px solid #e09030',
-          }}>
-            {availableGroups.map(g => (
-              <button
-                key={g.name}
-                onClick={() => setActiveGroup(g.name)}
-                style={{
-                  flex: '1 1 0',
-                  padding: '6px 4px',
-                  fontSize: 12,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  border: 'none',
-                  borderBottom: g.name === activeGroup ? '3px solid #e09030' : '3px solid transparent',
-                  background: g.name === activeGroup ? '#3d3d3d' : 'transparent',
-                  color: g.name === activeGroup ? '#f0c050' : '#aaa',
-                  transition: 'background 0.1s, color 0.1s',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {GROUP_LABELS[g.name] ?? g.name}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Item grid area */}
+      {/* Picker popover */}
+      {isOpen && (
         <div style={{
-          maxHeight: 320,
-          overflowY: 'auto',
-          padding: 6,
+          position: 'absolute',
+          top: '100%',
+          left: 0,
+          right: 0,
+          marginTop: 2,
+          borderRadius: 6,
+          background: '#3d3d3d',
+          border: '1px solid #555',
+          boxShadow: '0 6px 20px rgba(0,0,0,0.3)',
+          zIndex: 20,
+          overflow: 'hidden',
         }}>
-          {isSearching ? (
-            searchResults && searchResults.length > 0 ? (
-              <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 2,
-              }}>
-                {searchResults.map(item => (
-                  <IconCell
-                    key={item}
-                    item={item}
-                    selected={item === value}
-                    onClick={() => selectItem(item)}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div style={{ color: '#888', padding: 16, textAlign: 'center', fontSize: 14 }}>
-                No items found
-              </div>
-            )
-          ) : (
-            activeRows.map(([subgroup, items]) => (
-              <div
-                key={subgroup}
-                style={{
+
+          {/* Tab bar (hidden during search) */}
+          {!isSearching && (
+            <div style={{
+              display: 'flex',
+              background: '#2a2a2a',
+              borderBottom: '2px solid #e09030',
+            }}>
+              {availableGroups.map(g => (
+                <button
+                  key={g.name}
+                  onClick={() => setActiveGroup(g.name)}
+                  style={{
+                    flex: '1 1 0',
+                    padding: '6px 4px',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    border: 'none',
+                    borderBottom: g.name === activeGroup ? '3px solid #e09030' : '3px solid transparent',
+                    background: g.name === activeGroup ? '#3d3d3d' : 'transparent',
+                    color: g.name === activeGroup ? '#f0c050' : '#aaa',
+                    transition: 'background 0.1s, color 0.1s',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {GROUP_LABELS[g.name] ?? g.name}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Item grid area */}
+          <div style={{
+            maxHeight: 320,
+            overflowY: 'auto',
+            padding: 6,
+          }}>
+            {isSearching ? (
+              searchResults && searchResults.length > 0 ? (
+                <div style={{
                   display: 'flex',
                   flexWrap: 'wrap',
                   gap: 2,
-                  marginBottom: 4,
-                }}
-              >
-                {items.map(item => (
-                  <IconCell
-                    key={item}
-                    item={item}
-                    selected={item === value}
-                    onClick={() => selectItem(item)}
-                  />
-                ))}
-              </div>
-            ))
-          )}
+                }}>
+                  {searchResults.map(item => (
+                    <IconCell
+                      key={item}
+                      item={item}
+                      selected={item === value}
+                      onClick={() => selectItem(item)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div style={{ color: '#888', padding: 16, textAlign: 'center', fontSize: 14 }}>
+                  No items found
+                </div>
+              )
+            ) : (
+              activeRows.map(([subgroup, items]) => (
+                <div
+                  key={subgroup}
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: 2,
+                    marginBottom: 4,
+                  }}
+                >
+                  {items.map(item => (
+                    <IconCell
+                      key={item}
+                      item={item}
+                      selected={item === value}
+                      onClick={() => selectItem(item)}
+                    />
+                  ))}
+                </div>
+              ))
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
