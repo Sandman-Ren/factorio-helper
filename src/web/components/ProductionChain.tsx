@@ -39,12 +39,12 @@ export function ProductionChain({ node, timeUnit, depth = 0 }: Props) {
           padding: '6px 8px',
           cursor: hasChildren ? 'pointer' : 'default',
           borderRadius: 4,
-          background: depth === 0 ? '#f5f5f5' : 'transparent',
+          background: depth === 0 ? 'var(--card)' : 'transparent',
           userSelect: 'none',
         }}
       >
         {hasChildren && (
-          <span style={{ fontSize: 12, width: 16, color: '#888' }}>
+          <span style={{ fontSize: 12, width: 16, color: 'var(--muted-foreground)' }}>
             {expanded ? '\u25BC' : '\u25B6'}
           </span>
         )}
@@ -52,7 +52,7 @@ export function ProductionChain({ node, timeUnit, depth = 0 }: Props) {
 
         <ItemIcon name={node.item} size={depth === 0 ? 32 : 28} />
 
-        <span style={{ color: '#666', fontSize: 14 }}>
+        <span style={{ color: 'var(--muted-foreground)', fontSize: 14 }}>
           {formatRate(node.ratePerSecond, timeUnit)}{TIME_LABELS[timeUnit]}
         </span>
 
@@ -60,8 +60,8 @@ export function ProductionChain({ node, timeUnit, depth = 0 }: Props) {
           <span style={{
             marginLeft: 'auto',
             fontSize: 13,
-            color: '#444',
-            background: '#e8e8e8',
+            color: 'var(--foreground)',
+            background: 'var(--accent)',
             padding: '2px 8px',
             borderRadius: 4,
           }}>
@@ -73,7 +73,7 @@ export function ProductionChain({ node, timeUnit, depth = 0 }: Props) {
           <span style={{
             marginLeft: 'auto',
             fontSize: 13,
-            color: '#d97706',
+            color: 'var(--primary)',
             fontStyle: 'italic',
           }}>
             raw resource
@@ -82,7 +82,7 @@ export function ProductionChain({ node, timeUnit, depth = 0 }: Props) {
       </div>
 
       {expanded && hasChildren && (
-        <div style={{ borderLeft: '2px solid #e0e0e0', marginLeft: 7 }}>
+        <div style={{ borderLeft: '2px solid var(--border)', marginLeft: 7 }}>
           {node.children.map((child, i) => (
             <ProductionChain key={`${child.item}-${i}`} node={child} timeUnit={timeUnit} depth={depth + 1} />
           ))}

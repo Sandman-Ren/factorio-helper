@@ -17,9 +17,9 @@ export function App() {
   } = useCalculator();
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto', padding: 20, fontFamily: 'system-ui, sans-serif' }}>
+    <div style={{ maxWidth: 900, margin: '0 auto', padding: 20 }}>
       <h1 style={{ marginBottom: 4 }}>Factorio Production Calculator</h1>
-      <p style={{ color: '#666', marginTop: 0, marginBottom: 24 }}>
+      <p style={{ color: 'var(--muted-foreground)', marginTop: 0, marginBottom: 24 }}>
         Calculate full production chains for Factorio 2.0 base game
       </p>
 

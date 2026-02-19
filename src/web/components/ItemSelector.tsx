@@ -141,10 +141,11 @@ export function ItemSelector({ items: allItems, value, onChange }: Props) {
           width: '100%',
           padding: '8px 12px',
           fontSize: 16,
-          border: '1px solid #ccc',
+          border: '1px solid var(--border)',
           borderRadius: 6,
           boxSizing: 'border-box',
-          background: '#fff',
+          background: 'var(--card)',
+          color: 'var(--foreground)',
         }}
       />
 
@@ -157,8 +158,8 @@ export function ItemSelector({ items: allItems, value, onChange }: Props) {
           right: 0,
           marginTop: 2,
           borderRadius: 6,
-          background: '#3d3d3d',
-          border: '1px solid #555',
+          background: 'var(--popover)',
+          border: '1px solid var(--border)',
           boxShadow: '0 6px 20px rgba(0,0,0,0.3)',
           zIndex: 20,
           overflow: 'hidden',
@@ -168,8 +169,8 @@ export function ItemSelector({ items: allItems, value, onChange }: Props) {
           {!isSearching && (
             <div style={{
               display: 'flex',
-              background: '#2a2a2a',
-              borderBottom: '2px solid #e09030',
+              background: 'var(--muted)',
+              borderBottom: '2px solid var(--primary)',
             }}>
               {availableGroups.map(g => (
                 <button
@@ -182,9 +183,9 @@ export function ItemSelector({ items: allItems, value, onChange }: Props) {
                     fontWeight: 600,
                     cursor: 'pointer',
                     border: 'none',
-                    borderBottom: g.name === activeGroup ? '3px solid #e09030' : '3px solid transparent',
-                    background: g.name === activeGroup ? '#3d3d3d' : 'transparent',
-                    color: g.name === activeGroup ? '#f0c050' : '#aaa',
+                    borderBottom: g.name === activeGroup ? '3px solid var(--primary)' : '3px solid transparent',
+                    background: g.name === activeGroup ? 'var(--popover)' : 'transparent',
+                    color: g.name === activeGroup ? 'var(--color-factorio-highlight)' : 'var(--muted-foreground)',
                     transition: 'background 0.1s, color 0.1s',
                     whiteSpace: 'nowrap',
                   }}
@@ -218,7 +219,7 @@ export function ItemSelector({ items: allItems, value, onChange }: Props) {
                   ))}
                 </div>
               ) : (
-                <div style={{ color: '#888', padding: 16, textAlign: 'center', fontSize: 14 }}>
+                <div style={{ color: 'var(--muted-foreground)', padding: 16, textAlign: 'center', fontSize: 14 }}>
                   No items found
                 </div>
               )
@@ -274,15 +275,15 @@ function IconCell({ item, selected, onClick }: {
         justifyContent: 'center',
         cursor: 'pointer',
         borderRadius: 3,
-        border: selected ? '2px solid #f0c050' : '1px solid #555',
-        background: selected ? '#5a4520' : '#4a4a4a',
+        border: selected ? '2px solid var(--color-factorio-highlight)' : '1px solid var(--border)',
+        background: selected ? 'var(--color-factorio-selected)' : 'var(--accent)',
         flexShrink: 0,
       }}
     >
       {imgFailed ? (
         <span style={{
           fontSize: 9,
-          color: '#ccc',
+          color: 'var(--muted-foreground)',
           textAlign: 'center',
           lineHeight: 1.1,
           overflow: 'hidden',

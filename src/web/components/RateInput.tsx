@@ -24,8 +24,10 @@ export function RateInput({ amount, onAmountChange, timeUnit, onTimeUnitChange }
             width: 100,
             padding: '8px 12px',
             fontSize: 16,
-            border: '1px solid #ccc',
+            border: '1px solid var(--border)',
             borderRadius: 6,
+            background: 'var(--card)',
+            color: 'var(--foreground)',
           }}
         />
       </div>
@@ -39,9 +41,10 @@ export function RateInput({ amount, onAmountChange, timeUnit, onTimeUnitChange }
           style={{
             padding: '8px 12px',
             fontSize: 16,
-            border: '1px solid #ccc',
+            border: '1px solid var(--border)',
             borderRadius: 6,
-            background: '#fff',
+            background: 'var(--card)',
+            color: 'var(--foreground)',
           }}
         >
           <option value="sec">second</option>

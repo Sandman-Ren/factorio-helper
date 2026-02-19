@@ -25,27 +25,27 @@ export function Summary({ plan, timeUnit }: Props) {
       {machineEntries.length > 0 && (
         <div style={{
           flex: '1 1 250px',
-          border: '1px solid #ddd',
+          border: '1px solid var(--border)',
           borderRadius: 8,
           padding: 16,
         }}>
           <h3 style={{ margin: '0 0 12px', fontSize: 16 }}>Machines Required</h3>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid #eee' }}>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 <th style={{ textAlign: 'left', padding: '4px 0', fontWeight: 500 }}>Machine</th>
                 <th style={{ textAlign: 'right', padding: '4px 0', fontWeight: 500 }}>Count</th>
               </tr>
             </thead>
             <tbody>
               {machineEntries.map(([name, count]) => (
-                <tr key={name} style={{ borderBottom: '1px solid #f5f5f5' }}>
+                <tr key={name} style={{ borderBottom: '1px solid var(--border)' }}>
                   <td style={{ padding: '4px 0' }}>
                     <ItemIcon name={name} size={32} />
                   </td>
                   <td style={{ textAlign: 'right', padding: '4px 0', fontVariantNumeric: 'tabular-nums' }}>
                     {Math.ceil(count)}
-                    <span style={{ color: '#999', fontSize: 12 }}>
+                    <span style={{ color: 'var(--muted-foreground)', fontSize: 12 }}>
                       {' '}({count.toFixed(2)})
                     </span>
                   </td>
@@ -59,14 +59,14 @@ export function Summary({ plan, timeUnit }: Props) {
       {rawEntries.length > 0 && (
         <div style={{
           flex: '1 1 250px',
-          border: '1px solid #ddd',
+          border: '1px solid var(--border)',
           borderRadius: 8,
           padding: 16,
         }}>
           <h3 style={{ margin: '0 0 12px', fontSize: 16 }}>Raw Resources</h3>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid #eee' }}>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 <th style={{ textAlign: 'left', padding: '4px 0', fontWeight: 500 }}>Resource</th>
                 <th style={{ textAlign: 'right', padding: '4px 0', fontWeight: 500 }}>Rate</th>
               </tr>
@@ -75,7 +75,7 @@ export function Summary({ plan, timeUnit }: Props) {
               {rawEntries.map(([name, rate]) => {
                 const displayRate = rate * TIME_MULTIPLIERS[timeUnit];
                 return (
-                  <tr key={name} style={{ borderBottom: '1px solid #f5f5f5' }}>
+                  <tr key={name} style={{ borderBottom: '1px solid var(--border)' }}>
                     <td style={{ padding: '4px 0' }}>
                       <ItemIcon name={name} size={32} />
                     </td>
