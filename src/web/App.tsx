@@ -13,6 +13,8 @@ export function App() {
     setAmount,
     timeUnit,
     setTimeUnit,
+    machineOverrides,
+    setMachineOverrides,
     plan,
   } = useCalculator();
 
@@ -40,7 +42,15 @@ export function App() {
       {plan && (
         <>
           <Summary plan={plan} timeUnit={timeUnit} />
-          <ProductionChain node={plan.root} timeUnit={timeUnit} />
+          <ProductionChain
+            node={plan.root}
+            timeUnit={timeUnit}
+            categoryMachines={graph.categoryToMachines}
+            machineOverrides={machineOverrides}
+            onMachineChange={(item, machine) =>
+              setMachineOverrides(prev => ({ ...prev, [item]: machine }))
+            }
+          />
         </>
       )}
     </div>

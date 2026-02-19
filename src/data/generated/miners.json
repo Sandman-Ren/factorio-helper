@@ -38,16 +38,5 @@
     ],
     "energy_usage": "60kW",
     "module_slots": 0
-  },
-  {
-    "name": "big-mining-drill",
-    "type": "mining-drill",
-    "mining_speed": 2.5,
-    "resource_categories": [
-      "basic-solid",
-      "hard-solid"
-    ],
-    "energy_usage": "300kW",
-    "module_slots": 4
   }
 ]

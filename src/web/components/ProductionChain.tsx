@@ -1,12 +1,25 @@
 import { useState } from 'react';
 import type { ProductionNode } from '../../calculator/types.js';
+import type { MachineOverrides } from '../../calculator/types.js';
+import type { Machine } from '../../data/schema.js';
 import type { TimeUnit } from '../hooks/useCalculator.js';
 import { ItemIcon } from './ItemIcon.js';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+} from '../ui/index.js';
+import ChevronDownIcon from 'lucide-react/dist/esm/icons/chevron-down';
 
 interface Props {
   node: ProductionNode;
   timeUnit: TimeUnit;
   depth?: number;
+  categoryMachines?: Map<string, Machine[]>;
+  machineOverrides?: MachineOverrides;
+  onMachineChange?: (item: string, machineName: string) => void;
 }
 
 const TIME_LABELS: Record<TimeUnit, string> = { sec: '/s', min: '/min', hour: '/hr' };
@@ -23,7 +36,40 @@ function formatMachines(n: number): string {
   return rounded.toFixed(2).replace(/\.?0+$/, '');
 }
 
-export function ProductionChain({ node, timeUnit, depth = 0 }: Props) {
+function MachineSelector({ current, alternatives, onSelect }: {
+  current: Machine;
+  alternatives: Machine[];
+  onSelect: (name: string) => void;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        onClick={e => e.stopPropagation()}
+        className="inline-flex items-center gap-1 rounded bg-card border border-border px-1 py-0.5 cursor-pointer"
+      >
+        <ItemIcon name={current.name} size={24} />
+        <ChevronDownIcon className="size-3 text-muted-foreground" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" onClick={e => e.stopPropagation()}>
+        <DropdownMenuRadioGroup value={current.name} onValueChange={onSelect}>
+          {alternatives.map(m => (
+            <DropdownMenuRadioItem key={m.name} value={m.name}>
+              <ItemIcon name={m.name} size={24} />
+              <span className="text-foreground">
+                {m.name.replace(/-/g, ' ')}
+              </span>
+              <span className="ml-auto text-xs text-muted-foreground">
+                {'\u00D7'}{m.crafting_speed}
+              </span>
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+export function ProductionChain({ node, timeUnit, depth = 0, categoryMachines, machineOverrides, onMachineChange }: Props) {
   const [expanded, setExpanded] = useState(depth < 3);
   const hasChildren = node.children.length > 0;
   const isRaw = !node.recipe;
@@ -56,18 +102,35 @@ export function ProductionChain({ node, timeUnit, depth = 0 }: Props) {
           {formatRate(node.ratePerSecond, timeUnit)}{TIME_LABELS[timeUnit]}
         </span>
 
-        {node.machine && (
-          <span style={{
-            marginLeft: 'auto',
-            fontSize: 13,
-            color: 'var(--foreground)',
-            background: 'var(--accent)',
-            padding: '2px 8px',
-            borderRadius: 4,
-          }}>
-            {formatMachines(node.machinesNeeded)} x <ItemIcon name={node.machine.name} size={24} />
-          </span>
-        )}
+        {node.machine && (() => {
+          const alternatives = categoryMachines?.get(node.recipe?.category ?? '');
+          const hasAlternatives = alternatives && alternatives.length > 1;
+
+          return (
+            <span style={{
+              marginLeft: 'auto',
+              fontSize: 13,
+              color: 'var(--foreground)',
+              background: 'var(--accent)',
+              padding: '2px 8px',
+              borderRadius: 4,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
+            }}>
+              {formatMachines(node.machinesNeeded)} x{' '}
+              {hasAlternatives ? (
+                <MachineSelector
+                  current={node.machine}
+                  alternatives={alternatives}
+                  onSelect={name => onMachineChange?.(node.item, name)}
+                />
+              ) : (
+                <ItemIcon name={node.machine.name} size={24} />
+              )}
+            </span>
+          );
+        })()}
 
         {isRaw && (
           <span style={{
@@ -84,7 +147,7 @@ export function ProductionChain({ node, timeUnit, depth = 0 }: Props) {
       {expanded && hasChildren && (
         <div style={{ borderLeft: '2px solid var(--border)', marginLeft: 7 }}>
           {node.children.map((child, i) => (
-            <ProductionChain key={`${child.item}-${i}`} node={child} timeUnit={timeUnit} depth={depth + 1} />
+            <ProductionChain key={`${child.item}-${i}`} node={child} timeUnit={timeUnit} depth={depth + 1} categoryMachines={categoryMachines} machineOverrides={machineOverrides} onMachineChange={onMachineChange} />
           ))}
         </div>
       )}

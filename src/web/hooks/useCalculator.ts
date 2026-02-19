@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { buildRecipeGraph, solve } from '../../calculator/index.js';
-import type { RecipeGraph, ProductionPlan } from '../../calculator/index.js';
+import type { RecipeGraph, ProductionPlan, MachineOverrides } from '../../calculator/index.js';
 import recipesData from '../../data/generated/recipes.json';
 import machinesData from '../../data/generated/machines.json';
 import minersData from '../../data/generated/miners.json';
@@ -19,6 +19,7 @@ export function useCalculator() {
   const [targetItem, setTargetItem] = useState('');
   const [amount, setAmount] = useState(1);
   const [timeUnit, setTimeUnit] = useState<TimeUnit>('sec');
+  const [machineOverrides, setMachineOverrides] = useState<MachineOverrides>({});
 
   const graph: RecipeGraph = useMemo(
     () => buildRecipeGraph(
@@ -36,8 +37,8 @@ export function useCalculator() {
       return null;
     }
     const ratePerSecond = amount * TIME_MULTIPLIERS[timeUnit];
-    return solve(graph, targetItem, ratePerSecond);
-  }, [graph, targetItem, amount, timeUnit]);
+    return solve(graph, targetItem, ratePerSecond, machineOverrides);
+  }, [graph, targetItem, amount, timeUnit, machineOverrides]);
 
   return {
     graph,
@@ -47,6 +48,8 @@ export function useCalculator() {
     setAmount,
     timeUnit,
     setTimeUnit,
+    machineOverrides,
+    setMachineOverrides,
     plan,
   };
 }

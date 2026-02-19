@@ -1,5 +1,8 @@
 import type { Recipe, Machine } from '../data/schema.js';
 
+/** Per-item machine overrides: item name → machine name. */
+export type MachineOverrides = Record<string, string>;
+
 /** A node in the production chain tree. */
 export interface ProductionNode {
   item: string;
