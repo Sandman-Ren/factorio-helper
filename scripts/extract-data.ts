@@ -1,0 +1,33 @@
+import { mkdirSync, writeFileSync } from 'fs';
+import { join } from 'path';
+import { extractRecipes } from '../src/parser/extract-recipes.js';
+import { extractItems } from '../src/parser/extract-items.js';
+import { extractFluids } from '../src/parser/extract-fluids.js';
+import { extractMachines } from '../src/parser/extract-machines.js';
+
+const DATA_ROOT = join(import.meta.dirname, '..', 'factorio-data', 'base', 'prototypes');
+const OUT_DIR = join(import.meta.dirname, '..', 'src', 'data', 'generated');
+
+mkdirSync(OUT_DIR, { recursive: true });
+
+console.log('Extracting recipes...');
+const recipes = extractRecipes(join(DATA_ROOT, 'recipe.lua'));
+writeFileSync(join(OUT_DIR, 'recipes.json'), JSON.stringify(recipes, null, 2));
+console.log(`  ${recipes.length} recipes`);
+
+console.log('Extracting items...');
+const items = extractItems(join(DATA_ROOT, 'item.lua'));
+writeFileSync(join(OUT_DIR, 'items.json'), JSON.stringify(items, null, 2));
+console.log(`  ${items.length} items`);
+
+console.log('Extracting fluids...');
+const fluids = extractFluids(join(DATA_ROOT, 'fluid.lua'));
+writeFileSync(join(OUT_DIR, 'fluids.json'), JSON.stringify(fluids, null, 2));
+console.log(`  ${fluids.length} fluids`);
+
+console.log('Extracting machines...');
+const machines = extractMachines(join(DATA_ROOT, 'entity', 'entities.lua'));
+writeFileSync(join(OUT_DIR, 'machines.json'), JSON.stringify(machines, null, 2));
+console.log(`  ${machines.length} machines`);
+
+console.log('\nDone! Output written to src/data/generated/');

@@ -1,0 +1,4 @@
+export { buildRecipeGraph, RAW_RESOURCES } from './recipe-graph.js';
+export { solve } from './solver.js';
+export type { ProductionNode, ProductionPlan } from './types.js';
+export type { RecipeGraph } from './recipe-graph.js';

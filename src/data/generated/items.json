@@ -1,0 +1,1400 @@
+[
+  {
+    "name": "stone-brick",
+    "type": "item",
+    "subgroup": "terrain",
+    "stack_size": 100
+  },
+  {
+    "name": "wood",
+    "type": "item",
+    "subgroup": "raw-resource",
+    "stack_size": 100
+  },
+  {
+    "name": "coal",
+    "type": "item",
+    "subgroup": "raw-resource",
+    "stack_size": 50
+  },
+  {
+    "name": "stone",
+    "type": "item",
+    "subgroup": "raw-resource",
+    "stack_size": 50
+  },
+  {
+    "name": "iron-ore",
+    "type": "item",
+    "subgroup": "raw-resource",
+    "stack_size": 50
+  },
+  {
+    "name": "copper-ore",
+    "type": "item",
+    "subgroup": "raw-resource",
+    "stack_size": 50
+  },
+  {
+    "name": "iron-plate",
+    "type": "item",
+    "subgroup": "raw-material",
+    "stack_size": 100
+  },
+  {
+    "name": "copper-plate",
+    "type": "item",
+    "subgroup": "raw-material",
+    "stack_size": 100
+  },
+  {
+    "name": "copper-cable",
+    "type": "item",
+    "subgroup": "intermediate-product",
+    "stack_size": 200
+  },
+  {
+    "name": "iron-stick",
+    "type": "item",
+    "subgroup": "intermediate-product",
+    "stack_size": 100
+  },
+  {
+    "name": "iron-gear-wheel",
+    "type": "item",
+    "subgroup": "intermediate-product",
+    "stack_size": 100
+  },
+  {
+    "name": "electronic-circuit",
+    "type": "item",
+    "subgroup": "intermediate-product",
+    "stack_size": 200
+  },
+  {
+    "name": "wooden-chest",
+    "type": "item",
+    "subgroup": "storage",
+    "stack_size": 50
+  },
+  {
+    "name": "stone-furnace",
+    "type": "item",
+    "subgroup": "smelting-machine",
+    "stack_size": 50
+  },
+  {
+    "name": "burner-mining-drill",
+    "type": "item",
+    "subgroup": "extraction-machine",
+    "stack_size": 50
+  },
+  {
+    "name": "electric-mining-drill",
+    "type": "item",
+    "subgroup": "extraction-machine",
+    "stack_size": 50
+  },
+  {
+    "name": "burner-inserter",
+    "type": "item",
+    "subgroup": "inserter",
+    "stack_size": 50
+  },
+  {
+    "name": "inserter",
+    "type": "item",
+    "subgroup": "inserter",
+    "stack_size": 50
+  },
+  {
+    "name": "fast-inserter",
+    "type": "item",
+    "subgroup": "inserter",
+    "stack_size": 50
+  },
+  {
+    "name": "long-handed-inserter",
+    "type": "item",
+    "subgroup": "inserter",
+    "stack_size": 50
+  },
+  {
+    "name": "offshore-pump",
+    "type": "item",
+    "subgroup": "extraction-machine",
+    "stack_size": 20
+  },
+  {
+    "name": "pipe",
+    "type": "item",
+    "subgroup": "energy-pipe-distribution",
+    "stack_size": 100
+  },
+  {
+    "name": "boiler",
+    "type": "item",
+    "subgroup": "energy",
+    "stack_size": 50
+  },
+  {
+    "name": "steam-engine",
+    "type": "item",
+    "subgroup": "energy",
+    "stack_size": 10
+  },
+  {
+    "name": "small-electric-pole",
+    "type": "item",
+    "subgroup": "energy-pipe-distribution",
+    "stack_size": 50
+  },
+  {
+    "name": "radar",
+    "type": "item",
+    "subgroup": "defensive-structure",
+    "stack_size": 50
+  },
+  {
+    "name": "small-lamp",
+    "type": "item",
+    "subgroup": "circuit-network",
+    "stack_size": 50
+  },
+  {
+    "name": "pipe-to-ground",
+    "type": "item",
+    "subgroup": "energy-pipe-distribution",
+    "stack_size": 50
+  },
+  {
+    "name": "assembling-machine-1",
+    "type": "item",
+    "subgroup": "production-machine",
+    "stack_size": 50
+  },
+  {
+    "name": "assembling-machine-2",
+    "type": "item",
+    "subgroup": "production-machine",
+    "stack_size": 50
+  },
+  {
+    "name": "red-wire",
+    "type": "item",
+    "subgroup": "spawnables",
+    "stack_size": 1
+  },
+  {
+    "name": "green-wire",
+    "type": "item",
+    "subgroup": "spawnables",
+    "stack_size": 1
+  },
+  {
+    "name": "copper-wire",
+    "type": "item",
+    "subgroup": "spawnables",
+    "stack_size": 1
+  },
+  {
+    "name": "no-item",
+    "type": "item",
+    "subgroup": "other",
+    "stack_size": 1
+  },
+  {
+    "name": "raw-fish",
+    "type": "capsule",
+    "subgroup": "raw-resource",
+    "stack_size": 100
+  },
+  {
+    "name": "repair-pack",
+    "type": "repair-tool",
+    "subgroup": "tool",
+    "stack_size": 100
+  },
+  {
+    "name": "stone-wall",
+    "type": "item",
+    "subgroup": "defensive-structure",
+    "stack_size": 100
+  },
+  {
+    "name": "lab",
+    "type": "item",
+    "subgroup": "production-machine",
+    "stack_size": 10
+  },
+  {
+    "name": "copy-paste-tool",
+    "type": "copy-paste-tool",
+    "subgroup": "tool",
+    "stack_size": 1
+  },
+  {
+    "name": "cut-paste-tool",
+    "type": "copy-paste-tool",
+    "subgroup": "tool",
+    "stack_size": 1
+  },
+  {
+    "name": "blueprint",
+    "type": "blueprint",
+    "subgroup": "tool",
+    "stack_size": 1
+  },
+  {
+    "name": "automation-science-pack",
+    "type": "tool",
+    "subgroup": "science-pack",
+    "stack_size": 200
+  },
+  {
+    "name": "logistic-science-pack",
+    "type": "tool",
+    "subgroup": "science-pack",
+    "stack_size": 200
+  },
+  {
+    "name": "steel-plate",
+    "type": "item",
+    "subgroup": "raw-material",
+    "stack_size": 100
+  },
+  {
+    "name": "car",
+    "type": "item-with-entity-data",
+    "subgroup": "transport",
+    "stack_size": 1
+  },
+  {
+    "name": "engine-unit",
+    "type": "item",
+    "subgroup": "intermediate-product",
+    "stack_size": 50
+  },
+  {
+    "name": "electric-furnace",
+    "type": "item",
+    "subgroup": "smelting-machine",
+    "stack_size": 50
+  },
+  {
+    "name": "solid-fuel",
+    "type": "item",
+    "subgroup": "raw-material",
+    "stack_size": 50
+  },
+  {
+    "name": "rocket-fuel",
+    "type": "item",
+    "subgroup": "intermediate-product",
+    "stack_size": 20
+  },
+  {
+    "name": "iron-chest",
+    "type": "item",
+    "subgroup": "storage",
+    "stack_size": 50
+  },
+  {
+    "name": "big-electric-pole",
+    "type": "item",
+    "subgroup": "energy-pipe-distribution",
+    "stack_size": 50
+  },
+  {
+    "name": "medium-electric-pole",
+    "type": "item",
+    "subgroup": "energy-pipe-distribution",
+    "stack_size": 50
+  },
+  {
+    "name": "grenade",
+    "type": "capsule",
+    "subgroup": "capsule",
+    "stack_size": 100
+  },
+  {
+    "name": "steel-furnace",
+    "type": "item",
+    "subgroup": "smelting-machine",
+    "stack_size": 50
+  },
+  {
+    "name": "gate",
+    "type": "item",
+    "subgroup": "defensive-structure",
+    "stack_size": 50
+  },
+  {
+    "name": "steel-chest",
+    "type": "item",
+    "subgroup": "storage",
+    "stack_size": 50
+  },
+  {
+    "name": "solar-panel",
+    "type": "item",
+    "subgroup": "energy",
+    "stack_size": 50
+  },
+  {
+    "name": "locomotive",
+    "type": "item-with-entity-data",
+    "subgroup": "train-transport",
+    "stack_size": 5
+  },
+  {
+    "name": "cargo-wagon",
+    "type": "item-with-entity-data",
+    "subgroup": "train-transport",
+    "stack_size": 5
+  },
+  {
+    "name": "rail",
+    "type": "rail-planner",
+    "subgroup": "train-transport",
+    "stack_size": 100
+  },
+  {
+    "name": "train-stop",
+    "type": "item",
+    "subgroup": "train-transport",
+    "stack_size": 10
+  },
+  {
+    "name": "rail-signal",
+    "type": "item",
+    "subgroup": "train-transport",
+    "stack_size": 50
+  },
+  {
+    "name": "rail-chain-signal",
+    "type": "item",
+    "subgroup": "train-transport",
+    "stack_size": 50
+  },
+  {
+    "name": "concrete",
+    "type": "item",
+    "subgroup": "terrain",
+    "stack_size": 100
+  },
+  {
+    "name": "refined-concrete",
+    "type": "item",
+    "subgroup": "terrain",
+    "stack_size": 100
+  },
+  {
+    "name": "hazard-concrete",
+    "type": "item",
+    "subgroup": "terrain",
+    "stack_size": 100
+  },
+  {
+    "name": "refined-hazard-concrete",
+    "type": "item",
+    "subgroup": "terrain",
+    "stack_size": 100
+  },
+  {
+    "name": "landfill",
+    "type": "item",
+    "subgroup": "terrain",
+    "stack_size": 100
+  },
+  {
+    "name": "accumulator",
+    "type": "item",
+    "subgroup": "energy",
+    "stack_size": 50
+  },
+  {
+    "name": "uranium-ore",
+    "type": "item",
+    "subgroup": "raw-resource",
+    "stack_size": 50
+  },
+  {
+    "name": "defender-capsule",
+    "type": "capsule",
+    "subgroup": "capsule",
+    "stack_size": 100
+  },
+  {
+    "name": "transport-belt",
+    "type": "item",
+    "subgroup": "belt",
+    "stack_size": 100
+  },
+  {
+    "name": "fast-transport-belt",
+    "type": "item",
+    "subgroup": "belt",
+    "stack_size": 100
+  },
+  {
+    "name": "express-transport-belt",
+    "type": "item",
+    "subgroup": "belt",
+    "stack_size": 100
+  },
+  {
+    "name": "bulk-inserter",
+    "type": "item",
+    "subgroup": "inserter",
+    "stack_size": 50
+  },
+  {
+    "name": "assembling-machine-3",
+    "type": "item",
+    "subgroup": "production-machine",
+    "stack_size": 50
+  },
+  {
+    "name": "fluid-wagon",
+    "type": "item-with-entity-data",
+    "subgroup": "train-transport",
+    "stack_size": 5
+  },
+  {
+    "name": "artillery-wagon",
+    "type": "item-with-entity-data",
+    "subgroup": "train-transport",
+    "stack_size": 5
+  },
+  {
+    "name": "tank",
+    "type": "item-with-entity-data",
+    "subgroup": "transport",
+    "stack_size": 1
+  },
+  {
+    "name": "chemical-science-pack",
+    "type": "tool",
+    "subgroup": "science-pack",
+    "stack_size": 200
+  },
+  {
+    "name": "military-science-pack",
+    "type": "tool",
+    "subgroup": "science-pack",
+    "stack_size": 200
+  },
+  {
+    "name": "production-science-pack",
+    "type": "tool",
+    "subgroup": "science-pack",
+    "stack_size": 200
+  },
+  {
+    "name": "utility-science-pack",
+    "type": "tool",
+    "subgroup": "science-pack",
+    "stack_size": 200
+  },
+  {
+    "name": "space-science-pack",
+    "type": "tool",
+    "subgroup": "science-pack",
+    "stack_size": 2000
+  },
+  {
+    "name": "underground-belt",
+    "type": "item",
+    "subgroup": "belt",
+    "stack_size": 50
+  },
+  {
+    "name": "fast-underground-belt",
+    "type": "item",
+    "subgroup": "belt",
+    "stack_size": 50
+  },
+  {
+    "name": "express-underground-belt",
+    "type": "item",
+    "subgroup": "belt",
+    "stack_size": 50
+  },
+  {
+    "name": "splitter",
+    "type": "item",
+    "subgroup": "belt",
+    "stack_size": 50
+  },
+  {
+    "name": "lane-splitter",
+    "type": "item",
+    "subgroup": "other",
+    "stack_size": 50
+  },
+  {
+    "name": "fast-splitter",
+    "type": "item",
+    "subgroup": "belt",
+    "stack_size": 50
+  },
+  {
+    "name": "express-splitter",
+    "type": "item",
+    "subgroup": "belt",
+    "stack_size": 50
+  },
+  {
+    "name": "loader",
+    "type": "item",
+    "subgroup": "belt",
+    "stack_size": 50
+  },
+  {
+    "name": "fast-loader",
+    "type": "item",
+    "subgroup": "belt",
+    "stack_size": 50
+  },
+  {
+    "name": "express-loader",
+    "type": "item",
+    "subgroup": "belt",
+    "stack_size": 50
+  },
+  {
+    "name": "advanced-circuit",
+    "type": "item",
+    "subgroup": "intermediate-product",
+    "stack_size": 200
+  },
+  {
+    "name": "processing-unit",
+    "type": "item",
+    "subgroup": "intermediate-product",
+    "stack_size": 100
+  },
+  {
+    "name": "logistic-robot",
+    "type": "item",
+    "subgroup": "logistic-network",
+    "stack_size": 50
+  },
+  {
+    "name": "construction-robot",
+    "type": "item",
+    "subgroup": "logistic-network",
+    "stack_size": 50
+  },
+  {
+    "name": "passive-provider-chest",
+    "type": "item",
+    "subgroup": "logistic-network",
+    "stack_size": 50
+  },
+  {
+    "name": "active-provider-chest",
+    "type": "item",
+    "subgroup": "logistic-network",
+    "stack_size": 50
+  },
+  {
+    "name": "storage-chest",
+    "type": "item",
+    "subgroup": "logistic-network",
+    "stack_size": 50
+  },
+  {
+    "name": "buffer-chest",
+    "type": "item",
+    "subgroup": "logistic-network",
+    "stack_size": 50
+  },
+  {
+    "name": "requester-chest",
+    "type": "item",
+    "subgroup": "logistic-network",
+    "stack_size": 50
+  },
+  {
+    "name": "rocket-silo",
+    "type": "item",
+    "subgroup": "space-related",
+    "stack_size": 1
+  },
+  {
+    "name": "cargo-landing-pad",
+    "type": "item",
+    "subgroup": "space-related",
+    "stack_size": 1
+  },
+  {
+    "name": "roboport",
+    "type": "item",
+    "subgroup": "logistic-network",
+    "stack_size": 10
+  },
+  {
+    "name": "coin",
+    "type": "item",
+    "subgroup": "science-pack",
+    "stack_size": 100000
+  },
+  {
+    "name": "substation",
+    "type": "item",
+    "subgroup": "energy-pipe-distribution",
+    "stack_size": 50
+  },
+  {
+    "name": "beacon",
+    "type": "item",
+    "subgroup": "module",
+    "stack_size": 20
+  },
+  {
+    "name": "storage-tank",
+    "type": "item",
+    "subgroup": "storage",
+    "stack_size": 50
+  },
+  {
+    "name": "pump",
+    "type": "item",
+    "subgroup": "energy-pipe-distribution",
+    "stack_size": 50
+  },
+  {
+    "name": "upgrade-planner",
+    "type": "upgrade-item",
+    "subgroup": "tool",
+    "stack_size": 1
+  },
+  {
+    "name": "deconstruction-planner",
+    "type": "deconstruction-item",
+    "subgroup": "tool",
+    "stack_size": 1
+  },
+  {
+    "name": "blueprint-book",
+    "type": "blueprint-book",
+    "subgroup": "tool",
+    "stack_size": 1
+  },
+  {
+    "name": "pumpjack",
+    "type": "item",
+    "subgroup": "extraction-machine",
+    "stack_size": 20
+  },
+  {
+    "name": "oil-refinery",
+    "type": "item",
+    "subgroup": "production-machine",
+    "stack_size": 10
+  },
+  {
+    "name": "chemical-plant",
+    "type": "item",
+    "subgroup": "production-machine",
+    "stack_size": 10
+  },
+  {
+    "name": "sulfur",
+    "type": "item",
+    "subgroup": "raw-material",
+    "stack_size": 50
+  },
+  {
+    "name": "barrel",
+    "type": "item",
+    "subgroup": "intermediate-product",
+    "stack_size": 10
+  },
+  {
+    "name": "plastic-bar",
+    "type": "item",
+    "subgroup": "raw-material",
+    "stack_size": 100
+  },
+  {
+    "name": "electric-engine-unit",
+    "type": "item",
+    "subgroup": "intermediate-product",
+    "stack_size": 50
+  },
+  {
+    "name": "explosives",
+    "type": "item",
+    "subgroup": "raw-material",
+    "stack_size": 50
+  },
+  {
+    "name": "battery",
+    "type": "item",
+    "subgroup": "raw-material",
+    "stack_size": 200
+  },
+  {
+    "name": "flying-robot-frame",
+    "type": "item",
+    "subgroup": "intermediate-product",
+    "stack_size": 50
+  },
+  {
+    "name": "low-density-structure",
+    "type": "item",
+    "subgroup": "intermediate-product",
+    "stack_size": 50
+  },
+  {
+    "name": "nuclear-fuel",
+    "type": "item",
+    "subgroup": "uranium-processing",
+    "stack_size": 1
+  },
+  {
+    "name": "rocket-part",
+    "type": "item",
+    "subgroup": "intermediate-product",
+    "stack_size": 5
+  },
+  {
+    "name": "satellite",
+    "type": "item",
+    "subgroup": "space-related",
+    "stack_size": 1
+  },
+  {
+    "name": "spidertron",
+    "type": "item-with-entity-data",
+    "subgroup": "transport",
+    "stack_size": 1
+  },
+  {
+    "name": "spidertron-remote",
+    "type": "spidertron-remote",
+    "subgroup": "spawnables",
+    "stack_size": 1
+  },
+  {
+    "name": "selection-tool",
+    "type": "selection-tool",
+    "subgroup": "other",
+    "stack_size": 1
+  },
+  {
+    "name": "electric-energy-interface",
+    "type": "item",
+    "subgroup": "other",
+    "stack_size": 50
+  },
+  {
+    "name": "heat-interface",
+    "type": "item",
+    "subgroup": "other",
+    "stack_size": 20
+  },
+  {
+    "name": "nuclear-reactor",
+    "type": "item",
+    "subgroup": "energy",
+    "stack_size": 10
+  },
+  {
+    "name": "uranium-235",
+    "type": "item",
+    "subgroup": "uranium-processing",
+    "stack_size": 100
+  },
+  {
+    "name": "uranium-238",
+    "type": "item",
+    "subgroup": "uranium-processing",
+    "stack_size": 100
+  },
+  {
+    "name": "centrifuge",
+    "type": "item",
+    "subgroup": "production-machine",
+    "stack_size": 50
+  },
+  {
+    "name": "uranium-fuel-cell",
+    "type": "item",
+    "subgroup": "uranium-processing",
+    "stack_size": 50
+  },
+  {
+    "name": "depleted-uranium-fuel-cell",
+    "type": "item",
+    "subgroup": "uranium-processing",
+    "stack_size": 50
+  },
+  {
+    "name": "heat-exchanger",
+    "type": "item",
+    "subgroup": "energy",
+    "stack_size": 50
+  },
+  {
+    "name": "steam-turbine",
+    "type": "item",
+    "subgroup": "energy",
+    "stack_size": 10
+  },
+  {
+    "name": "heat-pipe",
+    "type": "item",
+    "subgroup": "energy",
+    "stack_size": 50
+  },
+  {
+    "name": "simple-entity-with-force",
+    "type": "item",
+    "subgroup": "other",
+    "stack_size": 50
+  },
+  {
+    "name": "simple-entity-with-owner",
+    "type": "item",
+    "subgroup": "other",
+    "stack_size": 50
+  },
+  {
+    "name": "infinity-chest",
+    "type": "item",
+    "subgroup": "other",
+    "stack_size": 10
+  },
+  {
+    "name": "infinity-cargo-wagon",
+    "type": "item",
+    "subgroup": "other",
+    "stack_size": 5
+  },
+  {
+    "name": "infinity-pipe",
+    "type": "item",
+    "subgroup": "other",
+    "stack_size": 10
+  },
+  {
+    "name": "burner-generator",
+    "type": "item",
+    "subgroup": "other",
+    "stack_size": 10
+  },
+  {
+    "name": "linked-chest",
+    "type": "item",
+    "subgroup": "other",
+    "stack_size": 10
+  },
+  {
+    "name": "proxy-container",
+    "type": "item",
+    "subgroup": "other",
+    "stack_size": 10
+  },
+  {
+    "name": "bottomless-chest",
+    "type": "item",
+    "subgroup": "other",
+    "stack_size": 10
+  },
+  {
+    "name": "linked-belt",
+    "type": "item",
+    "subgroup": "other",
+    "stack_size": 10
+  },
+  {
+    "name": "one-way-valve",
+    "type": "item",
+    "subgroup": "other",
+    "stack_size": 10
+  },
+  {
+    "name": "overflow-valve",
+    "type": "item",
+    "subgroup": "other",
+    "stack_size": 10
+  },
+  {
+    "name": "top-up-valve",
+    "type": "item",
+    "subgroup": "other",
+    "stack_size": 10
+  },
+  {
+    "name": "speed-module",
+    "type": "module",
+    "subgroup": "module",
+    "stack_size": 50
+  },
+  {
+    "name": "speed-module-2",
+    "type": "module",
+    "subgroup": "module",
+    "stack_size": 50
+  },
+  {
+    "name": "speed-module-3",
+    "type": "module",
+    "subgroup": "module",
+    "stack_size": 50
+  },
+  {
+    "name": "efficiency-module",
+    "type": "module",
+    "subgroup": "module",
+    "stack_size": 50
+  },
+  {
+    "name": "efficiency-module-2",
+    "type": "module",
+    "subgroup": "module",
+    "stack_size": 50
+  },
+  {
+    "name": "efficiency-module-3",
+    "type": "module",
+    "subgroup": "module",
+    "stack_size": 50
+  },
+  {
+    "name": "productivity-module",
+    "type": "module",
+    "subgroup": "module",
+    "stack_size": 50
+  },
+  {
+    "name": "productivity-module-2",
+    "type": "module",
+    "subgroup": "module",
+    "stack_size": 50
+  },
+  {
+    "name": "productivity-module-3",
+    "type": "module",
+    "subgroup": "module",
+    "stack_size": 50
+  },
+  {
+    "name": "empty-module-slot",
+    "type": "item",
+    "subgroup": "module",
+    "stack_size": 1
+  },
+  {
+    "name": "uranium-rounds-magazine",
+    "type": "ammo",
+    "subgroup": "ammo",
+    "stack_size": 100
+  },
+  {
+    "name": "flamethrower-ammo",
+    "type": "ammo",
+    "subgroup": "ammo",
+    "stack_size": 100
+  },
+  {
+    "name": "rocket",
+    "type": "ammo",
+    "subgroup": "ammo",
+    "stack_size": 100
+  },
+  {
+    "name": "explosive-rocket",
+    "type": "ammo",
+    "subgroup": "ammo",
+    "stack_size": 100
+  },
+  {
+    "name": "atomic-bomb",
+    "type": "ammo",
+    "subgroup": "ammo",
+    "stack_size": 10
+  },
+  {
+    "name": "piercing-shotgun-shell",
+    "type": "ammo",
+    "subgroup": "ammo",
+    "stack_size": 100
+  },
+  {
+    "name": "cannon-shell",
+    "type": "ammo",
+    "subgroup": "ammo",
+    "stack_size": 100
+  },
+  {
+    "name": "explosive-cannon-shell",
+    "type": "ammo",
+    "subgroup": "ammo",
+    "stack_size": 100
+  },
+  {
+    "name": "uranium-cannon-shell",
+    "type": "ammo",
+    "subgroup": "ammo",
+    "stack_size": 100
+  },
+  {
+    "name": "explosive-uranium-cannon-shell",
+    "type": "ammo",
+    "subgroup": "ammo",
+    "stack_size": 100
+  },
+  {
+    "name": "artillery-shell",
+    "type": "ammo",
+    "subgroup": "ammo",
+    "stack_size": 1
+  },
+  {
+    "name": "flamethrower",
+    "type": "gun",
+    "subgroup": "gun",
+    "stack_size": 5
+  },
+  {
+    "name": "tank-machine-gun",
+    "type": "gun",
+    "subgroup": "gun",
+    "stack_size": 1
+  },
+  {
+    "name": "tank-flamethrower",
+    "type": "gun",
+    "subgroup": "gun",
+    "stack_size": 1
+  },
+  {
+    "name": "land-mine",
+    "type": "item",
+    "subgroup": "defensive-structure",
+    "stack_size": 100
+  },
+  {
+    "name": "rocket-launcher",
+    "type": "gun",
+    "subgroup": "gun",
+    "stack_size": 5
+  },
+  {
+    "name": "combat-shotgun",
+    "type": "gun",
+    "subgroup": "gun",
+    "stack_size": 5
+  },
+  {
+    "name": "tank-cannon",
+    "type": "gun",
+    "subgroup": "gun",
+    "stack_size": 1
+  },
+  {
+    "name": "artillery-wagon-cannon",
+    "type": "gun",
+    "subgroup": "gun",
+    "stack_size": 1
+  },
+  {
+    "name": "spidertron-rocket-launcher-1",
+    "type": "gun",
+    "subgroup": "gun",
+    "stack_size": 1
+  },
+  {
+    "name": "spidertron-rocket-launcher-2",
+    "type": "gun",
+    "subgroup": "gun",
+    "stack_size": 1
+  },
+  {
+    "name": "spidertron-rocket-launcher-3",
+    "type": "gun",
+    "subgroup": "gun",
+    "stack_size": 1
+  },
+  {
+    "name": "spidertron-rocket-launcher-4",
+    "type": "gun",
+    "subgroup": "gun",
+    "stack_size": 1
+  },
+  {
+    "name": "modular-armor",
+    "type": "armor",
+    "subgroup": "armor",
+    "stack_size": 1
+  },
+  {
+    "name": "power-armor",
+    "type": "armor",
+    "subgroup": "armor",
+    "stack_size": 1
+  },
+  {
+    "name": "power-armor-mk2",
+    "type": "armor",
+    "subgroup": "armor",
+    "stack_size": 1
+  },
+  {
+    "name": "cluster-grenade",
+    "type": "capsule",
+    "subgroup": "capsule",
+    "stack_size": 100
+  },
+  {
+    "name": "poison-capsule",
+    "type": "capsule",
+    "subgroup": "capsule",
+    "stack_size": 100
+  },
+  {
+    "name": "slowdown-capsule",
+    "type": "capsule",
+    "subgroup": "capsule",
+    "stack_size": 100
+  },
+  {
+    "name": "distractor-capsule",
+    "type": "capsule",
+    "subgroup": "capsule",
+    "stack_size": 100
+  },
+  {
+    "name": "destroyer-capsule",
+    "type": "capsule",
+    "subgroup": "capsule",
+    "stack_size": 100
+  },
+  {
+    "name": "cliff-explosives",
+    "type": "capsule",
+    "subgroup": "terrain",
+    "stack_size": 20
+  },
+  {
+    "name": "firearm-magazine",
+    "type": "ammo",
+    "subgroup": "ammo",
+    "stack_size": 100
+  },
+  {
+    "name": "piercing-rounds-magazine",
+    "type": "ammo",
+    "subgroup": "ammo",
+    "stack_size": 100
+  },
+  {
+    "name": "shotgun-shell",
+    "type": "ammo",
+    "subgroup": "ammo",
+    "stack_size": 100
+  },
+  {
+    "name": "light-armor",
+    "type": "armor",
+    "subgroup": "armor",
+    "stack_size": 1
+  },
+  {
+    "name": "heavy-armor",
+    "type": "armor",
+    "subgroup": "armor",
+    "stack_size": 1
+  },
+  {
+    "name": "pistol",
+    "type": "gun",
+    "subgroup": "gun",
+    "stack_size": 5
+  },
+  {
+    "name": "submachine-gun",
+    "type": "gun",
+    "subgroup": "gun",
+    "stack_size": 5
+  },
+  {
+    "name": "vehicle-machine-gun",
+    "type": "gun",
+    "subgroup": "gun",
+    "stack_size": 1
+  },
+  {
+    "name": "shotgun",
+    "type": "gun",
+    "subgroup": "gun",
+    "stack_size": 5
+  },
+  {
+    "name": "solar-panel-equipment",
+    "type": "item",
+    "subgroup": "equipment",
+    "stack_size": 20
+  },
+  {
+    "name": "fission-reactor-equipment",
+    "type": "item",
+    "subgroup": "equipment",
+    "stack_size": 20
+  },
+  {
+    "name": "battery-equipment",
+    "type": "item",
+    "subgroup": "equipment",
+    "stack_size": 20
+  },
+  {
+    "name": "battery-mk2-equipment",
+    "type": "item",
+    "subgroup": "equipment",
+    "stack_size": 20
+  },
+  {
+    "name": "belt-immunity-equipment",
+    "type": "item",
+    "subgroup": "utility-equipment",
+    "stack_size": 20
+  },
+  {
+    "name": "exoskeleton-equipment",
+    "type": "item",
+    "subgroup": "utility-equipment",
+    "stack_size": 20
+  },
+  {
+    "name": "personal-roboport-equipment",
+    "type": "item",
+    "subgroup": "utility-equipment",
+    "stack_size": 20
+  },
+  {
+    "name": "personal-roboport-mk2-equipment",
+    "type": "item",
+    "subgroup": "utility-equipment",
+    "stack_size": 20
+  },
+  {
+    "name": "night-vision-equipment",
+    "type": "item",
+    "subgroup": "utility-equipment",
+    "stack_size": 20
+  },
+  {
+    "name": "energy-shield-equipment",
+    "type": "item",
+    "subgroup": "military-equipment",
+    "stack_size": 20
+  },
+  {
+    "name": "energy-shield-mk2-equipment",
+    "type": "item",
+    "subgroup": "military-equipment",
+    "stack_size": 20
+  },
+  {
+    "name": "personal-laser-defense-equipment",
+    "type": "item",
+    "subgroup": "military-equipment",
+    "stack_size": 20
+  },
+  {
+    "name": "discharge-defense-equipment",
+    "type": "item",
+    "subgroup": "military-equipment",
+    "stack_size": 20
+  },
+  {
+    "name": "discharge-defense-remote",
+    "type": "capsule",
+    "subgroup": "spawnables",
+    "stack_size": 1
+  },
+  {
+    "name": "gun-turret",
+    "type": "item",
+    "subgroup": "turret",
+    "stack_size": 50
+  },
+  {
+    "name": "laser-turret",
+    "type": "item",
+    "subgroup": "turret",
+    "stack_size": 50
+  },
+  {
+    "name": "flamethrower-turret",
+    "type": "item",
+    "subgroup": "turret",
+    "stack_size": 50
+  },
+  {
+    "name": "artillery-turret",
+    "type": "item",
+    "subgroup": "turret",
+    "stack_size": 10
+  },
+  {
+    "name": "artillery-targeting-remote",
+    "type": "capsule",
+    "subgroup": "spawnables",
+    "stack_size": 1
+  },
+  {
+    "name": "arithmetic-combinator",
+    "type": "item",
+    "subgroup": "circuit-network",
+    "stack_size": 50
+  },
+  {
+    "name": "decider-combinator",
+    "type": "item",
+    "subgroup": "circuit-network",
+    "stack_size": 50
+  },
+  {
+    "name": "constant-combinator",
+    "type": "item",
+    "subgroup": "circuit-network",
+    "stack_size": 50
+  },
+  {
+    "name": "selector-combinator",
+    "type": "item",
+    "subgroup": "circuit-network",
+    "stack_size": 50
+  },
+  {
+    "name": "power-switch",
+    "type": "item",
+    "subgroup": "circuit-network",
+    "stack_size": 10
+  },
+  {
+    "name": "programmable-speaker",
+    "type": "item",
+    "subgroup": "circuit-network",
+    "stack_size": 10
+  },
+  {
+    "name": "display-panel",
+    "type": "item",
+    "subgroup": "circuit-network",
+    "stack_size": 10
+  },
+  {
+    "name": "science",
+    "type": "item",
+    "subgroup": "science-pack",
+    "stack_size": 1
+  }
+]

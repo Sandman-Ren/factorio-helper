@@ -1,0 +1,26 @@
+[
+  {
+    "name": "water"
+  },
+  {
+    "name": "steam"
+  },
+  {
+    "name": "sulfuric-acid"
+  },
+  {
+    "name": "crude-oil"
+  },
+  {
+    "name": "heavy-oil"
+  },
+  {
+    "name": "light-oil"
+  },
+  {
+    "name": "petroleum-gas"
+  },
+  {
+    "name": "lubricant"
+  }
+]

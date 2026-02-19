@@ -1,0 +1,156 @@
+import { describe, it, expect } from 'vitest';
+import { buildRecipeGraph } from './recipe-graph.js';
+import { solve } from './solver.js';
+import type { Recipe, Machine } from '../data/schema.js';
+
+// Minimal test data matching Factorio base game values
+const testRecipes: Recipe[] = [
+  {
+    name: 'iron-plate',
+    category: 'smelting',
+    energy_required: 3.2,
+    ingredients: [{ type: 'item', name: 'iron-ore', amount: 1 }],
+    results: [{ type: 'item', name: 'iron-plate', amount: 1 }],
+  },
+  {
+    name: 'copper-plate',
+    category: 'smelting',
+    energy_required: 3.2,
+    ingredients: [{ type: 'item', name: 'copper-ore', amount: 1 }],
+    results: [{ type: 'item', name: 'copper-plate', amount: 1 }],
+  },
+  {
+    name: 'iron-gear-wheel',
+    category: 'crafting',
+    energy_required: 0.5,
+    ingredients: [{ type: 'item', name: 'iron-plate', amount: 2 }],
+    results: [{ type: 'item', name: 'iron-gear-wheel', amount: 1 }],
+  },
+  {
+    name: 'copper-cable',
+    category: 'crafting',
+    energy_required: 0.5,
+    ingredients: [{ type: 'item', name: 'copper-plate', amount: 1 }],
+    results: [{ type: 'item', name: 'copper-cable', amount: 2 }],
+  },
+  {
+    name: 'electronic-circuit',
+    category: 'crafting',
+    energy_required: 0.5,
+    ingredients: [
+      { type: 'item', name: 'iron-plate', amount: 1 },
+      { type: 'item', name: 'copper-cable', amount: 3 },
+    ],
+    results: [{ type: 'item', name: 'electronic-circuit', amount: 1 }],
+  },
+  {
+    name: 'automation-science-pack',
+    category: 'crafting',
+    energy_required: 5,
+    ingredients: [
+      { type: 'item', name: 'copper-plate', amount: 1 },
+      { type: 'item', name: 'iron-gear-wheel', amount: 1 },
+    ],
+    results: [{ type: 'item', name: 'automation-science-pack', amount: 1 }],
+  },
+];
+
+const testMachines: Machine[] = [
+  {
+    name: 'stone-furnace',
+    type: 'furnace',
+    crafting_speed: 1,
+    crafting_categories: ['smelting'],
+    energy_usage: '90kW',
+    module_slots: 0,
+  },
+  {
+    name: 'electric-furnace',
+    type: 'furnace',
+    crafting_speed: 2,
+    crafting_categories: ['smelting'],
+    energy_usage: '180kW',
+    module_slots: 2,
+  },
+  {
+    name: 'assembling-machine-1',
+    type: 'assembling-machine',
+    crafting_speed: 0.5,
+    crafting_categories: ['crafting', 'basic-crafting', 'advanced-crafting'],
+    energy_usage: '75kW',
+    module_slots: 0,
+  },
+  {
+    name: 'assembling-machine-3',
+    type: 'assembling-machine',
+    crafting_speed: 1.25,
+    crafting_categories: ['basic-crafting', 'crafting', 'advanced-crafting', 'crafting-with-fluid'],
+    energy_usage: '375kW',
+    module_slots: 4,
+  },
+];
+
+describe('solver', () => {
+  const graph = buildRecipeGraph(testRecipes, testMachines);
+
+  it('resolves raw resource as leaf node', () => {
+    const plan = solve(graph, 'iron-ore', 1);
+    expect(plan.root.item).toBe('iron-ore');
+    expect(plan.root.children).toHaveLength(0);
+    expect(plan.root.machinesNeeded).toBe(0);
+    expect(plan.rawResources['iron-ore']).toBe(1);
+  });
+
+  it('resolves iron-plate smelting', () => {
+    const plan = solve(graph, 'iron-plate', 1);
+    expect(plan.root.item).toBe('iron-plate');
+    // electric-furnace (speed 2): 1 plate/s needs 3.2/2 = 1.6 machines
+    expect(plan.root.machinesNeeded).toBeCloseTo(1.6);
+    expect(plan.root.machine?.name).toBe('electric-furnace');
+    expect(plan.root.children).toHaveLength(1);
+    expect(plan.root.children[0]!.item).toBe('iron-ore');
+    expect(plan.rawResources['iron-ore']).toBeCloseTo(1);
+  });
+
+  it('resolves electronic circuit chain', () => {
+    // 1 electronic-circuit/s:
+    //   recipe: 0.5s, 1 iron-plate + 3 copper-cable -> 1 circuit
+    //   with asm3 (speed 1.25): time = 0.5/1.25 = 0.4s per craft
+    //   machines = 1 * 0.4 = 0.4 assemblers
+    //   needs: 1 iron-plate/s + 3 copper-cable/s
+    //   copper-cable: recipe produces 2, so 3/s needs 1.5 crafts/s
+    //     1.5 * 0.5/1.25 = 0.6 assemblers
+    //     needs 1.5 copper-plate/s
+
+    const plan = solve(graph, 'electronic-circuit', 1);
+    expect(plan.root.machinesNeeded).toBeCloseTo(0.4);
+    expect(plan.root.children).toHaveLength(2);
+
+    // Iron plate child
+    const ironChild = plan.root.children.find(c => c.item === 'iron-plate');
+    expect(ironChild).toBeDefined();
+    expect(ironChild!.ratePerSecond).toBeCloseTo(1);
+
+    // Copper cable child
+    const cableChild = plan.root.children.find(c => c.item === 'copper-cable');
+    expect(cableChild).toBeDefined();
+    expect(cableChild!.ratePerSecond).toBeCloseTo(3);
+    // Cable recipe makes 2 per craft, so 1.5 crafts/s needed
+    expect(cableChild!.machinesNeeded).toBeCloseTo(0.6);
+
+    // Raw resources
+    expect(plan.rawResources['iron-ore']).toBeCloseTo(1);
+    expect(plan.rawResources['copper-ore']).toBeCloseTo(1.5);
+  });
+
+  it('aggregates total machines correctly', () => {
+    const plan = solve(graph, 'automation-science-pack', 1);
+
+    // automation-science-pack: 5s craft time, asm3 speed 1.25 → 5/1.25 = 4s → 1*4 = 4 machines
+    expect(plan.root.machinesNeeded).toBeCloseTo(4);
+
+    // Should have entries for assembling-machine-3 and electric-furnace
+    expect(plan.totalMachines['assembling-machine-3']).toBeGreaterThan(0);
+    expect(plan.totalMachines['electric-furnace']).toBeGreaterThan(0);
+  });
+});
