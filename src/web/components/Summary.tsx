@@ -1,5 +1,6 @@
 import type { ProductionPlan } from '../../calculator/types.js';
 import type { TimeUnit } from '../hooks/useCalculator.js';
+import { ItemIcon } from './ItemIcon.js';
 
 interface Props {
   plan: ProductionPlan;
@@ -39,7 +40,9 @@ export function Summary({ plan, timeUnit }: Props) {
             <tbody>
               {machineEntries.map(([name, count]) => (
                 <tr key={name} style={{ borderBottom: '1px solid #f5f5f5' }}>
-                  <td style={{ padding: '4px 0' }}>{name}</td>
+                  <td style={{ padding: '4px 0' }}>
+                    <ItemIcon name={name} size={24} />
+                  </td>
                   <td style={{ textAlign: 'right', padding: '4px 0', fontVariantNumeric: 'tabular-nums' }}>
                     {Math.ceil(count)}
                     <span style={{ color: '#999', fontSize: 12 }}>
@@ -73,7 +76,9 @@ export function Summary({ plan, timeUnit }: Props) {
                 const displayRate = rate * TIME_MULTIPLIERS[timeUnit];
                 return (
                   <tr key={name} style={{ borderBottom: '1px solid #f5f5f5' }}>
-                    <td style={{ padding: '4px 0' }}>{name}</td>
+                    <td style={{ padding: '4px 0' }}>
+                      <ItemIcon name={name} size={24} />
+                    </td>
                     <td style={{ textAlign: 'right', padding: '4px 0', fontVariantNumeric: 'tabular-nums' }}>
                       {displayRate.toFixed(2)}{TIME_LABELS[timeUnit]}
                     </td>

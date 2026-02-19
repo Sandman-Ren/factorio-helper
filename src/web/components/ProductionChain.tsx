@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { ProductionNode } from '../../calculator/types.js';
 import type { TimeUnit } from '../hooks/useCalculator.js';
+import { ItemIcon } from './ItemIcon.js';
 
 interface Props {
   node: ProductionNode;
@@ -49,12 +50,7 @@ export function ProductionChain({ node, timeUnit, depth = 0 }: Props) {
         )}
         {!hasChildren && <span style={{ width: 16 }} />}
 
-        <span style={{
-          fontWeight: depth === 0 ? 600 : 400,
-          color: isRaw ? '#d97706' : '#1a1a1a',
-        }}>
-          {node.item}
-        </span>
+        <ItemIcon name={node.item} size={depth === 0 ? 24 : 20} />
 
         <span style={{ color: '#666', fontSize: 14 }}>
           {formatRate(node.ratePerSecond, timeUnit)}{TIME_LABELS[timeUnit]}
@@ -69,7 +65,7 @@ export function ProductionChain({ node, timeUnit, depth = 0 }: Props) {
             padding: '2px 8px',
             borderRadius: 4,
           }}>
-            {formatMachines(node.machinesNeeded)} x {node.machine.name}
+            {formatMachines(node.machinesNeeded)} x <ItemIcon name={node.machine.name} size={18} />
           </span>
         )}
 

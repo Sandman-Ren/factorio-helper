@@ -1,11 +1,10 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
-import fluidsData from '../../data/generated/fluids.json';
 import itemsData from '../../data/generated/items.json';
+import fluidsData from '../../data/generated/fluids.json';
 import itemGroupsData from '../../data/generated/item-groups.json';
+import { getIconUrl } from './ItemIcon.js';
 
 // ── Data lookups ────────────────────────────────────────────────────────────
-
-const fluidNames = new Set(fluidsData.map(f => f.name));
 
 const itemSubgroupLookup = new Map<string, string>();
 for (const item of itemsData) {
@@ -27,11 +26,6 @@ const GROUP_LABELS: Record<string, string> = {
   'space': 'Space',
   'combat': 'Combat',
 };
-
-function getIconUrl(item: string): string {
-  const category = fluidNames.has(item) ? 'fluid' : 'item';
-  return `${import.meta.env.BASE_URL}icons/${category}/${item}.png`;
-}
 
 function resolveGroup(name: string): string {
   const subgroup = itemSubgroupLookup.get(name) ?? '';
