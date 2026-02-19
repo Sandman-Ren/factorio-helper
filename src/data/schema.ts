@@ -36,3 +36,22 @@ export interface Machine {
   energy_usage: string;
   module_slots: number;
 }
+
+/** A mining drill or pump entity. */
+export interface MiningDrill {
+  name: string;
+  type: string; // "mining-drill" or "offshore-pump"
+  mining_speed: number;
+  resource_categories: string[];
+  energy_usage: string;
+  module_slots: number;
+}
+
+/** A minable resource entity. */
+export interface Resource {
+  name: string;
+  category: string; // "basic-solid", "basic-fluid", etc.
+  mining_time: number;
+  results: RecipeItem[];
+  required_fluid?: { name: string; amount: number };
+}

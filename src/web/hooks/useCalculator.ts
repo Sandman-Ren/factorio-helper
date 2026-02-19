@@ -3,7 +3,9 @@ import { buildRecipeGraph, solve } from '../../calculator/index.js';
 import type { RecipeGraph, ProductionPlan } from '../../calculator/index.js';
 import recipesData from '../../data/generated/recipes.json';
 import machinesData from '../../data/generated/machines.json';
-import type { Recipe, Machine } from '../../data/schema.js';
+import minersData from '../../data/generated/miners.json';
+import resourcesData from '../../data/generated/resources.json';
+import type { Recipe, Machine, MiningDrill, Resource } from '../../data/schema.js';
 
 export type TimeUnit = 'sec' | 'min' | 'hour';
 
@@ -19,7 +21,12 @@ export function useCalculator() {
   const [timeUnit, setTimeUnit] = useState<TimeUnit>('sec');
 
   const graph: RecipeGraph = useMemo(
-    () => buildRecipeGraph(recipesData as Recipe[], machinesData as Machine[]),
+    () => buildRecipeGraph(
+      recipesData as Recipe[],
+      machinesData as Machine[],
+      minersData as MiningDrill[],
+      resourcesData as Resource[],
+    ),
     [],
   );
 

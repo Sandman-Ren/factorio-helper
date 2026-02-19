@@ -1,0 +1,53 @@
+[
+  {
+    "name": "electric-mining-drill",
+    "type": "mining-drill",
+    "mining_speed": 0.5,
+    "resource_categories": [
+      "basic-solid"
+    ],
+    "energy_usage": "90kW",
+    "module_slots": 3
+  },
+  {
+    "name": "burner-mining-drill",
+    "type": "mining-drill",
+    "mining_speed": 0.25,
+    "resource_categories": [
+      "basic-solid"
+    ],
+    "energy_usage": "150kW",
+    "module_slots": 0
+  },
+  {
+    "name": "pumpjack",
+    "type": "mining-drill",
+    "mining_speed": 1,
+    "resource_categories": [
+      "basic-fluid"
+    ],
+    "energy_usage": "90kW",
+    "module_slots": 2
+  },
+  {
+    "name": "offshore-pump",
+    "type": "offshore-pump",
+    "mining_speed": 20,
+    "resource_categories": [
+      "water-pumping"
+    ],
+    "energy_usage": "60kW",
+    "module_slots": 0
+  },
+  {
+    "name": "big-mining-drill",
+    "type": "mining-drill",
+    "mining_speed": 2.5,
+    "resource_categories": [
+      "basic-solid",
+      "hard-solid"
+    ],
+    "energy_usage": "300kW",
+    "module_slots": 4
+  }
+]

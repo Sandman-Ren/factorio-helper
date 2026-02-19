@@ -1,0 +1,78 @@
+[
+  {
+    "name": "uranium-ore",
+    "category": "basic-solid",
+    "mining_time": 2,
+    "results": [
+      {
+        "type": "item",
+        "name": "uranium-ore",
+        "amount": 1
+      }
+    ],
+    "required_fluid": {
+      "name": "sulfuric-acid",
+      "amount": 10
+    }
+  },
+  {
+    "name": "crude-oil",
+    "category": "basic-fluid",
+    "mining_time": 1,
+    "results": [
+      {
+        "type": "fluid",
+        "name": "crude-oil",
+        "amount": 10
+      }
+    ]
+  },
+  {
+    "name": "iron-ore",
+    "category": "basic-solid",
+    "mining_time": 1,
+    "results": [
+      {
+        "type": "item",
+        "name": "iron-ore",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "name": "copper-ore",
+    "category": "basic-solid",
+    "mining_time": 1,
+    "results": [
+      {
+        "type": "item",
+        "name": "copper-ore",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "name": "coal",
+    "category": "basic-solid",
+    "mining_time": 1,
+    "results": [
+      {
+        "type": "item",
+        "name": "coal",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "name": "stone",
+    "category": "basic-solid",
+    "mining_time": 1,
+    "results": [
+      {
+        "type": "item",
+        "name": "stone",
+        "amount": 1
+      }
+    ]
+  }
+]

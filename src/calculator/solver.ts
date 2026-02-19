@@ -1,5 +1,4 @@
 import type { RecipeGraph } from './recipe-graph.js';
-import { RAW_RESOURCES } from './recipe-graph.js';
 import type { ProductionNode, ProductionPlan } from './types.js';
 
 /**
@@ -35,8 +34,8 @@ function solveNode(
   const recipe = graph.itemToRecipe.get(itemName);
   const itemType = recipe?.results.find(r => r.name === itemName)?.type ?? 'item';
 
-  // Base case: raw resource
-  if (RAW_RESOURCES.has(itemName) || !recipe) {
+  // Base case: no recipe (truly unproducible items like wood)
+  if (!recipe) {
     rawResources[itemName] = (rawResources[itemName] ?? 0) + ratePerSecond;
     return {
       item: itemName,
@@ -61,6 +60,11 @@ function solveNode(
       machinesNeeded: 0,
       children: [],
     };
+  }
+
+  // Track mined resources in the raw resources summary
+  if (graph.minedResources.has(itemName)) {
+    rawResources[itemName] = (rawResources[itemName] ?? 0) + ratePerSecond;
   }
 
   visited = new Set(visited);

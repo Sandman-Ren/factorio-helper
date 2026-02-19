@@ -4,6 +4,8 @@ import { extractRecipes } from '../src/parser/extract-recipes.js';
 import { extractItems } from '../src/parser/extract-items.js';
 import { extractFluids } from '../src/parser/extract-fluids.js';
 import { extractMachines } from '../src/parser/extract-machines.js';
+import { extractMiners } from '../src/parser/extract-miners.js';
+import { extractResources } from '../src/parser/extract-resources.js';
 import { extractItemGroups } from '../src/parser/extract-item-groups.js';
 
 const DATA_ROOT = join(import.meta.dirname, '..', 'factorio-data', 'base', 'prototypes');
@@ -31,6 +33,20 @@ console.log('Extracting machines...');
 const machines = extractMachines(join(DATA_ROOT, 'entity', 'entities.lua'));
 writeFileSync(join(OUT_DIR, 'machines.json'), JSON.stringify(machines, null, 2));
 console.log(`  ${machines.length} machines`);
+
+console.log('Extracting miners...');
+const miners = extractMiners(
+  join(DATA_ROOT, 'entity', 'mining-drill.lua'),
+  join(DATA_ROOT, 'entity', 'entities.lua'),
+  join(SPACE_AGE_ROOT, 'entity', 'big-mining-drill.lua'),
+);
+writeFileSync(join(OUT_DIR, 'miners.json'), JSON.stringify(miners, null, 2));
+console.log(`  ${miners.length} miners`);
+
+console.log('Extracting resources...');
+const resources = extractResources(join(DATA_ROOT, 'entity', 'resources.lua'));
+writeFileSync(join(OUT_DIR, 'resources.json'), JSON.stringify(resources, null, 2));
+console.log(`  ${resources.length} resources`);
 
 console.log('Extracting item groups...');
 const itemGroups = extractItemGroups([

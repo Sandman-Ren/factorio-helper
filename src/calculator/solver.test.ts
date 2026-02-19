@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { buildRecipeGraph } from './recipe-graph.js';
 import { solve } from './solver.js';
-import type { Recipe, Machine } from '../data/schema.js';
+import type { Recipe, Machine, MiningDrill, Resource } from '../data/schema.js';
 
 // Minimal test data matching Factorio base game values
 const testRecipes: Recipe[] = [
@@ -152,5 +152,148 @@ describe('solver', () => {
     // Should have entries for assembling-machine-3 and electric-furnace
     expect(plan.totalMachines['assembling-machine-3']).toBeGreaterThan(0);
     expect(plan.totalMachines['electric-furnace']).toBeGreaterThan(0);
+  });
+});
+
+// --- Mining / extraction tests ---
+
+const testMiners: MiningDrill[] = [
+  {
+    name: 'electric-mining-drill',
+    type: 'mining-drill',
+    mining_speed: 0.5,
+    resource_categories: ['basic-solid'],
+    energy_usage: '90kW',
+    module_slots: 3,
+  },
+  {
+    name: 'pumpjack',
+    type: 'mining-drill',
+    mining_speed: 1,
+    resource_categories: ['basic-fluid'],
+    energy_usage: '90kW',
+    module_slots: 2,
+  },
+  {
+    name: 'offshore-pump',
+    type: 'offshore-pump',
+    mining_speed: 20, // pumping_speed in fluid/tick
+    resource_categories: ['water-pumping'],
+    energy_usage: '0kW',
+    module_slots: 0,
+  },
+];
+
+const testResources: Resource[] = [
+  {
+    name: 'iron-ore',
+    category: 'basic-solid',
+    mining_time: 1,
+    results: [{ type: 'item', name: 'iron-ore', amount: 1 }],
+  },
+  {
+    name: 'copper-ore',
+    category: 'basic-solid',
+    mining_time: 1,
+    results: [{ type: 'item', name: 'copper-ore', amount: 1 }],
+  },
+  {
+    name: 'uranium-ore',
+    category: 'basic-solid',
+    mining_time: 2,
+    results: [{ type: 'item', name: 'uranium-ore', amount: 1 }],
+    required_fluid: { name: 'sulfuric-acid', amount: 10 },
+  },
+  {
+    name: 'crude-oil',
+    category: 'basic-fluid',
+    mining_time: 1,
+    results: [{ type: 'fluid', name: 'crude-oil', amount: 10 }],
+  },
+];
+
+// Add a sulfuric-acid recipe for uranium mining chain tests
+const extendedRecipes: Recipe[] = [
+  ...testRecipes,
+  {
+    name: 'sulfuric-acid',
+    category: 'crafting-with-fluid',
+    energy_required: 1,
+    ingredients: [
+      { type: 'item', name: 'iron-plate', amount: 1 },
+      { type: 'fluid', name: 'sulfur', amount: 5 },
+    ],
+    results: [{ type: 'fluid', name: 'sulfuric-acid', amount: 50 }],
+  },
+];
+
+describe('solver with mining', () => {
+  const graph = buildRecipeGraph(extendedRecipes, testMachines, testMiners, testResources);
+
+  it('resolves iron-ore with electric mining drills', () => {
+    // electric-mining-drill speed 0.5, mining_time 1, result 1
+    // machinesNeeded = (1/1) * (1/0.5) = 2 drills
+    const plan = solve(graph, 'iron-ore', 1);
+    expect(plan.root.item).toBe('iron-ore');
+    expect(plan.root.machinesNeeded).toBeCloseTo(2);
+    expect(plan.root.machine?.name).toBe('electric-mining-drill');
+    expect(plan.root.children).toHaveLength(0); // no ingredients
+    expect(plan.rawResources['iron-ore']).toBeCloseTo(1);
+  });
+
+  it('resolves iron-plate chain including mining drills', () => {
+    // iron-plate: 1.6 electric-furnaces (unchanged)
+    // iron-ore: 2 electric-mining-drills
+    const plan = solve(graph, 'iron-plate', 1);
+    expect(plan.root.machinesNeeded).toBeCloseTo(1.6);
+    expect(plan.root.machine?.name).toBe('electric-furnace');
+
+    // Iron-ore child now has drills instead of being a bare leaf
+    const oreChild = plan.root.children[0]!;
+    expect(oreChild.item).toBe('iron-ore');
+    expect(oreChild.machinesNeeded).toBeCloseTo(2);
+    expect(oreChild.machine?.name).toBe('electric-mining-drill');
+
+    // Raw resources summary still includes iron-ore
+    expect(plan.rawResources['iron-ore']).toBeCloseTo(1);
+
+    // Total machines includes both furnaces and drills
+    expect(plan.totalMachines['electric-furnace']).toBeCloseTo(1.6);
+    expect(plan.totalMachines['electric-mining-drill']).toBeCloseTo(2);
+  });
+
+  it('resolves uranium-ore with drills and sulfuric acid chain', () => {
+    // uranium-ore: mining_time=2, speed=0.5 → (1/1)*(2/0.5) = 4 drills
+    // sulfuric-acid: 10/s needed, recipe produces 50 per craft
+    //   crafts/s = 10/50 = 0.2, time = 1/1.25 = 0.8 → 0.2 * 0.8 = 0.16 machines
+    const plan = solve(graph, 'uranium-ore', 1);
+    expect(plan.root.machinesNeeded).toBeCloseTo(4);
+    expect(plan.root.machine?.name).toBe('electric-mining-drill');
+    expect(plan.root.children).toHaveLength(1); // sulfuric-acid ingredient
+
+    const acidChild = plan.root.children[0]!;
+    expect(acidChild.item).toBe('sulfuric-acid');
+    expect(acidChild.ratePerSecond).toBeCloseTo(10);
+  });
+
+  it('resolves crude-oil with pumpjacks', () => {
+    // crude-oil: mining_time=1, pumpjack speed=1, result=10
+    // machinesNeeded = (10/10) * (1/1) = 1 pumpjack
+    const plan = solve(graph, 'crude-oil', 10);
+    expect(plan.root.machinesNeeded).toBeCloseTo(1);
+    expect(plan.root.machine?.name).toBe('pumpjack');
+    expect(plan.rawResources['crude-oil']).toBeCloseTo(10);
+  });
+
+  it('resolves water with offshore pumps', () => {
+    // offshore-pump: crafting_speed=1, water recipe produces 1200/craft
+    // 1200 water/s → 1 pump; 2400 water/s → 2 pumps
+    const plan = solve(graph, 'water', 1200);
+    expect(plan.root.machinesNeeded).toBeCloseTo(1);
+    expect(plan.root.machine?.name).toBe('offshore-pump');
+    expect(plan.rawResources['water']).toBeCloseTo(1200);
+
+    const plan2 = solve(graph, 'water', 2400);
+    expect(plan2.root.machinesNeeded).toBeCloseTo(2);
   });
 });

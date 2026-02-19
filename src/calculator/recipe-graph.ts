@@ -1,4 +1,4 @@
-import type { Recipe, Machine } from '../data/schema.js';
+import type { Recipe, Machine, MiningDrill, Resource } from '../data/schema.js';
 
 /** Lookup maps for navigating the recipe/machine dependency graph. */
 export interface RecipeGraph {
@@ -12,26 +12,80 @@ export interface RecipeGraph {
   allRecipes: Recipe[];
   /** All producible item/fluid names. */
   allProducts: string[];
+  /** Items produced by mining/pumping (tracked in raw resources summary). */
+  minedResources: Set<string>;
 }
 
-/** Resources that are mined/pumped, not crafted. */
-export const RAW_RESOURCES = new Set([
-  'iron-ore',
-  'copper-ore',
-  'coal',
-  'stone',
-  'wood',
-  'crude-oil',
-  'water',
-  'uranium-ore',
-]);
+export function buildRecipeGraph(
+  recipes: Recipe[],
+  machines: Machine[],
+  miners?: MiningDrill[],
+  resources?: Resource[],
+): RecipeGraph {
+  const combinedRecipes = [...recipes];
+  const combinedMachines = [...machines];
+  const minedResources = new Set<string>();
 
-export function buildRecipeGraph(recipes: Recipe[], machines: Machine[]): RecipeGraph {
+  if (miners && resources) {
+    // Convert miners → Machine objects
+    for (const miner of miners) {
+      // Offshore pumps get crafting_speed=1; rate is encoded in the water recipe
+      const craftingSpeed = miner.type === 'offshore-pump' ? 1 : miner.mining_speed;
+      combinedMachines.push({
+        name: miner.name,
+        type: miner.type,
+        crafting_speed: craftingSpeed,
+        crafting_categories: miner.resource_categories,
+        energy_usage: miner.energy_usage,
+        module_slots: miner.module_slots,
+      });
+    }
+
+    // Convert resources → synthetic Recipe objects
+    for (const resource of resources) {
+      const ingredients: Recipe['ingredients'] = [];
+      if (resource.required_fluid) {
+        ingredients.push({
+          type: 'fluid',
+          name: resource.required_fluid.name,
+          amount: resource.required_fluid.amount,
+        });
+      }
+
+      combinedRecipes.push({
+        name: `${resource.name}-mining`,
+        category: resource.category,
+        energy_required: resource.mining_time,
+        ingredients,
+        results: resource.results,
+      });
+
+      for (const result of resource.results) {
+        minedResources.add(result.name);
+      }
+    }
+
+    // Add synthetic water recipe if an offshore pump exists
+    const offshorePump = miners.find(m => m.type === 'offshore-pump');
+    if (offshorePump) {
+      // pumping_speed is in fluid/tick; × 60 ticks/s = fluid/s
+      const waterPerSecond = offshorePump.mining_speed * 60;
+      combinedRecipes.push({
+        name: 'water-pumping',
+        category: 'water-pumping',
+        energy_required: 1,
+        ingredients: [],
+        results: [{ type: 'fluid', name: 'water', amount: waterPerSecond }],
+      });
+      minedResources.add('water');
+    }
+  }
+
   const itemToRecipe = new Map<string, Recipe>();
   const categoryToMachines = new Map<string, Machine[]>();
 
   // Build item -> recipe map
-  for (const recipe of recipes) {
+  for (const recipe of combinedRecipes) {
     for (const result of recipe.results) {
       // Don't override: first recipe wins (some items have multiple recipes)
       if (!itemToRecipe.has(result.name)) {
@@ -41,7 +95,7 @@ export function buildRecipeGraph(recipes: Recipe[], machines: Machine[]): Recipe
   }
 
   // Build category -> machines map, sorted by crafting_speed (ascending)
-  for (const machine of machines) {
+  for (const machine of combinedMachines) {
     for (const category of machine.crafting_categories) {
       let list = categoryToMachines.get(category);
       if (!list) {
@@ -69,7 +123,8 @@ export function buildRecipeGraph(recipes: Recipe[], machines: Machine[]): Recipe
     itemToRecipe,
     categoryToMachines,
     defaultMachine,
-    allRecipes: recipes,
+    allRecipes: combinedRecipes,
     allProducts,
+    minedResources,
   };
 }
