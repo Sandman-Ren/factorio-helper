@@ -50,7 +50,7 @@ export function ProductionChain({ node, timeUnit, depth = 0 }: Props) {
         )}
         {!hasChildren && <span style={{ width: 16 }} />}
 
-        <ItemIcon name={node.item} size={depth === 0 ? 24 : 20} />
+        <ItemIcon name={node.item} size={depth === 0 ? 32 : 28} />
 
         <span style={{ color: '#666', fontSize: 14 }}>
           {formatRate(node.ratePerSecond, timeUnit)}{TIME_LABELS[timeUnit]}
@@ -65,7 +65,7 @@ export function ProductionChain({ node, timeUnit, depth = 0 }: Props) {
             padding: '2px 8px',
             borderRadius: 4,
           }}>
-            {formatMachines(node.machinesNeeded)} x <ItemIcon name={node.machine.name} size={18} />
+            {formatMachines(node.machinesNeeded)} x <ItemIcon name={node.machine.name} size={24} />
           </span>
         )}
 

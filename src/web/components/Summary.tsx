@@ -41,7 +41,7 @@ export function Summary({ plan, timeUnit }: Props) {
               {machineEntries.map(([name, count]) => (
                 <tr key={name} style={{ borderBottom: '1px solid #f5f5f5' }}>
                   <td style={{ padding: '4px 0' }}>
-                    <ItemIcon name={name} size={24} />
+                    <ItemIcon name={name} size={32} />
                   </td>
                   <td style={{ textAlign: 'right', padding: '4px 0', fontVariantNumeric: 'tabular-nums' }}>
                     {Math.ceil(count)}
@@ -77,7 +77,7 @@ export function Summary({ plan, timeUnit }: Props) {
                 return (
                   <tr key={name} style={{ borderBottom: '1px solid #f5f5f5' }}>
                     <td style={{ padding: '4px 0' }}>
-                      <ItemIcon name={name} size={24} />
+                      <ItemIcon name={name} size={32} />
                     </td>
                     <td style={{ textAlign: 'right', padding: '4px 0', fontVariantNumeric: 'tabular-nums' }}>
                       {displayRate.toFixed(2)}{TIME_LABELS[timeUnit]}
