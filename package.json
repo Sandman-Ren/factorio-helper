@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "fetch-data": "bash scripts/fetch-data.sh",
     "extract-data": "tsx scripts/extract-data.ts",
+    "dump-icons": "tsx scripts/dump-icons.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
