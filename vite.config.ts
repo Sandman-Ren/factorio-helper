@@ -5,6 +5,7 @@ export default defineConfig({
   plugins: [react()],
   base: '/factorio-helper/',
   root: 'src/web',
+  publicDir: '../../public',
   build: {
     outDir: '../../dist',
     emptyOutDir: true,

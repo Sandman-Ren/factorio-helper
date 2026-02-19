@@ -1,0 +1,250 @@
+{
+  "groups": [
+    {
+      "name": "logistics",
+      "order": "a"
+    },
+    {
+      "name": "production",
+      "order": "b"
+    },
+    {
+      "name": "intermediate-products",
+      "order": "c"
+    },
+    {
+      "name": "space",
+      "order": "d"
+    },
+    {
+      "name": "combat",
+      "order": "e"
+    },
+    {
+      "name": "fluids",
+      "order": "f"
+    }
+  ],
+  "subgroups": {
+    "storage": {
+      "group": "logistics",
+      "order": "a"
+    },
+    "belt": {
+      "group": "logistics",
+      "order": "b"
+    },
+    "inserter": {
+      "group": "logistics",
+      "order": "c"
+    },
+    "energy-pipe-distribution": {
+      "group": "logistics",
+      "order": "d"
+    },
+    "train-transport": {
+      "group": "logistics",
+      "order": "e"
+    },
+    "transport": {
+      "group": "logistics",
+      "order": "f"
+    },
+    "logistic-network": {
+      "group": "logistics",
+      "order": "g"
+    },
+    "circuit-network": {
+      "group": "logistics",
+      "order": "h"
+    },
+    "terrain": {
+      "group": "logistics",
+      "order": "i"
+    },
+    "tool": {
+      "group": "production",
+      "order": "a"
+    },
+    "energy": {
+      "group": "production",
+      "order": "b"
+    },
+    "extraction-machine": {
+      "group": "production",
+      "order": "c"
+    },
+    "smelting-machine": {
+      "group": "production",
+      "order": "d"
+    },
+    "production-machine": {
+      "group": "production",
+      "order": "e"
+    },
+    "module": {
+      "group": "production",
+      "order": "f"
+    },
+    "space-related": {
+      "group": "production",
+      "order": "g"
+    },
+    "fluid-recipes": {
+      "group": "intermediate-products",
+      "order": "a"
+    },
+    "raw-resource": {
+      "group": "intermediate-products",
+      "order": "b"
+    },
+    "raw-material": {
+      "group": "intermediate-products",
+      "order": "c"
+    },
+    "barrel": {
+      "group": "intermediate-products",
+      "order": "d"
+    },
+    "fill-barrel": {
+      "group": "intermediate-products",
+      "order": "e"
+    },
+    "empty-barrel": {
+      "group": "intermediate-products",
+      "order": "f"
+    },
+    "intermediate-product": {
+      "group": "intermediate-products",
+      "order": "g"
+    },
+    "intermediate-recipe": {
+      "group": "intermediate-products",
+      "order": "h"
+    },
+    "uranium-processing": {
+      "group": "intermediate-products",
+      "order": "i"
+    },
+    "science-pack": {
+      "group": "intermediate-products",
+      "order": "y"
+    },
+    "internal-process": {
+      "group": "intermediate-products",
+      "order": "z"
+    },
+    "gun": {
+      "group": "combat",
+      "order": "a"
+    },
+    "ammo": {
+      "group": "combat",
+      "order": "b"
+    },
+    "capsule": {
+      "group": "combat",
+      "order": "c"
+    },
+    "armor": {
+      "group": "combat",
+      "order": "d"
+    },
+    "equipment": {
+      "group": "combat",
+      "order": "e"
+    },
+    "utility-equipment": {
+      "group": "combat",
+      "order": "f"
+    },
+    "military-equipment": {
+      "group": "combat",
+      "order": "g"
+    },
+    "defensive-structure": {
+      "group": "combat",
+      "order": "h"
+    },
+    "turret": {
+      "group": "combat",
+      "order": "i"
+    },
+    "ammo-category": {
+      "group": "combat",
+      "order": "j"
+    },
+    "fluid": {
+      "group": "fluids",
+      "order": "a"
+    },
+    "vulcanus-processes": {
+      "group": "intermediate-products",
+      "order": "k"
+    },
+    "fulgora-processes": {
+      "group": "intermediate-products",
+      "order": "l"
+    },
+    "agriculture-processes": {
+      "group": "intermediate-products",
+      "order": "m"
+    },
+    "agriculture-products": {
+      "group": "intermediate-products",
+      "order": "n"
+    },
+    "nauvis-agriculture": {
+      "group": "intermediate-products",
+      "order": "o"
+    },
+    "aquilo-processes": {
+      "group": "intermediate-products",
+      "order": "p"
+    },
+    "agriculture": {
+      "group": "production",
+      "order": "da"
+    },
+    "environmental-protection": {
+      "group": "production",
+      "order": "f"
+    },
+    "space-interactors": {
+      "group": "space",
+      "order": "a"
+    },
+    "space-platform": {
+      "group": "space",
+      "order": "a"
+    },
+    "space-rocket": {
+      "group": "space",
+      "order": "b"
+    },
+    "space-environment": {
+      "group": "space",
+      "order": "f"
+    },
+    "space-material": {
+      "group": "space",
+      "order": "g"
+    },
+    "space-crushing": {
+      "group": "space",
+      "order": "h"
+    },
+    "space-processing": {
+      "group": "space",
+      "order": "i"
+    },
+    "planets": {
+      "group": "space",
+      "order": "j"
+    },
+    "planet-connections": {
+      "group": "space",
+      "order": "k"
+    }
+  }
+}

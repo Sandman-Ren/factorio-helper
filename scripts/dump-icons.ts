@@ -6,13 +6,13 @@ import {
   readFileSync,
   writeFileSync,
 } from 'fs';
-import { join, basename } from 'path';
+import { join } from 'path';
 import { homedir, platform } from 'os';
 import { execSync } from 'child_process';
 import { createInterface } from 'readline';
 
 const PROJECT_ROOT = join(import.meta.dirname, '..');
-const ICONS_DIR = join(PROJECT_ROOT, 'icons');
+const ICONS_DIR = join(PROJECT_ROOT, 'public', 'icons');
 const CONFIG_FILE = join(PROJECT_ROOT, '.factorio-path');
 const ICON_CATEGORIES = ['item', 'recipe', 'fluid'];
 
@@ -222,7 +222,7 @@ async function main() {
   // Save install path for next time
   writeFileSync(CONFIG_FILE, installDir + '\n');
 
-  console.log(`\nDone! ${totalCopied} icons copied to icons/`);
+  console.log(`\nDone! ${totalCopied} icons copied to public/icons/`);
 }
 
 main();
