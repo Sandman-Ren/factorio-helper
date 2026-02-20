@@ -57,7 +57,8 @@ export function useTechTree() {
         prev.map(node => {
           const isSelected = node.id === selected || searchMatches.has(node.id);
           const isHighlighted = hasChain && chainSet.has(node.id) && !isSelected;
-          const isDimmed = hasChain && !chainSet.has(node.id);
+          const isDimmed = (hasChain && !chainSet.has(node.id)) ||
+            (hasSearch && !searchMatches.has(node.id) && !hasChain);
 
           if (
             node.data.highlighted === isHighlighted &&
