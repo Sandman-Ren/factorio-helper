@@ -9,15 +9,17 @@ import {
   SheetDescription,
 } from '../../ui/index.js';
 import CalculatorIcon from 'lucide-react/dist/esm/icons/calculator';
+import LocateIcon from 'lucide-react/dist/esm/icons/locate';
 
 interface Props {
   technology: Technology | null;
   open: boolean;
   onClose: () => void;
   onCalculateRecipe?: (recipeName: string) => void;
+  onZoomToTech?: (techName: string) => void;
 }
 
-export function TechDetailPanel({ technology, open, onClose, onCalculateRecipe }: Props) {
+export function TechDetailPanel({ technology, open, onClose, onCalculateRecipe, onZoomToTech }: Props) {
   if (!technology) return null;
 
   const label = technology.name.replace(/-/g, ' ');
@@ -37,6 +39,16 @@ export function TechDetailPanel({ technology, open, onClose, onCalculateRecipe }
               ? 'Infinite research'
               : `Technology: ${label}`}
           </SheetDescription>
+          {onZoomToTech && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onZoomToTech(technology.name)}
+            >
+              <LocateIcon />
+              Focus in tree
+            </Button>
+          )}
         </SheetHeader>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '0 16px 16px' }}>

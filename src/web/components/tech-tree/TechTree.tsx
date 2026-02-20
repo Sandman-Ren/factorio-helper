@@ -4,6 +4,7 @@ import {
   Background,
   Controls,
   MiniMap,
+  type ReactFlowInstance,
   type NodeMouseHandler,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -36,6 +37,17 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
   } = useTechTree();
 
   const searchRef = useRef<HTMLInputElement>(null);
+  const rfInstance = useRef<ReactFlowInstance<TechNode> | null>(null);
+
+  const zoomToTech = useCallback((techName: string) => {
+    const instance = rfInstance.current;
+    if (!instance) return;
+    const node = instance.getNode(techName);
+    if (!node) return;
+    const x = node.position.x + (node.measured?.width ?? 180) / 2;
+    const y = node.position.y + (node.measured?.height ?? 60) / 2;
+    instance.setCenter(x, y, { zoom: 1.2, duration: 400 });
+  }, []);
 
   useEffect(() => {
     if (pendingTechSelect) {
@@ -85,6 +97,7 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
         nodeTypes={nodeTypes}
         onNodeClick={onNodeClick}
         onPaneClick={onPaneClick}
+        onInit={instance => { rfInstance.current = instance; }}
         fitView
         fitViewOptions={{ padding: 0.15 }}
         minZoom={0.1}
@@ -116,6 +129,7 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
         open={selectedTech != null}
         onClose={clearSelection}
         onCalculateRecipe={onCalculateRecipe}
+        onZoomToTech={zoomToTech}
       />
     </div>
   );
