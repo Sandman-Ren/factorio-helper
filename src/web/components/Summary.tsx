@@ -1,6 +1,7 @@
 import type { ProductionPlan } from '../../calculator/types.js';
 import type { TimeUnit } from '../hooks/useCalculator.js';
 import { ItemIcon } from './ItemIcon.js';
+import { Button } from '../ui/index.js';
 
 interface Props {
   plan: ProductionPlan;
@@ -106,20 +107,13 @@ export function Summary({ plan, timeUnit, integerMultiplier, onApplyMultiplier }
           <span>
             Minimum integer ratio: <strong>&times;{integerMultiplier}</strong>
           </span>
-          <button
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => onApplyMultiplier?.(integerMultiplier)}
-            style={{
-              padding: '4px 12px',
-              fontSize: 13,
-              border: '1px solid var(--border)',
-              borderRadius: 6,
-              background: 'var(--card)',
-              color: 'var(--foreground)',
-              cursor: 'pointer',
-            }}
           >
             Apply
-          </button>
+          </Button>
         </div>
       )}
     </div>

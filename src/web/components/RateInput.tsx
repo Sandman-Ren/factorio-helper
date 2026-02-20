@@ -1,4 +1,5 @@
 import type { TimeUnit } from '../hooks/useCalculator.js';
+import { Label, Input, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../ui/index.js';
 
 interface Props {
   amount: number;
@@ -9,48 +10,30 @@ interface Props {
 
 export function RateInput({ amount, onAmountChange, timeUnit, onTimeUnitChange }: Props) {
   return (
-    <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
+    <div className="flex items-end gap-2">
       <div>
-        <label style={{ display: 'block', fontSize: 14, fontWeight: 500, marginBottom: 4 }}>
-          Amount
-        </label>
-        <input
+        <Label className="mb-1">Amount</Label>
+        <Input
           type="number"
           min={0.01}
           step="any"
           value={amount}
           onChange={e => onAmountChange(parseFloat(e.target.value) || 0)}
-          style={{
-            width: 100,
-            padding: '8px 12px',
-            fontSize: 16,
-            border: '1px solid var(--border)',
-            borderRadius: 6,
-            background: 'var(--card)',
-            color: 'var(--foreground)',
-          }}
+          className="w-24"
         />
       </div>
       <div>
-        <label style={{ display: 'block', fontSize: 14, fontWeight: 500, marginBottom: 4 }}>
-          Per
-        </label>
-        <select
-          value={timeUnit}
-          onChange={e => onTimeUnitChange(e.target.value as TimeUnit)}
-          style={{
-            padding: '8px 12px',
-            fontSize: 16,
-            border: '1px solid var(--border)',
-            borderRadius: 6,
-            background: 'var(--card)',
-            color: 'var(--foreground)',
-          }}
-        >
-          <option value="sec">second</option>
-          <option value="min">minute</option>
-          <option value="hour">hour</option>
-        </select>
+        <Label className="mb-1">Per</Label>
+        <Select value={timeUnit} onValueChange={v => onTimeUnitChange(v as TimeUnit)}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="sec">second</SelectItem>
+            <SelectItem value="min">minute</SelectItem>
+            <SelectItem value="hour">hour</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );

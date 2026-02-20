@@ -3,6 +3,8 @@ import itemsData from '../../data/generated/items.json';
 import fluidsData from '../../data/generated/fluids.json';
 import itemGroupsData from '../../data/generated/item-groups.json';
 import { getIconUrl } from './ItemIcon.js';
+import { Label, Input, Button } from '../ui/index.js';
+import XIcon from 'lucide-react/dist/esm/icons/x';
 
 // ── Data lookups ────────────────────────────────────────────────────────────
 
@@ -129,56 +131,37 @@ export function ItemSelector({ items: allItems, value, onChange }: Props) {
   }
 
   return (
-    <div ref={containerRef} style={{ position: 'relative', flex: '1 1 300px' }}>
-      <label style={{ display: 'block', fontSize: 14, fontWeight: 500, marginBottom: 4 }}>
-        Target Item
-      </label>
+    <div ref={containerRef} className="relative flex-[1_1_300px]">
+      <Label className="mb-1">Target Item</Label>
 
       {/* Selected chip or search input */}
       {value && !isOpen ? (
         <div
           onClick={() => setIsOpen(true)}
-          style={{
-            width: '100%',
-            padding: '8px 12px',
-            fontSize: 16,
-            border: '1px solid var(--border)',
-            borderRadius: 6,
-            boxSizing: 'border-box',
-            background: 'var(--card)',
-            color: 'var(--foreground)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            cursor: 'pointer',
-          }}
+          className="flex w-full items-center gap-2 rounded-md border border-input bg-input/30 px-3 py-1 h-9 cursor-pointer text-base"
         >
           <img
             src={getIconUrl(value)}
             alt={value.replace(/-/g, ' ')}
             width={24}
             height={24}
-            style={{ imageRendering: 'pixelated', flexShrink: 0 }}
+            className="shrink-0"
+            style={{ imageRendering: 'pixelated' }}
           />
-          <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <span className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap">
             {value.replace(/-/g, ' ')}
           </span>
-          <span
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            aria-label="Clear selection"
             onClick={e => { e.stopPropagation(); onChange(''); setQuery(''); }}
-            style={{
-              fontSize: 20,
-              color: 'var(--muted-foreground)',
-              cursor: 'pointer',
-              lineHeight: 1,
-              flexShrink: 0,
-              padding: '0 2px',
-            }}
           >
-            ✕
-          </span>
+            <XIcon />
+          </Button>
         </div>
       ) : (
-        <input
+        <Input
           ref={inputRef}
           type="text"
           value={query}
@@ -189,59 +172,25 @@ export function ItemSelector({ items: allItems, value, onChange }: Props) {
             setIsOpen(true);
             if (!e.target.value) onChange('');
           }}
-          style={{
-            width: '100%',
-            padding: '8px 12px',
-            fontSize: 16,
-            border: '1px solid var(--border)',
-            borderRadius: 6,
-            boxSizing: 'border-box',
-            background: 'var(--card)',
-            color: 'var(--foreground)',
-          }}
         />
       )}
 
       {/* Picker popover */}
       {isOpen && (
-        <div style={{
-          position: 'absolute',
-          top: '100%',
-          left: 0,
-          right: 0,
-          marginTop: 2,
-          borderRadius: 6,
-          background: 'var(--popover)',
-          border: '1px solid var(--border)',
-          boxShadow: '0 6px 20px rgba(0,0,0,0.3)',
-          zIndex: 20,
-          overflow: 'hidden',
-        }}>
+        <div className="absolute top-full left-0 right-0 mt-0.5 rounded-md bg-popover border border-border shadow-lg z-20 overflow-hidden">
 
           {/* Tab bar (hidden during search) */}
           {!isSearching && (
-            <div style={{
-              display: 'flex',
-              background: 'var(--muted)',
-              borderBottom: '2px solid var(--primary)',
-            }}>
+            <div className="flex bg-muted border-b-2 border-primary">
               {availableGroups.map(g => (
                 <button
                   key={g.name}
                   onClick={() => setActiveGroup(g.name)}
-                  style={{
-                    flex: '1 1 0',
-                    padding: '6px 4px',
-                    fontSize: 12,
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    border: 'none',
-                    borderBottom: g.name === activeGroup ? '3px solid var(--primary)' : '3px solid transparent',
-                    background: g.name === activeGroup ? 'var(--popover)' : 'transparent',
-                    color: g.name === activeGroup ? 'var(--color-factorio-highlight)' : 'var(--muted-foreground)',
-                    transition: 'background 0.1s, color 0.1s',
-                    whiteSpace: 'nowrap',
-                  }}
+                  className={`flex-[1_1_0] px-1 py-1.5 text-xs font-semibold cursor-pointer border-none border-b-[3px] whitespace-nowrap transition-[background,color] duration-100 ${
+                    g.name === activeGroup
+                      ? 'border-b-primary bg-popover text-[var(--color-factorio-highlight)]'
+                      : 'border-b-transparent bg-transparent text-muted-foreground'
+                  }`}
                 >
                   {GROUP_LABELS[g.name] ?? g.name}
                 </button>
@@ -250,18 +199,10 @@ export function ItemSelector({ items: allItems, value, onChange }: Props) {
           )}
 
           {/* Item grid area */}
-          <div style={{
-            maxHeight: 320,
-            overflowY: 'auto',
-            padding: 6,
-          }}>
+          <div className="max-h-80 overflow-y-auto p-1.5">
             {isSearching ? (
               searchResults && searchResults.length > 0 ? (
-                <div style={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: 2,
-                }}>
+                <div className="flex flex-wrap gap-0.5">
                   {searchResults.map(item => (
                     <IconCell
                       key={item}
@@ -272,7 +213,7 @@ export function ItemSelector({ items: allItems, value, onChange }: Props) {
                   ))}
                 </div>
               ) : (
-                <div style={{ color: 'var(--muted-foreground)', padding: 16, textAlign: 'center', fontSize: 14 }}>
+                <div className="text-muted-foreground p-4 text-center text-sm">
                   No items found
                 </div>
               )
@@ -280,12 +221,7 @@ export function ItemSelector({ items: allItems, value, onChange }: Props) {
               activeRows.map(([subgroup, items]) => (
                 <div
                   key={subgroup}
-                  style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: 2,
-                    marginBottom: 4,
-                  }}
+                  className="flex flex-wrap gap-0.5 mb-1"
                 >
                   {items.map(item => (
                     <IconCell
@@ -320,30 +256,14 @@ function IconCell({ item, selected, onClick }: {
     <div
       title={label}
       onClick={onClick}
-      style={{
-        width: 40,
-        height: 40,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        borderRadius: 3,
-        border: selected ? '2px solid var(--color-factorio-highlight)' : '1px solid var(--border)',
-        background: selected ? 'var(--color-factorio-selected)' : 'var(--accent)',
-        flexShrink: 0,
-      }}
+      className={`flex size-10 shrink-0 items-center justify-center cursor-pointer rounded-sm ${
+        selected
+          ? 'border-2 border-[var(--color-factorio-highlight)] bg-[var(--color-factorio-selected)]'
+          : 'border border-border bg-accent'
+      }`}
     >
       {imgFailed ? (
-        <span style={{
-          fontSize: 9,
-          color: 'var(--muted-foreground)',
-          textAlign: 'center',
-          lineHeight: 1.1,
-          overflow: 'hidden',
-          wordBreak: 'break-all',
-          maxHeight: 36,
-          padding: 1,
-        }}>
+        <span className="text-[9px] text-muted-foreground text-center leading-tight overflow-hidden break-all max-h-9 p-px">
           {label.slice(0, 8)}
         </span>
       ) : (
