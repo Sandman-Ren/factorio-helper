@@ -52,6 +52,21 @@
     --color-factorio-red: #ff8e8e;
     --color-factorio-blue: #80cef0;
     --color-factorio-selected: #5a4520;
+
+    /* Science pack colors for tech tree pip indicators */
+    --color-science-automation: #e05050;
+    --color-science-logistic: #50c850;
+    --color-science-military: #404040;
+    --color-science-chemical: #50b0e0;
+    --color-science-production: #c050c0;
+    --color-science-utility: #e0c020;
+    --color-science-space: #e0e0e0;
+    --color-science-metallurgic: #e09030;
+    --color-science-electromagnetic: #80cef0;
+    --color-science-agricultural: #87d88b;
+    --color-science-cryogenic: #a0d0f0;
+    --color-science-promethium: #ff8080;
+    --color-science-fallback: #888888;
 }
 
 /* Factorio dark industrial theme — always dark, no light mode */

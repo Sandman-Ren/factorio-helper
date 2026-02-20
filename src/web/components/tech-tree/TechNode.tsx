@@ -3,20 +3,20 @@ import { Handle, Position, type NodeProps } from '@xyflow/react';
 import type { TechNode as TechNodeType, TechNodeData } from './types.js';
 import { getIconUrl } from '../ItemIcon.js';
 
-/** Science pack colors for the pip indicators. */
+/** Science pack colors for the pip indicators (CSS custom properties from app.css). */
 const SCIENCE_COLORS: Record<string, string> = {
-  'automation-science-pack': '#e05050',
-  'logistic-science-pack': '#50c850',
-  'military-science-pack': '#404040',
-  'chemical-science-pack': '#50b0e0',
-  'production-science-pack': '#c050c0',
-  'utility-science-pack': '#e0c020',
-  'space-science-pack': '#e0e0e0',
-  'metallurgic-science-pack': '#e09030',
-  'electromagnetic-science-pack': '#80cef0',
-  'agricultural-science-pack': '#87d88b',
-  'cryogenic-science-pack': '#a0d0f0',
-  'promethium-science-pack': '#ff8080',
+  'automation-science-pack': 'var(--color-science-automation)',
+  'logistic-science-pack': 'var(--color-science-logistic)',
+  'military-science-pack': 'var(--color-science-military)',
+  'chemical-science-pack': 'var(--color-science-chemical)',
+  'production-science-pack': 'var(--color-science-production)',
+  'utility-science-pack': 'var(--color-science-utility)',
+  'space-science-pack': 'var(--color-science-space)',
+  'metallurgic-science-pack': 'var(--color-science-metallurgic)',
+  'electromagnetic-science-pack': 'var(--color-science-electromagnetic)',
+  'agricultural-science-pack': 'var(--color-science-agricultural)',
+  'cryogenic-science-pack': 'var(--color-science-cryogenic)',
+  'promethium-science-pack': 'var(--color-science-promethium)',
 };
 
 function TechNodeComponent({ data }: NodeProps<TechNodeType>) {
@@ -85,8 +85,8 @@ function TechNodeComponent({ data }: NodeProps<TechNodeType>) {
                 width: 12,
                 height: 12,
                 borderRadius: 2,
-                backgroundColor: SCIENCE_COLORS[ing.name] ?? '#888',
-                border: '1px solid rgba(255,255,255,0.15)',
+                backgroundColor: SCIENCE_COLORS[ing.name] ?? 'var(--color-science-fallback)',
+                border: '1px solid color-mix(in srgb, var(--foreground) 15%, transparent)',
               }}
             />
           ))}

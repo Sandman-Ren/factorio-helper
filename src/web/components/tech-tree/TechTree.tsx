@@ -49,8 +49,10 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
     instance.setCenter(x, y, { zoom: 1.2, duration: 400 });
   }, []);
 
+  const handledPendingRef = useRef<string | null>(null);
   useEffect(() => {
-    if (pendingTechSelect) {
+    if (pendingTechSelect && pendingTechSelect !== handledPendingRef.current) {
+      handledPendingRef.current = pendingTechSelect;
       selectTech(pendingTechSelect);
       onPendingHandled?.();
     }
@@ -119,7 +121,7 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
             if (node.data?.dimmed) return 'var(--accent)';
             return 'var(--card)';
           }}
-          maskColor="rgba(0,0,0,0.6)"
+          maskColor="color-mix(in srgb, var(--background) 60%, transparent)"
           style={{ bottom: 12, right: 12 }}
         />
       </ReactFlow>
