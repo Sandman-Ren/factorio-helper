@@ -116,3 +116,33 @@ function solveNode(
     children,
   };
 }
+
+/** Collect all non-zero machinesNeeded values from a production tree. */
+function collectMachinesNeeded(node: ProductionNode): number[] {
+  const values: number[] = [];
+  if (node.machinesNeeded > 0) values.push(node.machinesNeeded);
+  for (const child of node.children) {
+    values.push(...collectMachinesNeeded(child));
+  }
+  return values;
+}
+
+/**
+ * Find the smallest positive integer k such that every machine count
+ * in the plan, when multiplied by k, is an integer (within tolerance).
+ * Returns null if no k ≤ maxK works.
+ */
+export function findIntegerMultiplier(
+  plan: ProductionPlan,
+  maxK = 1000,
+): number | null {
+  const values = collectMachinesNeeded(plan.root);
+  if (values.length === 0) return 1;
+
+  for (let k = 1; k <= maxK; k++) {
+    if (values.every(v => Math.abs(v * k - Math.round(v * k)) < 0.001)) {
+      return k;
+    }
+  }
+  return null;
+}

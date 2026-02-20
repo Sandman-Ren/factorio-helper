@@ -1,3 +1,4 @@
+import { findIntegerMultiplier } from '../calculator/index.js';
 import { useCalculator } from './hooks/useCalculator.js';
 import { ItemSelector } from './components/ItemSelector.js';
 import { RateInput } from './components/RateInput.js';
@@ -41,7 +42,12 @@ export function App() {
 
       {plan && (
         <>
-          <Summary plan={plan} timeUnit={timeUnit} />
+          <Summary
+            plan={plan}
+            timeUnit={timeUnit}
+            integerMultiplier={findIntegerMultiplier(plan)}
+            onApplyMultiplier={(k) => setAmount(prev => prev * k)}
+          />
           <ProductionChain
             node={plan.root}
             timeUnit={timeUnit}

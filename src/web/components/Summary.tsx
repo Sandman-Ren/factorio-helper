@@ -5,12 +5,14 @@ import { ItemIcon } from './ItemIcon.js';
 interface Props {
   plan: ProductionPlan;
   timeUnit: TimeUnit;
+  integerMultiplier: number | null;
+  onApplyMultiplier?: (multiplier: number) => void;
 }
 
 const TIME_LABELS: Record<TimeUnit, string> = { sec: '/s', min: '/min', hour: '/hr' };
 const TIME_MULTIPLIERS: Record<TimeUnit, number> = { sec: 1, min: 60, hour: 3600 };
 
-export function Summary({ plan, timeUnit }: Props) {
+export function Summary({ plan, timeUnit, integerMultiplier, onApplyMultiplier }: Props) {
   const machineEntries = Object.entries(plan.totalMachines).sort(
     ([, a], [, b]) => b - a,
   );
@@ -87,6 +89,37 @@ export function Summary({ plan, timeUnit }: Props) {
               })}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {integerMultiplier !== null && integerMultiplier > 1 && (
+        <div style={{
+          flex: '1 1 100%',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          border: '1px solid var(--border)',
+          borderRadius: 8,
+          padding: '10px 16px',
+          fontSize: 14,
+        }}>
+          <span>
+            Minimum integer ratio: <strong>&times;{integerMultiplier}</strong>
+          </span>
+          <button
+            onClick={() => onApplyMultiplier?.(integerMultiplier)}
+            style={{
+              padding: '4px 12px',
+              fontSize: 13,
+              border: '1px solid var(--border)',
+              borderRadius: 6,
+              background: 'var(--card)',
+              color: 'var(--foreground)',
+              cursor: 'pointer',
+            }}
+          >
+            Apply
+          </button>
         </div>
       )}
     </div>
