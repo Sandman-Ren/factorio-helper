@@ -1,15 +1,19 @@
 import { useState } from 'react';
 import type { ProductionNode } from '../../calculator/types.js';
 import type { MachineOverrides } from '../../calculator/types.js';
-import type { Machine } from '../../data/schema.js';
+import type { Machine, Technology } from '../../data/schema.js';
 import type { TimeUnit } from '../hooks/useCalculator.js';
 import { ItemIcon } from './ItemIcon.js';
 import {
+  Badge,
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
 } from '../ui/index.js';
 import ChevronDownIcon from 'lucide-react/dist/esm/icons/chevron-down';
 
@@ -20,6 +24,8 @@ interface Props {
   categoryMachines?: Map<string, Machine[]>;
   machineOverrides?: MachineOverrides;
   onMachineChange?: (item: string, machineName: string) => void;
+  itemToTech?: Map<string, Technology>;
+  onTechClick?: (techName: string) => void;
 }
 
 const TIME_LABELS: Record<TimeUnit, string> = { sec: '/s', min: '/min', hour: '/hr' };
@@ -69,10 +75,11 @@ function MachineSelector({ current, alternatives, onSelect }: {
   );
 }
 
-export function ProductionChain({ node, timeUnit, depth = 0, categoryMachines, machineOverrides, onMachineChange }: Props) {
+export function ProductionChain({ node, timeUnit, depth = 0, categoryMachines, machineOverrides, onMachineChange, itemToTech, onTechClick }: Props) {
   const [expanded, setExpanded] = useState(depth < 3);
   const hasChildren = node.children.length > 0;
   const isRaw = !node.recipe;
+  const tech = itemToTech?.get(node.item);
 
   return (
     <div style={{ marginLeft: depth > 0 ? 20 : 0 }}>
@@ -101,6 +108,26 @@ export function ProductionChain({ node, timeUnit, depth = 0, categoryMachines, m
         <span style={{ color: 'var(--muted-foreground)', fontSize: 14 }}>
           {formatRate(node.ratePerSecond, timeUnit)}{TIME_LABELS[timeUnit]}
         </span>
+
+        {tech && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span
+                onClick={e => {
+                  e.stopPropagation();
+                  onTechClick?.(tech.name);
+                }}
+                className={onTechClick ? 'cursor-pointer' : undefined}
+              >
+                <Badge variant="outline" className="text-[10px] text-muted-foreground gap-1 py-0 px-1.5">
+                  <ItemIcon name={tech.name} size={12} />
+                  {tech.name.replace(/-/g, ' ')}
+                </Badge>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>Requires: {tech.name.replace(/-/g, ' ')}</TooltipContent>
+          </Tooltip>
+        )}
 
         {node.machine && (() => {
           const alternatives = categoryMachines?.get(node.recipe?.category ?? '');
@@ -147,7 +174,7 @@ export function ProductionChain({ node, timeUnit, depth = 0, categoryMachines, m
       {expanded && hasChildren && (
         <div style={{ borderLeft: '2px solid var(--border)', marginLeft: 7 }}>
           {node.children.map((child, i) => (
-            <ProductionChain key={`${child.item}-${i}`} node={child} timeUnit={timeUnit} depth={depth + 1} categoryMachines={categoryMachines} machineOverrides={machineOverrides} onMachineChange={onMachineChange} />
+            <ProductionChain key={`${child.item}-${i}`} node={child} timeUnit={timeUnit} depth={depth + 1} categoryMachines={categoryMachines} machineOverrides={machineOverrides} onMachineChange={onMachineChange} itemToTech={itemToTech} onTechClick={onTechClick} />
           ))}
         </div>
       )}
