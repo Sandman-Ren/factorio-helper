@@ -20,6 +20,7 @@ export function useCalculator() {
   const [amount, setAmount] = useState(1);
   const [timeUnit, setTimeUnit] = useState<TimeUnit>('sec');
   const [machineOverrides, setMachineOverrides] = useState<MachineOverrides>({});
+  const [categoryOverrides, setCategoryOverrides] = useState<Record<string, string>>({});
 
   const graph: RecipeGraph = useMemo(
     () => buildRecipeGraph(
@@ -37,8 +38,8 @@ export function useCalculator() {
       return null;
     }
     const ratePerSecond = amount * TIME_MULTIPLIERS[timeUnit];
-    return solve(graph, targetItem, ratePerSecond, machineOverrides);
-  }, [graph, targetItem, amount, timeUnit, machineOverrides]);
+    return solve(graph, targetItem, ratePerSecond, machineOverrides, categoryOverrides);
+  }, [graph, targetItem, amount, timeUnit, machineOverrides, categoryOverrides]);
 
   return {
     graph,
@@ -50,6 +51,8 @@ export function useCalculator() {
     setTimeUnit,
     machineOverrides,
     setMachineOverrides,
+    categoryOverrides,
+    setCategoryOverrides,
     plan,
   };
 }

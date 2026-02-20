@@ -14,11 +14,12 @@ export function solve(
   targetItem: string,
   desiredRatePerSecond: number,
   machineOverrides?: MachineOverrides,
+  categoryOverrides?: Record<string, string>,
 ): ProductionPlan {
   const totalMachines: Record<string, number> = {};
   const rawResources: Record<string, number> = {};
 
-  const root = solveNode(graph, targetItem, desiredRatePerSecond, totalMachines, rawResources, new Set(), machineOverrides);
+  const root = solveNode(graph, targetItem, desiredRatePerSecond, totalMachines, rawResources, new Set(), machineOverrides, categoryOverrides);
 
   return { root, totalMachines, rawResources };
 }
@@ -31,6 +32,7 @@ function solveNode(
   rawResources: Record<string, number>,
   visited: Set<string>,
   machineOverrides?: MachineOverrides,
+  categoryOverrides?: Record<string, string>,
 ): ProductionNode {
   // Determine item type by checking if it's a fluid recipe result
   const recipe = graph.itemToRecipe.get(itemName);
@@ -73,7 +75,7 @@ function solveNode(
   visited.add(itemName);
 
   // Find the machine for this recipe (check per-item override first)
-  const overrideName = machineOverrides?.[itemName];
+  const overrideName = machineOverrides?.[itemName] ?? categoryOverrides?.[recipe.category];
   const machine = (
     overrideName
       ? graph.categoryToMachines.get(recipe.category)?.find(m => m.name === overrideName)
@@ -102,7 +104,7 @@ function solveNode(
   const children: ProductionNode[] = [];
   for (const ingredient of recipe.ingredients) {
     const ingredientRate = craftsPerSecond * ingredient.amount;
-    const child = solveNode(graph, ingredient.name, ingredientRate, totalMachines, rawResources, visited, machineOverrides);
+    const child = solveNode(graph, ingredient.name, ingredientRate, totalMachines, rawResources, visited, machineOverrides, categoryOverrides);
     children.push(child);
   }
 

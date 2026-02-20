@@ -4,6 +4,8 @@ import { ItemSelector } from './components/ItemSelector.js';
 import { RateInput } from './components/RateInput.js';
 import { ProductionChain } from './components/ProductionChain.js';
 import { Summary } from './components/Summary.js';
+import { ItemIcon } from './components/ItemIcon.js';
+import { Label, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from './ui/index.js';
 
 export function App() {
   const {
@@ -16,8 +18,12 @@ export function App() {
     setTimeUnit,
     machineOverrides,
     setMachineOverrides,
+    categoryOverrides,
+    setCategoryOverrides,
     plan,
   } = useCalculator();
+
+  const smeltingMachines = graph.categoryToMachines.get('smelting') ?? [];
 
   return (
     <div style={{ maxWidth: 900, margin: '0 auto', padding: 20 }}>
@@ -38,6 +44,36 @@ export function App() {
           timeUnit={timeUnit}
           onTimeUnitChange={setTimeUnit}
         />
+        {smeltingMachines.length > 0 && (
+          <div>
+            <Label className="mb-1">Furnace</Label>
+            <Select
+              value={categoryOverrides['smelting'] ?? '__default__'}
+              onValueChange={v => {
+                setCategoryOverrides(prev => {
+                  if (v === '__default__') {
+                    const { smelting: _, ...rest } = prev;
+                    return rest;
+                  }
+                  return { ...prev, smelting: v };
+                });
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__default__">Default (best)</SelectItem>
+                {smeltingMachines.map(m => (
+                  <SelectItem key={m.name} value={m.name}>
+                    <ItemIcon name={m.name} size={16} />
+                    {m.name.replace(/-/g, ' ')}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
       </div>
 
       {plan && (
