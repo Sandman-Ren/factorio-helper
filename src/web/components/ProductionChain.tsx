@@ -25,6 +25,7 @@ interface Props {
   machineOverrides?: MachineOverrides;
   onMachineChange?: (item: string, machineName: string) => void;
   itemToTech?: Map<string, Technology>;
+  onTechClick?: (techName: string) => void;
 }
 
 const TIME_LABELS: Record<TimeUnit, string> = { sec: '/s', min: '/min', hour: '/hr' };
@@ -74,7 +75,7 @@ function MachineSelector({ current, alternatives, onSelect }: {
   );
 }
 
-export function ProductionChain({ node, timeUnit, depth = 0, categoryMachines, machineOverrides, onMachineChange, itemToTech }: Props) {
+export function ProductionChain({ node, timeUnit, depth = 0, categoryMachines, machineOverrides, onMachineChange, itemToTech, onTechClick }: Props) {
   const [expanded, setExpanded] = useState(depth < 3);
   const hasChildren = node.children.length > 0;
   const isRaw = !node.recipe;
@@ -111,7 +112,13 @@ export function ProductionChain({ node, timeUnit, depth = 0, categoryMachines, m
         {tech && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <span>
+              <span
+                onClick={e => {
+                  e.stopPropagation();
+                  onTechClick?.(tech.name);
+                }}
+                className={onTechClick ? 'cursor-pointer' : undefined}
+              >
                 <Badge variant="outline" className="text-[10px] text-muted-foreground gap-1 py-0 px-1.5">
                   <ItemIcon name={tech.name} size={12} />
                   {tech.name.replace(/-/g, ' ')}
@@ -167,7 +174,7 @@ export function ProductionChain({ node, timeUnit, depth = 0, categoryMachines, m
       {expanded && hasChildren && (
         <div style={{ borderLeft: '2px solid var(--border)', marginLeft: 7 }}>
           {node.children.map((child, i) => (
-            <ProductionChain key={`${child.item}-${i}`} node={child} timeUnit={timeUnit} depth={depth + 1} categoryMachines={categoryMachines} machineOverrides={machineOverrides} onMachineChange={onMachineChange} itemToTech={itemToTech} />
+            <ProductionChain key={`${child.item}-${i}`} node={child} timeUnit={timeUnit} depth={depth + 1} categoryMachines={categoryMachines} machineOverrides={machineOverrides} onMachineChange={onMachineChange} itemToTech={itemToTech} onTechClick={onTechClick} />
           ))}
         </div>
       )}

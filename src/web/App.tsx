@@ -27,6 +27,7 @@ const TechTree = lazy(() =>
 
 export function App() {
   const [activeTab, setActiveTab] = useState('calculator');
+  const [pendingTech, setPendingTech] = useState<string | null>(null);
 
   const {
     graph,
@@ -55,6 +56,14 @@ export function App() {
       setActiveTab('calculator');
     },
     [graph, setTargetItem],
+  );
+
+  const handleViewTech = useCallback(
+    (techName: string) => {
+      setPendingTech(techName);
+      setActiveTab('tech-tree');
+    },
+    [],
   );
 
   const smeltingMachines = graph.categoryToMachines.get('smelting') ?? [];
@@ -138,6 +147,7 @@ export function App() {
                     setMachineOverrides(prev => ({ ...prev, [item]: machine }))
                   }
                   itemToTech={itemToTech}
+                  onTechClick={handleViewTech}
                 />
               </>
             )}
@@ -152,7 +162,11 @@ export function App() {
               </div>
             }
           >
-            <TechTree onCalculateRecipe={handleCalculateRecipe} />
+            <TechTree
+              onCalculateRecipe={handleCalculateRecipe}
+              pendingTechSelect={pendingTech}
+              onPendingHandled={() => setPendingTech(null)}
+            />
           </Suspense>
         </TabsContent>
       </Tabs>

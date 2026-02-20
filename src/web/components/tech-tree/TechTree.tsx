@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import {
   ReactFlow,
   Background,
@@ -18,9 +18,11 @@ const nodeTypes = { tech: TechNodeRenderer };
 
 interface TechTreeProps {
   onCalculateRecipe?: (recipeName: string) => void;
+  pendingTechSelect?: string | null;
+  onPendingHandled?: () => void;
 }
 
-export function TechTree({ onCalculateRecipe }: TechTreeProps) {
+export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandled }: TechTreeProps) {
   const {
     nodes,
     edges,
@@ -34,6 +36,13 @@ export function TechTree({ onCalculateRecipe }: TechTreeProps) {
   } = useTechTree();
 
   const searchRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (pendingTechSelect) {
+      selectTech(pendingTechSelect);
+      onPendingHandled?.();
+    }
+  }, [pendingTechSelect, selectTech, onPendingHandled]);
 
   const onNodeClick: NodeMouseHandler<TechNode> = useCallback(
     (_event, node) => {
