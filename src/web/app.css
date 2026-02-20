@@ -102,6 +102,34 @@
     }
 }
 
+/* React Flow dark theme overrides */
+.react-flow__background {
+    background-color: var(--background);
+}
+.react-flow__controls button {
+    background-color: var(--card);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    fill: var(--foreground);
+}
+.react-flow__controls button:hover {
+    background-color: var(--accent);
+}
+.react-flow__controls button svg {
+    fill: var(--foreground);
+}
+.react-flow__minimap {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+.react-flow__edge-path {
+    stroke: var(--border);
+}
+.react-flow__panel {
+    margin: 0;
+}
+
 /* Factorio-style scrollbar */
 @layer base {
     * {

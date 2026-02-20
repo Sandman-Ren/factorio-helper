@@ -1,0 +1,154 @@
+import type { Technology } from '../../../data/schema.js';
+import { ItemIcon } from '../ItemIcon.js';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from '../../ui/index.js';
+
+interface Props {
+  technology: Technology | null;
+  open: boolean;
+  onClose: () => void;
+}
+
+export function TechDetailPanel({ technology, open, onClose }: Props) {
+  if (!technology) return null;
+
+  const label = technology.name.replace(/-/g, ' ');
+  const recipeEffects = technology.effects.filter(e => e.type === 'unlock-recipe');
+  const otherEffects = technology.effects.filter(e => e.type !== 'unlock-recipe');
+
+  return (
+    <Sheet open={open} onOpenChange={v => { if (!v) onClose(); }}>
+      <SheetContent side="right" className="overflow-y-auto w-[340px] sm:max-w-[340px]">
+        <SheetHeader>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <ItemIcon name={technology.name} size={32} />
+            <SheetTitle className="capitalize">{label}</SheetTitle>
+          </div>
+          <SheetDescription>
+            {technology.max_level === 'infinite'
+              ? 'Infinite research'
+              : `Technology: ${label}`}
+          </SheetDescription>
+        </SheetHeader>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '0 16px 16px' }}>
+          {/* Research cost */}
+          {technology.unit && (
+            <Section title="Research Cost">
+              {technology.unit.count != null && (
+                <Row label="Packs" value={String(technology.unit.count)} />
+              )}
+              {technology.unit.count_formula && (
+                <Row label="Formula" value={technology.unit.count_formula} />
+              )}
+              <Row label="Time per unit" value={`${technology.unit.time}s`} />
+              <div style={{ marginTop: 6 }}>
+                <div style={{ fontSize: 11, color: 'var(--muted-foreground)', marginBottom: 4 }}>
+                  Ingredients
+                </div>
+                {technology.unit.ingredients.map(ing => (
+                  <div key={ing.name} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+                    <ItemIcon name={ing.name} size={16} />
+                    <span style={{ fontSize: 13 }}>
+                      {ing.amount}x {ing.name.replace(/-/g, ' ')}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </Section>
+          )}
+
+          {/* Research trigger */}
+          {technology.research_trigger && (
+            <Section title="Research Trigger">
+              <Row label="Type" value={technology.research_trigger.type.replace(/-/g, ' ')} />
+              {technology.research_trigger.item && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
+                  <ItemIcon name={technology.research_trigger.item} size={16} />
+                  <span style={{ fontSize: 13 }}>
+                    {technology.research_trigger.count ?? ''}x {technology.research_trigger.item.replace(/-/g, ' ')}
+                  </span>
+                </div>
+              )}
+            </Section>
+          )}
+
+          {/* Prerequisites */}
+          {technology.prerequisites.length > 0 && (
+            <Section title="Prerequisites">
+              {technology.prerequisites.map(p => (
+                <div key={p} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+                  <ItemIcon name={p} size={16} />
+                  <span style={{ fontSize: 13 }}>{p.replace(/-/g, ' ')}</span>
+                </div>
+              ))}
+            </Section>
+          )}
+
+          {/* Unlocks */}
+          {recipeEffects.length > 0 && (
+            <Section title="Unlocks">
+              {recipeEffects.map(e => (
+                <div key={e.recipe} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+                  <ItemIcon name={e.recipe!} size={16} />
+                  <span style={{ fontSize: 13 }}>{e.recipe!.replace(/-/g, ' ')}</span>
+                </div>
+              ))}
+            </Section>
+          )}
+
+          {/* Other effects */}
+          {otherEffects.length > 0 && (
+            <Section title="Modifiers">
+              {otherEffects.map((e, i) => (
+                <div key={i} style={{ fontSize: 13, marginBottom: 2 }}>
+                  <span style={{ color: 'var(--muted-foreground)' }}>{e.type.replace(/-/g, ' ')}</span>
+                  {e.modifier != null && (
+                    <span style={{ color: 'var(--factorio-green)', marginLeft: 6 }}>
+                      +{Math.round(e.modifier * 100)}%
+                    </span>
+                  )}
+                  {e.quality && (
+                    <span style={{ marginLeft: 6 }}>{(e.quality as string).replace(/-/g, ' ')}</span>
+                  )}
+                </div>
+              ))}
+            </Section>
+          )}
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <h4 style={{
+        fontSize: 12,
+        fontWeight: 600,
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em',
+        color: 'var(--primary)',
+        marginBottom: 6,
+      }}>
+        {title}
+      </h4>
+      {children}
+    </div>
+  );
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 2 }}>
+      <span style={{ color: 'var(--muted-foreground)' }}>{label}</span>
+      <span>{value}</span>
+    </div>
+  );
+}

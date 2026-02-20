@@ -55,3 +55,45 @@ export interface Resource {
   results: RecipeItem[];
   required_fluid?: { name: string; amount: number };
 }
+
+/** A science pack ingredient for research. */
+export interface TechIngredient {
+  name: string;
+  amount: number;
+}
+
+/** Research cost for a technology. */
+export interface TechUnit {
+  count?: number;
+  count_formula?: string;
+  time: number;
+  ingredients: TechIngredient[];
+}
+
+/** A trigger-based research requirement (early-game techs). */
+export interface ResearchTrigger {
+  type: string; // "craft-item", "create-space-platform", etc.
+  item?: string;
+  count?: number;
+}
+
+/** An effect granted by researching a technology. */
+export interface TechEffect {
+  type: string; // "unlock-recipe", "ammo-damage", "turret-attack", etc.
+  recipe?: string;
+  modifier?: number;
+  quality?: string;
+  [key: string]: unknown;
+}
+
+/** A technology in the research tree. */
+export interface Technology {
+  name: string;
+  prerequisites: string[];
+  unit?: TechUnit;
+  research_trigger?: ResearchTrigger;
+  effects: TechEffect[];
+  order?: string;
+  max_level?: string | number; // "infinite" or a number
+  upgrade?: boolean;
+}
