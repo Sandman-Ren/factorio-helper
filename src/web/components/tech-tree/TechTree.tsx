@@ -16,7 +16,11 @@ import { Input } from '../../ui/index.js';
 
 const nodeTypes = { tech: TechNodeRenderer };
 
-export function TechTree() {
+interface TechTreeProps {
+  onCalculateRecipe?: (recipeName: string) => void;
+}
+
+export function TechTree({ onCalculateRecipe }: TechTreeProps) {
   const {
     nodes,
     edges,
@@ -102,6 +106,7 @@ export function TechTree() {
         technology={selectedTech}
         open={selectedTech != null}
         onClose={clearSelection}
+        onCalculateRecipe={onCalculateRecipe}
       />
     </div>
   );

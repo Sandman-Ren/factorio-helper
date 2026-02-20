@@ -1,20 +1,23 @@
 import type { Technology } from '../../../data/schema.js';
 import { ItemIcon } from '../ItemIcon.js';
 import {
+  Button,
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetDescription,
 } from '../../ui/index.js';
+import CalculatorIcon from 'lucide-react/dist/esm/icons/calculator';
 
 interface Props {
   technology: Technology | null;
   open: boolean;
   onClose: () => void;
+  onCalculateRecipe?: (recipeName: string) => void;
 }
 
-export function TechDetailPanel({ technology, open, onClose }: Props) {
+export function TechDetailPanel({ technology, open, onClose, onCalculateRecipe }: Props) {
   if (!technology) return null;
 
   const label = technology.name.replace(/-/g, ' ');
@@ -60,6 +63,23 @@ export function TechDetailPanel({ technology, open, onClose }: Props) {
                   </div>
                 ))}
               </div>
+
+              {/* Total science packs */}
+              {technology.unit.count != null && (
+                <div style={{ marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: 11, color: 'var(--muted-foreground)', marginBottom: 4 }}>
+                    Total packs needed
+                  </div>
+                  {technology.unit.ingredients.map(ing => (
+                    <div key={ing.name} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+                      <ItemIcon name={ing.name} size={16} />
+                      <span style={{ fontSize: 13 }}>
+                        {technology.unit!.count! * ing.amount}x {ing.name.replace(/-/g, ' ')}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </Section>
           )}
 
@@ -97,6 +117,17 @@ export function TechDetailPanel({ technology, open, onClose }: Props) {
                 <div key={e.recipe} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
                   <ItemIcon name={e.recipe!} size={16} />
                   <span style={{ fontSize: 13 }}>{e.recipe!.replace(/-/g, ' ')}</span>
+                  {onCalculateRecipe && (
+                    <Button
+                      variant="ghost"
+                      size="xs"
+                      className="ml-auto"
+                      onClick={() => onCalculateRecipe(e.recipe!)}
+                    >
+                      <CalculatorIcon />
+                      Calc
+                    </Button>
+                  )}
                 </div>
               ))}
             </Section>
