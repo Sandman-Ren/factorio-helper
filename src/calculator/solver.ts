@@ -18,7 +18,8 @@ export interface SolverOptions {
  * @param graph - The recipe/machine dependency graph
  * @param targetItem - The item or fluid to produce
  * @param desiredRatePerSecond - How many per second to produce
- * @returns A production plan with the full tree, aggregated machines, and raw resources
+ * @returns A production plan with the full tree, aggregated machines, raw resources,
+ *          total electric power draw, and fuel consumption by type
  */
 export function solve(
   graph: RecipeGraph,
@@ -34,12 +35,10 @@ export function solve(
   const totalFuel: Record<string, number> = {};
 
   const mergedOptions: SolverOptions = {
-    machineOverrides,
-    categoryOverrides,
     ...options,
     // Explicit params take precedence over options bag
-    ...(machineOverrides ? { machineOverrides } : {}),
-    ...(categoryOverrides ? { categoryOverrides } : {}),
+    machineOverrides: machineOverrides ?? options?.machineOverrides,
+    categoryOverrides: categoryOverrides ?? options?.categoryOverrides,
   };
 
   const fuelMap = new Map<string, Fuel>();

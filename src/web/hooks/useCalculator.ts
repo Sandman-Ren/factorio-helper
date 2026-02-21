@@ -23,8 +23,10 @@ export function useCalculator() {
   const [amount, setAmount] = useState(1);
   const [timeUnit, setTimeUnit] = useState<TimeUnit>('sec');
   const [machineOverrides, setMachineOverrides] = useState<MachineOverrides>({});
-  const [categoryOverrides, setCategoryOverrides] = useState<Record<string, string>>({});
-  const [defaultFuel, setDefaultFuel] = useState('coal');
+  const [categoryOverrides, setCategoryOverrides] = useState<Record<string, string>>({
+    'basic-solid': 'electric-mining-drill',
+  });
+  const [defaultFuel, setDefaultFuel] = useState(fuels[0]?.name ?? '');
   const [fuelOverrides, setFuelOverrides] = useState<FuelOverrides>({});
 
   const graph: RecipeGraph = useMemo(
