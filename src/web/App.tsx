@@ -6,7 +6,7 @@ import { ProductionChain } from './components/ProductionChain.js';
 import { Summary } from './components/Summary.js';
 import { ItemIcon } from './components/ItemIcon.js';
 import { Label, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from './ui/index.js';
-
+/** All categories that assembling machines can handle. */
 const ASSEMBLER_CATEGORIES = ['crafting', 'basic-crafting', 'advanced-crafting', 'crafting-with-fluid'];
 
 export function App() {
@@ -22,6 +22,11 @@ export function App() {
     setMachineOverrides,
     categoryOverrides,
     setCategoryOverrides,
+    defaultFuel,
+    setDefaultFuel,
+    fuelOverrides,
+    setFuelOverrides,
+    fuels,
     plan,
   } = useCalculator();
 
@@ -85,14 +90,18 @@ export function App() {
               value={categoryOverrides['crafting'] ?? '__default__'}
               onValueChange={v => {
                 setCategoryOverrides(prev => {
-                  if (v === '__default__') {
-                    const next = { ...prev };
-                    for (const cat of ASSEMBLER_CATEGORIES) delete next[cat];
-                    return next;
+                  const next = { ...prev };
+                  // Clear all assembler category overrides first
+                  for (const cat of ASSEMBLER_CATEGORIES) delete next[cat];
+                  if (v === '__default__') return next;
+                  // Only override categories the selected machine actually supports
+                  const machine = assemblingMachines.find(m => m.name === v);
+                  if (machine) {
+                    for (const cat of machine.crafting_categories) {
+                      if (ASSEMBLER_CATEGORIES.includes(cat)) next[cat] = v;
+                    }
                   }
-                  const overrides: Record<string, string> = {};
-                  for (const cat of ASSEMBLER_CATEGORIES) overrides[cat] = v;
-                  return { ...prev, ...overrides };
+                  return next;
                 });
               }}
             >
@@ -141,6 +150,29 @@ export function App() {
             </Select>
           </div>
         )}
+        {fuels.length > 0 && (
+          <div>
+            <Label className="mb-1">Default Fuel</Label>
+            <Select
+              value={defaultFuel}
+              onValueChange={setDefaultFuel}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {fuels
+                  .filter(f => f.fuel_category === 'chemical')
+                  .map(f => (
+                    <SelectItem key={f.name} value={f.name}>
+                      <ItemIcon name={f.name} size={16} />
+                      {f.name.replace(/-/g, ' ')}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
       </div>
 
       {plan && (
@@ -158,6 +190,11 @@ export function App() {
             machineOverrides={machineOverrides}
             onMachineChange={(item, machine) =>
               setMachineOverrides(prev => ({ ...prev, [item]: machine }))
+            }
+            fuels={fuels}
+            fuelOverrides={fuelOverrides}
+            onFuelChange={(item, fuel) =>
+              setFuelOverrides(prev => ({ ...prev, [item]: fuel }))
             }
           />
         </>

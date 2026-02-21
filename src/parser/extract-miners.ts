@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs';
 import { parseLuaPrototypes } from './lua-table-parser.js';
 import type { MiningDrill } from '../data/schema.js';
+import { extractEnergySource } from './extract-energy-source.js';
 
 /**
  * Extract mining drill and offshore pump entities from Lua data files.
@@ -35,7 +36,13 @@ export function extractMiners(...luaPaths: string[]): MiningDrill[] {
         }
         if (resource_categories.length === 0) continue;
 
-        miners.push({ name, type: 'mining-drill', mining_speed, resource_categories, energy_usage, module_slots });
+        const { energy_type, fuel_categories } = extractEnergySource(entry);
+
+        const miner: MiningDrill = {
+          name, type: 'mining-drill', mining_speed, resource_categories, energy_usage, module_slots, energy_type,
+        };
+        if (fuel_categories) miner.fuel_categories = fuel_categories;
+        miners.push(miner);
         seen.add(name);
       } else if (entryType === 'offshore-pump') {
         const name = entry['name'];
@@ -51,6 +58,7 @@ export function extractMiners(...luaPaths: string[]): MiningDrill[] {
           resource_categories: ['water-pumping'],
           energy_usage,
           module_slots: 0,
+          energy_type: 'void',
         });
         seen.add(name);
       }

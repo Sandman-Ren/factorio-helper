@@ -31,14 +31,17 @@ export function buildRecipeGraph(
     for (const miner of miners) {
       // Offshore pumps get crafting_speed=1; rate is encoded in the water recipe
       const craftingSpeed = miner.type === 'offshore-pump' ? 1 : miner.mining_speed;
-      combinedMachines.push({
+      const machine: Machine = {
         name: miner.name,
         type: miner.type,
         crafting_speed: craftingSpeed,
         crafting_categories: miner.resource_categories,
         energy_usage: miner.energy_usage,
         module_slots: miner.module_slots,
-      });
+        energy_type: miner.energy_type,
+      };
+      if (miner.fuel_categories) machine.fuel_categories = miner.fuel_categories;
+      combinedMachines.push(machine);
     }
 
     // Convert resources → synthetic Recipe objects

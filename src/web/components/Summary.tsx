@@ -1,5 +1,6 @@
 import type { ProductionPlan } from '../../calculator/types.js';
 import type { TimeUnit } from '../hooks/useCalculator.js';
+import { formatPower } from '../../calculator/energy.js';
 import { ItemIcon } from './ItemIcon.js';
 import { Button } from '../ui/index.js';
 
@@ -18,6 +19,9 @@ export function Summary({ plan, timeUnit, integerMultiplier, onApplyMultiplier }
     ([, a], [, b]) => b - a,
   );
   const rawEntries = Object.entries(plan.rawResources).sort(
+    ([, a], [, b]) => b - a,
+  );
+  const fuelEntries = Object.entries(plan.totalFuel).sort(
     ([, a], [, b]) => b - a,
   );
 
@@ -90,6 +94,45 @@ export function Summary({ plan, timeUnit, integerMultiplier, onApplyMultiplier }
               })}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {(plan.totalElectricPowerKW > 0 || fuelEntries.length > 0) && (
+        <div style={{
+          flex: '1 1 250px',
+          border: '1px solid var(--border)',
+          borderRadius: 8,
+          padding: 16,
+        }}>
+          <h3 style={{ margin: '0 0 12px', fontSize: 16 }}>Power &amp; Fuel</h3>
+          {plan.totalElectricPowerKW > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: fuelEntries.length > 0 ? 12 : 0, fontSize: 14 }}>
+              <span>{'\u26A1'}</span>
+              <span>Electric Power</span>
+              <span style={{ marginLeft: 'auto', fontVariantNumeric: 'tabular-nums' }}>
+                {formatPower(plan.totalElectricPowerKW)}
+              </span>
+            </div>
+          )}
+          {fuelEntries.length > 0 && (
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+              <tbody>
+                {fuelEntries.map(([name, rate]) => {
+                  const displayRate = rate * TIME_MULTIPLIERS[timeUnit];
+                  return (
+                    <tr key={name} style={{ borderBottom: '1px solid var(--border)' }}>
+                      <td style={{ padding: '4px 0' }}>
+                        <ItemIcon name={name} size={24} />
+                      </td>
+                      <td style={{ textAlign: 'right', padding: '4px 0', fontVariantNumeric: 'tabular-nums' }}>
+                        {displayRate.toFixed(2)}{TIME_LABELS[timeUnit]}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
         </div>
       )}
 

@@ -7,7 +7,8 @@
       "basic-solid"
     ],
     "energy_usage": "90kW",
-    "module_slots": 3
+    "module_slots": 3,
+    "energy_type": "electric"
   },
   {
     "name": "burner-mining-drill",
@@ -17,7 +18,11 @@
       "basic-solid"
     ],
     "energy_usage": "150kW",
-    "module_slots": 0
+    "module_slots": 0,
+    "energy_type": "burner",
+    "fuel_categories": [
+      "chemical"
+    ]
   },
   {
     "name": "pumpjack",
@@ -27,7 +32,8 @@
       "basic-fluid"
     ],
     "energy_usage": "90kW",
-    "module_slots": 2
+    "module_slots": 2,
+    "energy_type": "electric"
   },
   {
     "name": "offshore-pump",
@@ -37,6 +43,19 @@
       "water-pumping"
     ],
     "energy_usage": "60kW",
-    "module_slots": 0
+    "module_slots": 0,
+    "energy_type": "void"
+  },
+  {
+    "name": "big-mining-drill",
+    "type": "mining-drill",
+    "mining_speed": 2.5,
+    "resource_categories": [
+      "basic-solid",
+      "hard-solid"
+    ],
+    "energy_usage": "300kW",
+    "module_slots": 4,
+    "energy_type": "electric"
   }
 ]
