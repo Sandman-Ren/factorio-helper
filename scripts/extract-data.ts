@@ -8,6 +8,8 @@ import { extractMiners } from '../src/parser/extract-miners.js';
 import { extractResources } from '../src/parser/extract-resources.js';
 import { extractItemGroups } from '../src/parser/extract-item-groups.js';
 import { extractTechnologies } from '../src/parser/extract-technologies.js';
+import { extractFuels } from '../src/parser/extract-fuels.js';
+import { extractPowerEntities } from '../src/parser/extract-power-entities.js';
 
 const DATA_ROOT = join(import.meta.dirname, '..', 'factorio-data', 'base', 'prototypes');
 const SPACE_AGE_ROOT = join(import.meta.dirname, '..', 'factorio-data', 'space-age', 'prototypes');
@@ -66,5 +68,29 @@ const technologies = extractTechnologies(
 );
 writeFileSync(join(OUT_DIR, 'technologies.json'), JSON.stringify(technologies, null, 2));
 console.log(`  ${technologies.length} technologies`);
+
+console.log('Extracting fuels...');
+const fuels = [
+  ...extractFuels(join(DATA_ROOT, 'item.lua')),
+  ...extractFuels(join(SPACE_AGE_ROOT, 'item.lua')),
+];
+// Deduplicate by name
+const uniqueFuels = [...new Map(fuels.map(f => [f.name, f])).values()];
+writeFileSync(join(OUT_DIR, 'fuels.json'), JSON.stringify(uniqueFuels, null, 2));
+console.log(`  ${uniqueFuels.length} fuels`);
+
+console.log('Extracting power entities...');
+const powerEntities = extractPowerEntities(
+  join(DATA_ROOT, 'entity', 'entities.lua'),
+  join(DATA_ROOT, 'entity', 'turrets.lua'),
+  join(DATA_ROOT, 'entity', 'circuit-network.lua'),
+  join(DATA_ROOT, 'entity', 'mining-drill.lua'),
+  join(SPACE_AGE_ROOT, 'entity', 'entities.lua'),
+  join(SPACE_AGE_ROOT, 'entity', 'turrets.lua'),
+  join(SPACE_AGE_ROOT, 'entity', 'circuit-network.lua'),
+  join(SPACE_AGE_ROOT, 'entity', 'big-mining-drill.lua'),
+);
+writeFileSync(join(OUT_DIR, 'power-entities.json'), JSON.stringify(powerEntities, null, 2));
+console.log(`  ${powerEntities.length} power entities`);
 
 console.log('\nDone! Output written to src/data/generated/');
