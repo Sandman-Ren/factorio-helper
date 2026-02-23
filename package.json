@@ -14,7 +14,6 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@dagrejs/dagre": "^2.0.4",
     "@tailwindcss/vite": "^4.2.0",
     "@xyflow/react": "^12.10.1",
     "class-variance-authority": "^0.7.1",
@@ -28,6 +27,7 @@
     "tailwindcss": "^4.2.0"
   },
   "devDependencies": {
+    "@dagrejs/dagre": "^2.0.4",
     "@types/node": "^25.3.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

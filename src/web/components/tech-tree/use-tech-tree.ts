@@ -2,7 +2,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { useNodesState, useEdgesState } from '@xyflow/react';
 import type { Technology } from '../../../data/schema.js';
 import type { TechNode, TechEdge } from './types.js';
-import { layoutTechTree, getPrerequisiteChain } from './layout.js';
+import { buildTechTree, getPrerequisiteChain } from './layout.js';
 import { formatName } from './format.js';
 import technologiesData from '../../../data/generated/technologies.json';
 
@@ -15,7 +15,7 @@ export function useTechTree() {
   );
 
   const { nodes: initialNodes, edges: initialEdges } = useMemo(
-    () => layoutTechTree(technologies),
+    () => buildTechTree(technologies),
     [technologies],
   );
 

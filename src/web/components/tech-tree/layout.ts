@@ -1,61 +1,34 @@
-import dagre from '@dagrejs/dagre';
 import type { Technology } from '../../../data/schema.js';
 import type { TechNode, TechEdge, TechNodeData } from './types.js';
 import { formatName } from './format.js';
+import techTreeLayout from '../../../data/generated/tech-tree-layout.json';
 
-const NODE_WIDTH = 200;
-const NODE_HEIGHT = 80;
+const layout = techTreeLayout as {
+  positions: Record<string, { x: number; y: number }>;
+  edges: { source: string; target: string }[];
+};
 
-export function layoutTechTree(technologies: Technology[]): { nodes: TechNode[]; edges: TechEdge[] } {
-  const techMap = new Map(technologies.map(t => [t.name, t]));
+export function buildTechTree(technologies: Technology[]): { nodes: TechNode[]; edges: TechEdge[] } {
+  const nodes: TechNode[] = technologies.map(tech => ({
+    id: tech.name,
+    type: 'tech' as const,
+    position: layout.positions[tech.name] ?? { x: 0, y: 0 },
+    data: {
+      label: formatName(tech.name),
+      technology: tech,
+      highlighted: false,
+      dimmed: false,
+      selected: false,
+    } satisfies TechNodeData,
+    draggable: false,
+  }));
 
-  const g = new dagre.graphlib.Graph();
-  g.setDefaultEdgeLabel(() => ({}));
-  g.setGraph({ rankdir: 'LR', nodesep: 30, ranksep: 80 });
-
-  // Add nodes
-  for (const tech of technologies) {
-    g.setNode(tech.name, { width: NODE_WIDTH, height: NODE_HEIGHT });
-  }
-
-  // Add edges (prerequisite -> technology)
-  const edges: TechEdge[] = [];
-  for (const tech of technologies) {
-    for (const prereq of tech.prerequisites) {
-      if (techMap.has(prereq)) {
-        const edgeId = `${prereq}->${tech.name}`;
-        g.setEdge(prereq, tech.name);
-        edges.push({
-          id: edgeId,
-          source: prereq,
-          target: tech.name,
-          type: 'default',
-        });
-      }
-    }
-  }
-
-  dagre.layout(g);
-
-  const nodes: TechNode[] = technologies.map(tech => {
-    const pos = g.node(tech.name);
-    return {
-      id: tech.name,
-      type: 'tech' as const,
-      position: {
-        x: pos.x - NODE_WIDTH / 2,
-        y: pos.y - NODE_HEIGHT / 2,
-      },
-      data: {
-        label: formatName(tech.name),
-        technology: tech,
-        highlighted: false,
-        dimmed: false,
-        selected: false,
-      } satisfies TechNodeData,
-      draggable: false,
-    };
-  });
+  const edges: TechEdge[] = layout.edges.map(e => ({
+    id: `${e.source}->${e.target}`,
+    source: e.source,
+    target: e.target,
+    type: 'default',
+  }));
 
   return { nodes, edges };
 }
