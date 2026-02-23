@@ -117,7 +117,7 @@ export function EntityPicker({ onSelect }: Props) {
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`px-3 py-1.5 text-xs font-semibold cursor-pointer border-none border-b-[3px] whitespace-nowrap transition-[background,color] duration-100 ${
+                  className={`px-3 py-1.5 text-xs font-semibold cursor-pointer border-0 border-b-[3px] border-solid whitespace-nowrap transition-[background,color] duration-100 ${
                     cat === activeCategory
                       ? 'border-b-primary bg-popover text-[var(--color-factorio-highlight)]'
                       : 'border-b-transparent bg-transparent text-muted-foreground'
@@ -160,7 +160,7 @@ function EntityRow({ entity, onClick }: { entity: PowerEntity; onClick: () => vo
     >
       <ItemIcon name={entity.name} size={24} />
       <span className="flex-1 text-sm">{entity.name.replace(/-/g, ' ')}</span>
-      <span className="text-xs text-muted-foreground tabular-nums">{entityAnnotation(entity)}</span>
+      <span className="text-xs text-foreground/70 tabular-nums">{entityAnnotation(entity)}</span>
     </div>
   );
 }

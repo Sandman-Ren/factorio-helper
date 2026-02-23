@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import powerEntitiesData from '../../data/generated/power-entities.json';
 import fuelsData from '../../data/generated/fuels.json';
 import { formatPower } from '../../calculator/energy.js';
@@ -40,16 +40,15 @@ export interface FuelSummaryEntry {
   totalPerSecond: number;
 }
 
-let nextId = 0;
-
 export function usePowerCalculator() {
   const [entries, setEntries] = useState<PowerEntry[]>([]);
   const [defaultFuel, setDefaultFuel] = useState('coal');
+  const nextIdRef = useRef(0);
 
   const addEntity = useCallback((entityName: string) => {
     setEntries(prev => [
       ...prev,
-      { id: String(++nextId), entityName, count: 1 },
+      { id: String(++nextIdRef.current), entityName, count: 1 },
     ]);
   }, []);
 
@@ -90,7 +89,15 @@ export function usePowerCalculator() {
       let fuelPerSecond: number | undefined;
       let fuelName: string | undefined;
 
-      if (entity.type === 'inserter') {
+      if (entity.energy_type === 'burner') {
+        sustainedKW = entry.count * (entity.energy_usage_kw || 0);
+        const selectedFuel = entry.fuel || defaultFuel;
+        const fuel = fuelMap.get(selectedFuel);
+        if (fuel && fuel.fuel_value_kj > 0) {
+          fuelPerSecond = sustainedKW / fuel.fuel_value_kj;
+          fuelName = fuel.name;
+        }
+      } else if (entity.type === 'inserter') {
         sustainedKW = entry.count * (entity.drain_kw || 0);
       } else if (entity.type === 'electric-turret') {
         sustainedKW = entry.count * (entity.drain_kw || 0);
@@ -103,14 +110,6 @@ export function usePowerCalculator() {
         peakKW = entry.count * (entity.active_energy_usage_kw || 0);
       } else if (entity.category === 'Circuit') {
         sustainedKW = entry.count * (entity.active_energy_usage_kw || entity.energy_usage_kw || 0);
-      } else if (entity.energy_type === 'burner') {
-        sustainedKW = entry.count * (entity.energy_usage_kw || 0);
-        const selectedFuel = entry.fuel || defaultFuel;
-        const fuel = fuelMap.get(selectedFuel);
-        if (fuel && fuel.fuel_value_kj > 0) {
-          fuelPerSecond = sustainedKW / fuel.fuel_value_kj;
-          fuelName = fuel.name;
-        }
       } else {
         sustainedKW = entry.count * (entity.energy_usage_kw || 0);
       }
