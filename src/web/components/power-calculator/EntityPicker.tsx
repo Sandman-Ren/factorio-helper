@@ -136,7 +136,7 @@ export function EntityPicker({ onSelect }: Props) {
                   <EntityRow key={entity.name} entity={entity} onClick={() => selectEntity(entity.name)} />
                 ))
               ) : (
-                <div className="text-muted-foreground p-4 text-center text-sm">
+                <div className="text-foreground/70 p-4 text-center text-sm">
                   No entities found
                 </div>
               )
