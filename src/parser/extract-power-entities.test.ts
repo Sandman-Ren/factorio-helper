@@ -303,6 +303,75 @@ data:extend({
     expect(result.find(e => e.name === 'beacon')!.category).toBe('Infrastructure');
   });
 
+  it('extracts combinators wrapped in generator functions', () => {
+    mockReadFileSync.mockReturnValue(`
+data:extend
+{
+  generate_arithmetic_combinator
+  {
+    type = "arithmetic-combinator",
+    name = "arithmetic-combinator",
+    energy_source = { type = "electric", usage_priority = "primary-input" },
+    active_energy_usage = "1kW",
+  },
+  generate_decider_combinator
+  {
+    type = "decider-combinator",
+    name = "decider-combinator",
+    energy_source = { type = "electric", usage_priority = "primary-input" },
+    active_energy_usage = "1kW",
+  },
+  {
+    type = "programmable-speaker",
+    name = "programmable-speaker",
+    energy_source = { type = "electric", usage_priority = "secondary-input" },
+    energy_usage_per_tick = "2kW",
+  },
+  generate_selector_combinator
+  {
+    type = "selector-combinator",
+    name = "selector-combinator",
+    energy_source = { type = "electric", usage_priority = "primary-input" },
+    active_energy_usage = "1kW",
+  },
+}
+`);
+
+    const result = extractPowerEntities('circuit-network.lua');
+    expect(result).toHaveLength(4);
+
+    const arithmetic = result.find(e => e.name === 'arithmetic-combinator');
+    expect(arithmetic).toMatchObject({
+      type: 'arithmetic-combinator',
+      category: 'Circuit',
+      energy_type: 'electric',
+      active_energy_usage: '1kW',
+      active_energy_usage_kw: 1,
+    });
+
+    const decider = result.find(e => e.name === 'decider-combinator');
+    expect(decider).toMatchObject({
+      type: 'decider-combinator',
+      category: 'Circuit',
+      active_energy_usage_kw: 1,
+    });
+
+    const speaker = result.find(e => e.name === 'programmable-speaker');
+    expect(speaker).toMatchObject({
+      type: 'programmable-speaker',
+      category: 'Infrastructure',
+      energy_usage_per_tick: '2kW',
+      energy_usage_kw: 2,
+    });
+
+    const selector = result.find(e => e.name === 'selector-combinator');
+    expect(selector).toMatchObject({
+      type: 'selector-combinator',
+      category: 'Circuit',
+      active_energy_usage_kw: 1,
+    });
+  });
+
   it('skips non-existent files gracefully', () => {
     mockExistsSync.mockReturnValueOnce(true).mockReturnValueOnce(false);
     mockReadFileSync.mockReturnValue(`

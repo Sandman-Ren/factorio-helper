@@ -197,6 +197,38 @@
     "input_flow_limit_kw": 9600
   },
   {
+    "name": "arithmetic-combinator",
+    "type": "arithmetic-combinator",
+    "category": "Circuit",
+    "energy_type": "electric",
+    "active_energy_usage": "1kW",
+    "active_energy_usage_kw": 1
+  },
+  {
+    "name": "decider-combinator",
+    "type": "decider-combinator",
+    "category": "Circuit",
+    "energy_type": "electric",
+    "active_energy_usage": "1kW",
+    "active_energy_usage_kw": 1
+  },
+  {
+    "name": "programmable-speaker",
+    "type": "programmable-speaker",
+    "category": "Infrastructure",
+    "energy_type": "electric",
+    "energy_usage_per_tick": "2kW",
+    "energy_usage_kw": 2
+  },
+  {
+    "name": "selector-combinator",
+    "type": "selector-combinator",
+    "category": "Circuit",
+    "energy_type": "electric",
+    "active_energy_usage": "1kW",
+    "active_energy_usage_kw": 1
+  },
+  {
     "name": "electric-mining-drill",
     "type": "mining-drill",
     "category": "Mining",

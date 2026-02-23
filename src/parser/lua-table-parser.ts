@@ -24,7 +24,7 @@ export class LuaTableParser {
     this.pos = 0;
   }
 
-  /** Find and parse all `data:extend({...})` blocks in the source. */
+  /** Find and parse all `data:extend({...})` and `data:extend{...}` blocks in the source. */
   extractDataExtend(): LuaValue[][] {
     const results: LuaValue[][] = [];
     const pattern = 'data:extend';
@@ -36,13 +36,15 @@ export class LuaTableParser {
       this.pos = idx + pattern.length;
       this.skipWS();
 
-      if (this.peek() !== '(') continue;
-      this.pos++; // skip (
-      this.skipWS();
+      // Handle both data:extend({...}) and data:extend{...} (parens optional in Lua)
+      const hasParen = this.peek() === '(';
+      if (hasParen) {
+        this.pos++; // skip (
+        this.skipWS();
+      }
 
       if (this.peek() !== '{') {
-        // Not a table literal, skip
-        this.skipBalanced('(', ')');
+        if (hasParen) this.skipBalanced('(', ')');
         continue;
       }
 
@@ -52,7 +54,7 @@ export class LuaTableParser {
       }
 
       this.skipWS();
-      if (this.peek() === ')') this.pos++;
+      if (hasParen && this.peek() === ')') this.pos++;
     }
 
     return results;
@@ -120,6 +122,14 @@ export class LuaTableParser {
       if (ident === 'not') {
         this.skipExpressionFull();
         return undefined as unknown as LuaValue;
+      }
+
+      // Function call with table argument: funcname { ... }
+      // In Factorio data, this wraps a prototype table (e.g. generate_arithmetic_combinator { ... }).
+      // Extract the inner table since it contains the prototype fields we need.
+      this.skipWS();
+      if (this.peek() === '{') {
+        return this.parseTable();
       }
 
       // Variable reference — skip rest of expression (dot access, calls, etc.)
