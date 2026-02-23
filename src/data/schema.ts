@@ -97,3 +97,47 @@ export interface Technology {
   max_level?: string | number; // "infinite" or a number
   upgrade?: boolean;
 }
+
+/** A fuel item (wood, coal, solid fuel, etc.). */
+export interface Fuel {
+  name: string;
+  fuel_value: string;    // raw from prototype, e.g. "4MJ"
+  fuel_value_kj: number; // parsed to kJ for calculation
+  fuel_category: string; // e.g. "chemical", "nuclear"
+}
+
+/** An entity that consumes power (electric or burner). */
+export interface PowerEntity {
+  name: string;
+  type: string;                              // Lua prototype type
+  category: string;                          // UI grouping category
+  energy_type: 'electric' | 'burner' | 'void';
+
+  // Standard power draw
+  energy_usage?: string;
+  energy_usage_kw?: number;
+
+  // Drain (inserters, turrets, pumps)
+  drain?: string;
+  drain_kw?: number;
+
+  // Turret buffer model
+  buffer_capacity?: string;
+  buffer_capacity_kj?: number;
+  input_flow_limit?: string;
+  input_flow_limit_kw?: number;
+
+  // Multi-mode (rocket silo)
+  active_energy_usage?: string;
+  active_energy_usage_kw?: number;
+
+  // Tick-based (lamp, speaker) - converted to kW at extraction
+  energy_usage_per_tick?: string;
+
+  // Burner specifics
+  fuel_categories?: string[];
+
+  // Roboport specifics
+  charging_energy?: string;
+  charging_energy_kw?: number;
+}

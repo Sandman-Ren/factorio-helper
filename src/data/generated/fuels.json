@@ -1,0 +1,122 @@
+[
+  {
+    "name": "wood",
+    "fuel_value": "2MJ",
+    "fuel_value_kj": 2000,
+    "fuel_category": "chemical"
+  },
+  {
+    "name": "coal",
+    "fuel_value": "4MJ",
+    "fuel_value_kj": 4000,
+    "fuel_category": "chemical"
+  },
+  {
+    "name": "solid-fuel",
+    "fuel_value": "12MJ",
+    "fuel_value_kj": 12000,
+    "fuel_category": "chemical"
+  },
+  {
+    "name": "rocket-fuel",
+    "fuel_value": "100MJ",
+    "fuel_value_kj": 100000,
+    "fuel_category": "chemical"
+  },
+  {
+    "name": "nuclear-fuel",
+    "fuel_value": "1.21GJ",
+    "fuel_value_kj": 1210000,
+    "fuel_category": "chemical"
+  },
+  {
+    "name": "uranium-fuel-cell",
+    "fuel_value": "8GJ",
+    "fuel_value_kj": 8000000,
+    "fuel_category": "nuclear"
+  },
+  {
+    "name": "carbon",
+    "fuel_value": "2MJ",
+    "fuel_value_kj": 2000,
+    "fuel_category": "chemical"
+  },
+  {
+    "name": "yumako",
+    "fuel_value": "2MJ",
+    "fuel_value_kj": 2000,
+    "fuel_category": "chemical"
+  },
+  {
+    "name": "jellynut",
+    "fuel_value": "10MJ",
+    "fuel_value_kj": 10000,
+    "fuel_category": "chemical"
+  },
+  {
+    "name": "yumako-seed",
+    "fuel_value": "4MJ",
+    "fuel_value_kj": 4000,
+    "fuel_category": "chemical"
+  },
+  {
+    "name": "jellynut-seed",
+    "fuel_value": "4MJ",
+    "fuel_value_kj": 4000,
+    "fuel_category": "chemical"
+  },
+  {
+    "name": "nutrients",
+    "fuel_value": "2MJ",
+    "fuel_value_kj": 2000,
+    "fuel_category": "nutrients"
+  },
+  {
+    "name": "yumako-mash",
+    "fuel_value": "1MJ",
+    "fuel_value_kj": 1000,
+    "fuel_category": "chemical"
+  },
+  {
+    "name": "jelly",
+    "fuel_value": "1MJ",
+    "fuel_value_kj": 1000,
+    "fuel_category": "chemical"
+  },
+  {
+    "name": "bioflux",
+    "fuel_value": "6MJ",
+    "fuel_value_kj": 6000,
+    "fuel_category": "food"
+  },
+  {
+    "name": "biter-egg",
+    "fuel_value": "6MJ",
+    "fuel_value_kj": 6000,
+    "fuel_category": "chemical"
+  },
+  {
+    "name": "pentapod-egg",
+    "fuel_value": "5MJ",
+    "fuel_value_kj": 5000,
+    "fuel_category": "chemical"
+  },
+  {
+    "name": "fusion-power-cell",
+    "fuel_value": "40GJ",
+    "fuel_value_kj": 40000000,
+    "fuel_category": "fusion"
+  },
+  {
+    "name": "spoilage",
+    "fuel_value": "250kJ",
+    "fuel_value_kj": 250,
+    "fuel_category": "chemical"
+  },
+  {
+    "name": "tree-seed",
+    "fuel_value": "100kJ",
+    "fuel_value_kj": 100,
+    "fuel_category": "chemical"
+  }
+]

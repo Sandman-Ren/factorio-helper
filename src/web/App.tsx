@@ -25,6 +25,10 @@ const TechTree = lazy(() =>
   import('./components/tech-tree/TechTree.js').then(m => ({ default: m.TechTree })),
 );
 
+const PowerCalculator = lazy(() =>
+  import('./components/power-calculator/PowerCalculator.js').then(m => ({ default: m.PowerCalculator })),
+);
+
 export function App() {
   const [activeTab, setActiveTab] = useState('calculator');
   const [pendingTech, setPendingTech] = useState<string | null>(null);
@@ -75,12 +79,13 @@ export function App() {
           <div style={{ marginBottom: 8 }}>
             <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0, lineHeight: 1.2 }}>Factorio Helper</h1>
             <p style={{ color: 'var(--muted-foreground)', fontSize: 13, margin: 0 }}>
-              Production calculator &amp; tech tree for Factorio 2.0
+              Production calculator, tech tree &amp; power calculator for Factorio 2.0
             </p>
           </div>
           <TabsList variant="line">
             <TabsTrigger value="calculator">Calculator</TabsTrigger>
             <TabsTrigger value="tech-tree">Tech Tree</TabsTrigger>
+            <TabsTrigger value="power">Power</TabsTrigger>
           </TabsList>
         </div>
 
@@ -167,6 +172,18 @@ export function App() {
               pendingTechSelect={pendingTech}
               onPendingHandled={() => setPendingTech(null)}
             />
+          </Suspense>
+        </TabsContent>
+
+        <TabsContent value="power" style={{ overflow: 'auto', flex: 1 }}>
+          <Suspense
+            fallback={
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--muted-foreground)' }}>
+                Loading power calculator...
+              </div>
+            }
+          >
+            <PowerCalculator />
           </Suspense>
         </TabsContent>
       </Tabs>
