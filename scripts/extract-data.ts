@@ -39,7 +39,6 @@ console.log('Extracting miners...');
 const miners = extractMiners(
   join(DATA_ROOT, 'entity', 'mining-drill.lua'),
   join(DATA_ROOT, 'entity', 'entities.lua'),
-  join(SPACE_AGE_ROOT, 'entity', 'big-mining-drill.lua'),
 );
 writeFileSync(join(OUT_DIR, 'miners.json'), JSON.stringify(miners, null, 2));
 console.log(`  ${miners.length} miners`);
