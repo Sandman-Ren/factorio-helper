@@ -142,9 +142,17 @@ function solveNode(
       addPower(powerKW);
     } else if (machine.energy_type === 'burner') {
       // Determine fuel for this machine
-      const fuelName = options.fuelOverrides?.[itemName] ?? options.defaultFuel ?? 'coal';
+      const fuelName = options.fuelOverrides?.[itemName] || options.defaultFuel || 'coal';
       const fuelData = fuelMap.get(fuelName);
-      if (fuelData && fuelData.fuel_value_kj > 0) {
+      if (!fuelData) {
+        console.warn(`[solver] Unknown fuel "${fuelName}" for burner machine "${machine.name}" (item: ${itemName})`);
+      }
+      const compatible = !fuelData || !machine.fuel_categories
+        || machine.fuel_categories.includes(fuelData.fuel_category);
+      if (!compatible) {
+        console.warn(`[solver] Fuel "${fuelName}" (category: ${fuelData!.fuel_category}) incompatible with machine "${machine.name}" (accepts: ${machine.fuel_categories!.join(', ')})`);
+      }
+      if (fuelData && compatible && fuelData.fuel_value_kj > 0) {
         fuelPerSecond = machinesNeeded * energyKW / fuelData.fuel_value_kj;
         fuel = fuelName;
         addFuel(fuelName, fuelPerSecond);

@@ -5,7 +5,10 @@
  */
 export function parseEnergyKilo(s: string): number {
   const match = s.match(/^([\d.]+)\s*(W|kW|MW|GW|J|kJ|MJ|GJ|TJ)$/);
-  if (!match) return 0;
+  if (!match) {
+    if (s) console.warn(`[energy] Failed to parse energy string: "${s}"`);
+    return 0;
+  }
   const val = parseFloat(match[1]!);
   switch (match[2]) {
     case 'W':  return val / 1_000;

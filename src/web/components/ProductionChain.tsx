@@ -62,7 +62,7 @@ function FuelSelector({ current, fuels, onSelect }: {
               <span className="text-foreground">
                 {f.name.replace(/-/g, ' ')}
               </span>
-              <span className="ml-auto text-xs text-muted-foreground">
+              <span className="ml-auto text-xs text-foreground/70">
                 {f.fuel_value}
               </span>
             </DropdownMenuRadioItem>
@@ -95,7 +95,7 @@ function MachineSelector({ current, alternatives, onSelect }: {
               <span className="text-foreground">
                 {m.name.replace(/-/g, ' ')}
               </span>
-              <span className="ml-auto text-xs text-muted-foreground">
+              <span className="ml-auto text-xs text-foreground/70">
                 {'\u00D7'}{m.crafting_speed}
               </span>
             </DropdownMenuRadioItem>
@@ -177,7 +177,7 @@ export function ProductionChain({ node, timeUnit, depth = 0, categoryMachines, m
 
               {/* Power/fuel info */}
               {isElectric && node.powerKW > 0 && (
-                <span style={{ color: 'var(--muted-foreground)', fontSize: 12, marginLeft: 4 }}>
+                <span style={{ color: 'var(--foreground)', opacity: 0.7, fontSize: 12, marginLeft: 4 }}>
                   {'\u26A1'}{formatPower(node.powerKW)}
                 </span>
               )}
@@ -192,7 +192,7 @@ export function ProductionChain({ node, timeUnit, depth = 0, categoryMachines, m
                   ) : (
                     <ItemIcon name={node.fuel} size={20} />
                   )}
-                  <span style={{ color: 'var(--muted-foreground)', fontSize: 12 }}>
+                  <span style={{ color: 'var(--foreground)', opacity: 0.7, fontSize: 12 }}>
                     {formatRate(node.fuelPerSecond, timeUnit)}{TIME_LABELS[timeUnit]}
                   </span>
                 </span>

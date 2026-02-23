@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { buildRecipeGraph } from './recipe-graph.js';
 import { solve } from './solver.js';
+import type { MachineOverrides } from './types.js';
 import type { Recipe, Machine, MiningDrill, Resource, Fuel } from '../data/schema.js';
 
 const testFuels: Fuel[] = [
@@ -379,5 +380,50 @@ describe('solver power and fuel', () => {
     expect(plan.root.powerKW).toBe(0);
     expect(plan.root.fuelPerSecond).toBe(0);
     expect(plan.totalElectricPowerKW).toBe(0);
+  });
+
+  it('handles burner machine with empty fuels array', () => {
+    const plan = solve(graph, 'iron-plate', 1, undefined, { smelting: 'stone-furnace' }, {
+      fuels: [],
+      defaultFuel: 'coal',
+    });
+    // No fuels in map → fuelMap.get returns undefined → 0 fuel
+    expect(plan.root.fuelPerSecond).toBe(0);
+    expect(plan.root.fuel).toBeNull();
+  });
+
+  it('handles burner machine with unknown fuel name', () => {
+    const plan = solve(graph, 'iron-plate', 1, undefined, { smelting: 'stone-furnace' }, {
+      fuels: testFuels,
+      defaultFuel: 'nonexistent-fuel',
+    });
+    expect(plan.root.fuelPerSecond).toBe(0);
+    expect(plan.root.fuel).toBeNull();
+  });
+
+  it('rejects fuel with incompatible category', () => {
+    const nuclearFuels: Fuel[] = [
+      ...testFuels,
+      { name: 'uranium-fuel-cell', fuel_value: '8GJ', fuel_value_kj: 8000000, fuel_category: 'nuclear' },
+    ];
+    // stone-furnace only accepts 'chemical', not 'nuclear'
+    const plan = solve(graph, 'iron-plate', 1, undefined, { smelting: 'stone-furnace' }, {
+      fuels: nuclearFuels,
+      defaultFuel: 'uranium-fuel-cell',
+    });
+    expect(plan.root.fuelPerSecond).toBe(0);
+    expect(plan.root.fuel).toBeNull();
+  });
+
+  it('explicit params override options bag', () => {
+    const explicitOverrides: MachineOverrides = { 'iron-plate': 'stone-furnace' };
+    const optionsOverrides: MachineOverrides = { 'iron-plate': 'electric-furnace' };
+    const plan = solve(graph, 'iron-plate', 1, explicitOverrides, undefined, {
+      machineOverrides: optionsOverrides,
+      fuels: testFuels,
+      defaultFuel: 'coal',
+    });
+    // Explicit param wins — stone-furnace (speed 1, burner)
+    expect(plan.root.machine?.name).toBe('stone-furnace');
   });
 });

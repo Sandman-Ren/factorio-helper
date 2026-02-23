@@ -21,7 +21,10 @@ export function extractFuels(luaPath: string): Fuel[] {
     if (typeof name !== 'string') continue;
 
     const fuel_value_kj = parseEnergyKilo(fuel_value);
-    if (fuel_value_kj <= 0) continue;
+    if (fuel_value_kj <= 0) {
+      console.warn(`[extract-fuels] Skipping fuel "${name}": unparseable fuel_value "${fuel_value}"`);
+      continue;
+    }
 
     fuels.push({ name, fuel_value, fuel_value_kj, fuel_category });
   }

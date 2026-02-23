@@ -26,7 +26,7 @@ export function useCalculator() {
   const [categoryOverrides, setCategoryOverrides] = useState<Record<string, string>>({
     'basic-solid': 'electric-mining-drill',
   });
-  const [defaultFuel, setDefaultFuel] = useState(fuels[0]?.name ?? '');
+  const [defaultFuel, setDefaultFuel] = useState('coal');
   const [fuelOverrides, setFuelOverrides] = useState<FuelOverrides>({});
 
   const graph: RecipeGraph = useMemo(

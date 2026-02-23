@@ -34,5 +34,9 @@ export function extractEnergySource(entry: Record<string, LuaValue>): {
     return { energy_type: 'void' };
   }
 
+  if (sourceType !== 'electric' && sourceType !== undefined) {
+    console.warn(`[extract-energy-source] Unknown energy_source.type: "${sourceType}"`);
+  }
+
   return { energy_type: 'electric' };
 }
