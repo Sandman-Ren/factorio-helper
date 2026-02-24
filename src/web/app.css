@@ -44,14 +44,14 @@
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
 
-    /* Factorio-specific color tokens */
-    --color-factorio-orange-dim: #a06020;
-    --color-factorio-orange-bright: #f0a040;
-    --color-factorio-highlight: #f0c050;
-    --color-factorio-green: #87d88b;
-    --color-factorio-red: #ff8e8e;
-    --color-factorio-blue: #80cef0;
-    --color-factorio-selected: #5a4520;
+    /* Factorio-specific color tokens (reference :root variables) */
+    --color-factorio-orange-dim: var(--factorio-orange-dim);
+    --color-factorio-orange-bright: var(--factorio-orange-bright);
+    --color-factorio-highlight: var(--factorio-highlight);
+    --color-factorio-green: var(--factorio-green);
+    --color-factorio-red: var(--factorio-red);
+    --color-factorio-blue: var(--factorio-blue);
+    --color-factorio-selected: var(--factorio-selected);
 
     /* Science pack colors for tech tree pip indicators */
     --color-science-automation: #e05050;
@@ -103,6 +103,15 @@
     --sidebar-accent-foreground: #e3e3e3;
     --sidebar-border: #555555;
     --sidebar-ring: #e09030;
+
+    /* Factorio-specific tokens (available for inline styles) */
+    --factorio-orange-dim: #a06020;
+    --factorio-orange-bright: #f0a040;
+    --factorio-highlight: #f0c050;
+    --factorio-green: #87d88b;
+    --factorio-red: #ff8e8e;
+    --factorio-blue: #80cef0;
+    --factorio-selected: #5a4520;
 }
 
 @layer base {

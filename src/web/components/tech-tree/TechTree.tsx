@@ -115,6 +115,8 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
           style={{ bottom: 12, left: 12 }}
         />
         <MiniMap
+          pannable
+          zoomable
           nodeColor={node => {
             if (node.data?.selected) return 'var(--primary)';
             if (node.data?.highlighted) return 'var(--factorio-orange-bright)';
