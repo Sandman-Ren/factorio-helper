@@ -89,7 +89,7 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') clearSelection();
+      if (e.key === 'Escape' && !(e.target instanceof HTMLInputElement)) clearSelection();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -122,6 +122,7 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
           variant="outline"
           size="icon"
           onClick={toggleAutoFocus}
+          aria-label={autoFocus ? 'Auto-focus on select: ON' : 'Auto-focus on select: OFF'}
           title={autoFocus ? 'Auto-focus on select: ON' : 'Auto-focus on select: OFF'}
           className="bg-card/90 backdrop-blur-sm"
           style={{ opacity: autoFocus ? 1 : 0.5 }}

@@ -132,7 +132,7 @@ export function TechDetailPanel({ technology, open, onClose, onCalculateRecipe, 
                   role="button"
                   tabIndex={0}
                   onClick={() => onSelectTech?.(p)}
-                  onKeyDown={e => { if (e.key === 'Enter') onSelectTech?.(p); }}
+                  onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelectTech?.(p); } }}
                   style={{
                     display: 'flex',
                     alignItems: 'center',

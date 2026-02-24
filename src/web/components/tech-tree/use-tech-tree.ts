@@ -42,7 +42,7 @@ export function useTechTree() {
 
       if (hasSearch) {
         for (const [name] of techMap) {
-          const label = formatName(name);
+          const label = formatName(name).toLowerCase();
           if (label.includes(lowerSearch) || name.includes(lowerSearch)) {
             searchMatches.add(name);
             for (const chainName of getPrerequisiteChain(name, techMap)) {
