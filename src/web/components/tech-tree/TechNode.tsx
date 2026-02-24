@@ -1,7 +1,11 @@
 import { memo, useState } from 'react';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import type { TechNode as TechNodeType, TechNodeData } from './types.js';
-import { getIconUrl } from '../ItemIcon.js';
+import { formatName } from './format.js';
+
+function getTechIconUrl(name: string): string {
+  return `${import.meta.env.BASE_URL}icons/technology/${name}.png`;
+}
 
 /** Science pack colors for the pip indicators (CSS custom properties from app.css). */
 const SCIENCE_COLORS: Record<string, string> = {
@@ -80,7 +84,7 @@ function TechNodeComponent({ data }: NodeProps<TechNodeType>) {
           {sciencePacks.map(ing => (
             <div
               key={ing.name}
-              title={ing.name.replace(/-/g, ' ')}
+              title={formatName(ing.name)}
               style={{
                 width: 12,
                 height: 12,
@@ -95,7 +99,7 @@ function TechNodeComponent({ data }: NodeProps<TechNodeType>) {
 
       {technology.research_trigger && sciencePacks.length === 0 && (
         <div style={{ fontSize: 10, color: 'var(--muted-foreground)', marginTop: 4 }}>
-          {technology.research_trigger.type.replace(/-/g, ' ')}
+          {formatName(technology.research_trigger.type)}
         </div>
       )}
 
@@ -110,7 +114,7 @@ function TechIcon({ name, size = 24 }: { name: string; size?: number }) {
   if (failed) return null;
   return (
     <img
-      src={getIconUrl(name)}
+      src={getTechIconUrl(name)}
       alt=""
       width={size}
       height={size}

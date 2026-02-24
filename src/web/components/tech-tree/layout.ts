@@ -1,6 +1,7 @@
 import dagre from '@dagrejs/dagre';
 import type { Technology } from '../../../data/schema.js';
 import type { TechNode, TechEdge, TechNodeData } from './types.js';
+import { formatName } from './format.js';
 
 const NODE_WIDTH = 200;
 const NODE_HEIGHT = 80;
@@ -46,7 +47,7 @@ export function layoutTechTree(technologies: Technology[]): { nodes: TechNode[];
         y: pos.y - NODE_HEIGHT / 2,
       },
       data: {
-        label: tech.name.replace(/-/g, ' '),
+        label: formatName(tech.name),
         technology: tech,
         highlighted: false,
         dimmed: false,

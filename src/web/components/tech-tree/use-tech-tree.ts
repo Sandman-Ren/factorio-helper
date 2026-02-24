@@ -3,6 +3,7 @@ import { useNodesState, useEdgesState } from '@xyflow/react';
 import type { Technology } from '../../../data/schema.js';
 import type { TechNode, TechEdge } from './types.js';
 import { layoutTechTree, getPrerequisiteChain } from './layout.js';
+import { formatName } from './format.js';
 import technologiesData from '../../../data/generated/technologies.json';
 
 export function useTechTree() {
@@ -29,21 +30,36 @@ export function useTechTree() {
       const lowerSearch = search.toLowerCase().trim();
       const hasSearch = lowerSearch.length > 0;
 
-      let chainSet: Set<string> | null = null;
+      // Build combined prerequisite chain from selection + search matches
+      const chainSet = new Set<string>();
+      const searchMatches = new Set<string>();
+
       if (selected) {
-        chainSet = getPrerequisiteChain(selected, techMap);
+        for (const name of getPrerequisiteChain(selected, techMap)) {
+          chainSet.add(name);
+        }
       }
+
+      if (hasSearch) {
+        for (const [name] of techMap) {
+          const label = formatName(name).toLowerCase();
+          if (label.includes(lowerSearch) || name.includes(lowerSearch)) {
+            searchMatches.add(name);
+            for (const chainName of getPrerequisiteChain(name, techMap)) {
+              chainSet.add(chainName);
+            }
+          }
+        }
+      }
+
+      const hasChain = chainSet.size > 0;
 
       setNodes(prev =>
         prev.map(node => {
-          const matchesSearch = !hasSearch ||
-            node.data.label.toLowerCase().includes(lowerSearch) ||
-            node.id.toLowerCase().includes(lowerSearch);
-
-          const isHighlighted = chainSet != null && chainSet.has(node.id) && node.id !== selected;
-          const isSelected = node.id === selected;
-          const isDimmed = (hasSearch && !matchesSearch) ||
-            (chainSet != null && !chainSet.has(node.id));
+          const isSelected = node.id === selected || searchMatches.has(node.id);
+          const isHighlighted = hasChain && chainSet.has(node.id) && !isSelected;
+          const isDimmed = (hasChain && !chainSet.has(node.id)) ||
+            (hasSearch && !searchMatches.has(node.id) && !hasChain);
 
           if (
             node.data.highlighted === isHighlighted &&
@@ -67,7 +83,7 @@ export function useTechTree() {
 
       setEdges(prev =>
         prev.map(edge => {
-          const inChain = chainSet != null &&
+          const inChain = hasChain &&
             chainSet.has(edge.source) &&
             chainSet.has(edge.target);
 

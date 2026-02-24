@@ -14,7 +14,7 @@ import { createInterface } from 'readline';
 const PROJECT_ROOT = join(import.meta.dirname, '..');
 const ICONS_DIR = join(PROJECT_ROOT, 'public', 'icons');
 const CONFIG_FILE = join(PROJECT_ROOT, '.factorio-path');
-const ICON_CATEGORIES = ['item', 'recipe', 'fluid'];
+const ICON_CATEGORIES = ['item', 'recipe', 'fluid', 'technology'];
 
 const force = process.argv.includes('--force');
 
