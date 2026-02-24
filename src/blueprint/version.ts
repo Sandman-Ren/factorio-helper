@@ -19,7 +19,13 @@ export function encodeVersion(
     (BigInt(minor) << 32n) |
     (BigInt(patch) << 16n) |
     BigInt(build);
-  return Number(v);
+  const num = Number(v);
+  if (!Number.isSafeInteger(num)) {
+    throw new Error(
+      `Version ${major}.${minor}.${patch}.${build} exceeds Number.MAX_SAFE_INTEGER`,
+    );
+  }
+  return num;
 }
 
 export function decodeVersion(version: number): {

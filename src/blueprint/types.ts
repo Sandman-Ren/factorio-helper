@@ -3,7 +3,7 @@
 
 // ── Enums ──────────────────────────────────────────────────────────────────
 
-export const enum Direction {
+export enum Direction {
   North = 0,
   NorthNorthEast = 1,
   NorthEast = 2,
@@ -22,7 +22,7 @@ export const enum Direction {
   NorthNorthWest = 15,
 }
 
-export const enum WireConnectorId {
+export enum WireConnectorId {
   CircuitRed = 1,
   CircuitGreen = 2,
   CombinatorOutputRed = 3,
@@ -634,7 +634,7 @@ export interface Mapper {
 }
 
 export interface UpgradePlanner {
-  item: "blueprint";
+  item: "upgrade-planner";
   label?: string;
   label_color?: Color;
   version: number;

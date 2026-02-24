@@ -25,6 +25,7 @@ export class BlueprintBuilder {
   private description?: string;
   private icons: Icon[] = [];
   private version: number = encodeVersion(2, 0, 28);
+  private nextEntityNumber = 1;
   private entities: Entity[] = [];
   private tiles: Tile[] = [];
   private wires: WireConnection[] = [];
@@ -69,7 +70,8 @@ export class BlueprintBuilder {
    * Returns the assigned entity_number for use in wire connections.
    */
   addEntity(input: EntityInput): number {
-    const entityNumber = input.entity_number ?? this.entities.length + 1;
+    const entityNumber = input.entity_number ?? this.nextEntityNumber;
+    this.nextEntityNumber = Math.max(this.nextEntityNumber, entityNumber + 1);
     const entity: Entity = { ...input, entity_number: entityNumber };
     this.entities.push(entity);
     return entityNumber;

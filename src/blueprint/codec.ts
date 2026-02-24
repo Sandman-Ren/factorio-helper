@@ -94,10 +94,10 @@ function base64ToBytes(base64: string): Uint8Array {
 function bytesToBase64(bytes: Uint8Array): string {
   // Build binary string in chunks to avoid stack overflow on large arrays
   const CHUNK_SIZE = 8192;
-  let binary = "";
+  const parts: string[] = [];
   for (let i = 0; i < bytes.length; i += CHUNK_SIZE) {
     const chunk = bytes.subarray(i, i + CHUNK_SIZE);
-    binary += String.fromCharCode(...chunk);
+    parts.push(String.fromCharCode.apply(null, chunk as unknown as number[]));
   }
-  return btoa(binary);
+  return btoa(parts.join(""));
 }
