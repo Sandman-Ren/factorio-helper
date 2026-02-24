@@ -28,8 +28,13 @@ export function TechDetailPanel({ technology, open, onClose, onCalculateRecipe, 
   const otherEffects = technology.effects.filter(e => e.type !== 'unlock-recipe');
 
   return (
-    <Sheet open={open} onOpenChange={v => { if (!v) onClose(); }}>
-      <SheetContent side="right" className="overflow-y-auto w-[340px] sm:max-w-[340px]">
+    <Sheet open={open} modal={false} onOpenChange={v => { if (!v) onClose(); }}>
+      <SheetContent
+        side="right"
+        showOverlay={false}
+        onInteractOutside={e => e.preventDefault()}
+        className="overflow-y-auto w-[340px] sm:max-w-[340px]"
+      >
         <SheetHeader>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <ItemIcon name={technology.name} size={32} />

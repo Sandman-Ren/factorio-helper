@@ -82,8 +82,12 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
     [selectTech, autoFocus, zoomToTech],
   );
 
-  const onPaneClick = useCallback(() => {
-    clearSelection();
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') clearSelection();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [clearSelection]);
 
   return (
@@ -128,7 +132,6 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
         onNodeClick={onNodeClick}
-        onPaneClick={onPaneClick}
         onInit={instance => { rfInstance.current = instance; }}
         fitView
         fitViewOptions={{ padding: 0.15 }}
