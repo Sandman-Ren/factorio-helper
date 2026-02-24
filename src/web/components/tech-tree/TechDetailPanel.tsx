@@ -18,9 +18,10 @@ interface Props {
   onClose: () => void;
   onCalculateRecipe?: (recipeName: string) => void;
   onZoomToTech?: (techName: string) => void;
+  onSelectTech?: (techName: string) => void;
 }
 
-export function TechDetailPanel({ technology, open, onClose, onCalculateRecipe, onZoomToTech }: Props) {
+export function TechDetailPanel({ technology, open, onClose, onCalculateRecipe, onZoomToTech, onSelectTech }: Props) {
   if (!technology) return null;
 
   const label = formatName(technology.name);
@@ -120,7 +121,24 @@ export function TechDetailPanel({ technology, open, onClose, onCalculateRecipe, 
           {technology.prerequisites.length > 0 && (
             <Section title="Prerequisites">
               {technology.prerequisites.map(p => (
-                <div key={p} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+                <div
+                  key={p}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => onSelectTech?.(p)}
+                  onKeyDown={e => { if (e.key === 'Enter') onSelectTech?.(p); }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    marginBottom: 2,
+                    cursor: onSelectTech ? 'pointer' : 'default',
+                    borderRadius: 'var(--radius)',
+                    padding: '2px 4px',
+                    margin: '0 -4px 2px',
+                  }}
+                  className="hover:bg-accent/50"
+                >
                   <ItemIcon name={p} size={16} />
                   <span style={{ fontSize: 13 }}>{formatName(p)}</span>
                 </div>

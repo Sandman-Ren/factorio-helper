@@ -167,6 +167,10 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
         onClose={clearSelection}
         onCalculateRecipe={onCalculateRecipe}
         onZoomToTech={zoomToTech}
+        onSelectTech={useCallback((name: string) => {
+          selectTech(name);
+          zoomToTech(name);
+        }, [selectTech, zoomToTech])}
       />
     </div>
   );
