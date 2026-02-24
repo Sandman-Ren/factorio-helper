@@ -1,10 +1,11 @@
 import { memo, useState } from 'react';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import type { TechNode as TechNodeType, TechNodeData } from './types.js';
+import { formatName } from './format.js';
+
 function getTechIconUrl(name: string): string {
   return `${import.meta.env.BASE_URL}icons/technology/${name}.png`;
 }
-import { formatName } from './format.js';
 
 /** Science pack colors for the pip indicators (CSS custom properties from app.css). */
 const SCIENCE_COLORS: Record<string, string> = {

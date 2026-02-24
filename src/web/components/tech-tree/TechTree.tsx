@@ -82,6 +82,11 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
     [selectTech, autoFocus, zoomToTech],
   );
 
+  const navigateToTech = useCallback((name: string) => {
+    selectTech(name);
+    zoomToTech(name);
+  }, [selectTech, zoomToTech]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') clearSelection();
@@ -167,10 +172,7 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
         onClose={clearSelection}
         onCalculateRecipe={onCalculateRecipe}
         onZoomToTech={zoomToTech}
-        onSelectTech={useCallback((name: string) => {
-          selectTech(name);
-          zoomToTech(name);
-        }, [selectTech, zoomToTech])}
+        onSelectTech={navigateToTech}
       />
     </div>
   );
