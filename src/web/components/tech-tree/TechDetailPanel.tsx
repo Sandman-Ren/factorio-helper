@@ -38,7 +38,13 @@ export function TechDetailPanel({ technology, open, onClose, onCalculateRecipe, 
       >
         <SheetHeader>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <ItemIcon name={technology.name} size={32} />
+            <img
+              src={`${import.meta.env.BASE_URL}icons/technology/${technology.name}.png`}
+              alt=""
+              width={32}
+              height={32}
+              style={{ imageRendering: 'pixelated' }}
+            />
             <SheetTitle>{label}</SheetTitle>
           </div>
           <SheetDescription>
