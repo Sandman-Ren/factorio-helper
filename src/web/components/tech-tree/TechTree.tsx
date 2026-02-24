@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ReactFlow,
   Background,
@@ -13,7 +13,10 @@ import { TechNodeRenderer } from './TechNode.js';
 import { TechDetailPanel } from './TechDetailPanel.js';
 import { useTechTree } from './use-tech-tree.js';
 import type { TechNode } from './types.js';
-import { Input } from '../../ui/index.js';
+import { Input, Button } from '../../ui/index.js';
+import CrosshairIcon from 'lucide-react/dist/esm/icons/crosshair';
+
+const STORAGE_KEY = 'techTree.autoFocus';
 
 const nodeTypes = { tech: TechNodeRenderer };
 
@@ -39,6 +42,19 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
   const searchRef = useRef<HTMLInputElement>(null);
   const rfInstance = useRef<ReactFlowInstance<TechNode> | null>(null);
 
+  const [autoFocus, setAutoFocus] = useState(() => {
+    try { return localStorage.getItem(STORAGE_KEY) !== 'false'; }
+    catch { return true; }
+  });
+
+  const toggleAutoFocus = useCallback(() => {
+    setAutoFocus(prev => {
+      const next = !prev;
+      try { localStorage.setItem(STORAGE_KEY, String(next)); } catch {}
+      return next;
+    });
+  }, []);
+
   const zoomToTech = useCallback((techName: string) => {
     const instance = rfInstance.current;
     if (!instance) return;
@@ -61,8 +77,9 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
   const onNodeClick: NodeMouseHandler<TechNode> = useCallback(
     (_event, node) => {
       selectTech(node.id);
+      if (autoFocus) zoomToTech(node.id);
     },
-    [selectTech],
+    [selectTech, autoFocus, zoomToTech],
   );
 
   const onPaneClick = useCallback(() => {
@@ -79,7 +96,9 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
           left: '50%',
           transform: 'translateX(-50%)',
           zIndex: 10,
-          width: 280,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
         }}
       >
         <Input
@@ -88,7 +107,18 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
           value={searchQuery}
           onChange={e => updateSearch(e.target.value)}
           className="bg-card/90 backdrop-blur-sm"
+          style={{ width: 280 }}
         />
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={toggleAutoFocus}
+          title={autoFocus ? 'Auto-focus on select: ON' : 'Auto-focus on select: OFF'}
+          className="bg-card/90 backdrop-blur-sm"
+          style={{ opacity: autoFocus ? 1 : 0.5 }}
+        >
+          <CrosshairIcon />
+        </Button>
       </div>
 
       <ReactFlow

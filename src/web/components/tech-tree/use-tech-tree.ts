@@ -3,6 +3,7 @@ import { useNodesState, useEdgesState } from '@xyflow/react';
 import type { Technology } from '../../../data/schema.js';
 import type { TechNode, TechEdge } from './types.js';
 import { layoutTechTree, getPrerequisiteChain } from './layout.js';
+import { formatName } from './format.js';
 import technologiesData from '../../../data/generated/technologies.json';
 
 export function useTechTree() {
@@ -41,7 +42,7 @@ export function useTechTree() {
 
       if (hasSearch) {
         for (const [name] of techMap) {
-          const label = name.replace(/-/g, ' ');
+          const label = formatName(name);
           if (label.includes(lowerSearch) || name.includes(lowerSearch)) {
             searchMatches.add(name);
             for (const chainName of getPrerequisiteChain(name, techMap)) {
