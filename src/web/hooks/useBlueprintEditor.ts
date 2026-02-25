@@ -99,6 +99,66 @@ function wrapNode(node: BlueprintNode, type: BlueprintType): BlueprintString {
   }
 }
 
+/** Set the root node in a BlueprintString. */
+function setRootNode(_data: BlueprintString, node: BlueprintNode, type: BlueprintType): BlueprintString {
+  return wrapNode(node, type);
+}
+
+/** Replace a child node in a BlueprintBookChild. */
+function setChildNode(child: BlueprintBookChild, node: BlueprintNode, type: BlueprintType): BlueprintBookChild {
+  const index = child.index;
+  switch (type) {
+    case 'blueprint': return { index, blueprint: node as Blueprint };
+    case 'blueprint_book': return { index, blueprint_book: node as BlueprintBook };
+    case 'upgrade_planner': return { index, upgrade_planner: node as UpgradePlanner };
+    case 'deconstruction_planner': return { index, deconstruction_planner: node as DeconstructionPlanner };
+  }
+}
+
+/**
+ * Apply an updater to the node at the given path within a BlueprintString.
+ * Returns a new BlueprintString with the updated node; the input is not mutated.
+ */
+export function applyAtPath(
+  data: BlueprintString,
+  path: NodePath,
+  updater: (node: BlueprintNode, type: BlueprintType) => BlueprintNode,
+): BlueprintString {
+  if (path.length === 0) {
+    const rootType = detectType(data);
+    const rootNode = getRootNode(data);
+    return setRootNode(data, updater(rootNode, rootType), rootType);
+  }
+
+  if (!('blueprint_book' in data)) return data;
+
+  // Recursive helper to rebuild the book tree immutably
+  function rebuildBook(book: BlueprintBook, remainingPath: number[]): BlueprintBook {
+    const [idx, ...rest] = remainingPath;
+    if (idx === undefined || !book.blueprints || idx >= book.blueprints.length) return book;
+    const child = book.blueprints[idx]!;
+
+    let newChild: BlueprintBookChild;
+    if (rest.length === 0) {
+      // Apply updater to this child
+      const childType = getChildType(child);
+      const childNode = getChildNode(child);
+      newChild = setChildNode(child, updater(childNode, childType), childType);
+    } else {
+      // Recurse into nested book
+      if (!('blueprint_book' in child)) return book;
+      const nestedBook = rebuildBook(child.blueprint_book, rest);
+      newChild = { ...child, blueprint_book: nestedBook };
+    }
+
+    const newChildren = [...book.blueprints];
+    newChildren[idx] = newChild;
+    return { ...book, blueprints: newChildren };
+  }
+
+  return { blueprint_book: rebuildBook(data.blueprint_book, path) };
+}
+
 export function useBlueprintEditor() {
   const [inputString, setInputString] = useState('');
   const [decoded, setDecoded] = useState<DecodedResult | null>(null);
@@ -141,6 +201,18 @@ export function useBlueprintEditor() {
     setSelectedPath([]);
   }, []);
 
+  /** Apply an updater function to the currently selected node. */
+  const updateSelectedNode = useCallback((
+    updater: (node: BlueprintNode, type: BlueprintType) => BlueprintNode,
+  ) => {
+    setDecoded(prev => {
+      if (!prev) return prev;
+      const newRaw = applyAtPath(prev.raw, selectedPath, updater);
+      if (newRaw === prev.raw) return prev;
+      return { ...prev, raw: newRaw };
+    });
+  }, [selectedPath]);
+
   const resolved = useMemo(() => {
     if (!decoded) return null;
     return resolveNodeAtPath(decoded.raw, selectedPath);
@@ -179,6 +251,7 @@ export function useBlueprintEditor() {
     setSelectedPath,
     selectedNode,
     selectedNodeType,
+    updateSelectedNode,
     reEncodedString: reEncoded.string,
     reEncodeError: reEncoded.error,
     formattedVersion,

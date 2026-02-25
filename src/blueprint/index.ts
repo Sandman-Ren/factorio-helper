@@ -15,6 +15,9 @@ export { BlueprintBookBuilder, BlueprintBuilder } from "./builder";
 // Wire helpers
 export { connectGreen, connectPower, connectRed } from "./wire";
 
+// Transforms
+export { computeBounds, translateBy, translateToOrigin } from "./transforms";
+
 // Types
 export type {
   AlertParameters,
