@@ -39,7 +39,11 @@ export function extractEnergySource(entry: Record<string, LuaValue>): EnergySour
     return { energy_type: 'void' };
   }
 
-  // Electric — extract optional fields
+  if (sourceType !== 'electric' && sourceType !== undefined) {
+    console.warn(`[extract-energy-source] Unknown energy_source.type: "${sourceType}"`);
+  }
+
+  // Electric -- extract optional fields
   const result: EnergySourceInfo = { energy_type: 'electric' };
 
   const drain = sourceObj['drain'];

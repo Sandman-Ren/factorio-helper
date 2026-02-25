@@ -1,7 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { buildRecipeGraph } from './recipe-graph.js';
 import { solve } from './solver.js';
-import type { Recipe, Machine, MiningDrill, Resource } from '../data/schema.js';
+import type { MachineOverrides } from './types.js';
+import type { Recipe, Machine, MiningDrill, Resource, Fuel } from '../data/schema.js';
+
+const testFuels: Fuel[] = [
+  { name: 'coal', fuel_value: '4MJ', fuel_value_kj: 4000, fuel_category: 'chemical' },
+  { name: 'solid-fuel', fuel_value: '12MJ', fuel_value_kj: 12000, fuel_category: 'chemical' },
+];
 
 // Minimal test data matching Factorio base game values
 const testRecipes: Recipe[] = [
@@ -63,6 +69,8 @@ const testMachines: Machine[] = [
     crafting_categories: ['smelting'],
     energy_usage: '90kW',
     module_slots: 0,
+    energy_type: 'burner',
+    fuel_categories: ['chemical'],
   },
   {
     name: 'electric-furnace',
@@ -71,6 +79,7 @@ const testMachines: Machine[] = [
     crafting_categories: ['smelting'],
     energy_usage: '180kW',
     module_slots: 2,
+    energy_type: 'electric',
   },
   {
     name: 'assembling-machine-1',
@@ -79,6 +88,7 @@ const testMachines: Machine[] = [
     crafting_categories: ['crafting', 'basic-crafting', 'advanced-crafting'],
     energy_usage: '75kW',
     module_slots: 0,
+    energy_type: 'electric',
   },
   {
     name: 'assembling-machine-3',
@@ -87,6 +97,7 @@ const testMachines: Machine[] = [
     crafting_categories: ['basic-crafting', 'crafting', 'advanced-crafting', 'crafting-with-fluid'],
     energy_usage: '375kW',
     module_slots: 4,
+    energy_type: 'electric',
   },
 ];
 
@@ -165,6 +176,7 @@ const testMiners: MiningDrill[] = [
     resource_categories: ['basic-solid'],
     energy_usage: '90kW',
     module_slots: 3,
+    energy_type: 'electric',
   },
   {
     name: 'pumpjack',
@@ -173,6 +185,7 @@ const testMiners: MiningDrill[] = [
     resource_categories: ['basic-fluid'],
     energy_usage: '90kW',
     module_slots: 2,
+    energy_type: 'electric',
   },
   {
     name: 'offshore-pump',
@@ -181,6 +194,7 @@ const testMiners: MiningDrill[] = [
     resource_categories: ['water-pumping'],
     energy_usage: '0kW',
     module_slots: 0,
+    energy_type: 'void',
   },
 ];
 
@@ -295,5 +309,119 @@ describe('solver with mining', () => {
 
     const plan2 = solve(graph, 'water', 2400);
     expect(plan2.root.machinesNeeded).toBeCloseTo(2);
+  });
+});
+
+describe('solver power and fuel', () => {
+  const graph = buildRecipeGraph(extendedRecipes, testMachines, testMiners, testResources);
+
+  it('computes electric power for assemblers', () => {
+    // iron-gear-wheel: 1/s needs 0.4 asm3 (375kW each)
+    // power = 0.4 * 375 = 150 kW
+    const plan = solve(graph, 'iron-gear-wheel', 1, undefined, undefined, { fuels: testFuels });
+    expect(plan.root.powerKW).toBeCloseTo(150);
+    expect(plan.root.fuelPerSecond).toBe(0);
+    expect(plan.root.fuel).toBeNull();
+  });
+
+  it('computes electric power for electric furnaces', () => {
+    // iron-plate: 1/s needs 1.6 electric-furnace (180kW each)
+    // power = 1.6 * 180 = 288 kW
+    const plan = solve(graph, 'iron-plate', 1, undefined, undefined, { fuels: testFuels });
+    expect(plan.root.powerKW).toBeCloseTo(288);
+  });
+
+  it('computes fuel consumption for burner furnaces', () => {
+    // Use stone-furnace override for smelting
+    // iron-plate: 1/s with stone-furnace (speed 1): 3.2 machines, 90kW each
+    // fuel = 3.2 * 90 / 4000 = 0.072 coal/s
+    const plan = solve(graph, 'iron-plate', 1, undefined, { smelting: 'stone-furnace' }, {
+      fuels: testFuels,
+      defaultFuel: 'coal',
+    });
+    expect(plan.root.powerKW).toBe(0); // burner, not electric
+    expect(plan.root.fuelPerSecond).toBeCloseTo(0.072);
+    expect(plan.root.fuel).toBe('coal');
+  });
+
+  it('aggregates totalElectricPowerKW across chain', () => {
+    const plan = solve(graph, 'iron-plate', 1, undefined, undefined, { fuels: testFuels });
+    // electric-furnace: 1.6 * 180 = 288 kW
+    // electric-mining-drill: 2 * 90 = 180 kW
+    // total = 468 kW
+    expect(plan.totalElectricPowerKW).toBeCloseTo(468);
+  });
+
+  it('aggregates totalFuel for burner machines', () => {
+    const plan = solve(graph, 'iron-plate', 1, undefined, { smelting: 'stone-furnace' }, {
+      fuels: testFuels,
+      defaultFuel: 'coal',
+    });
+    // stone-furnace: 3.2 * 90 / 4000 = 0.072 coal/s
+    expect(plan.totalFuel['coal']).toBeCloseTo(0.072);
+    // electric-mining-drill is electric, not burner — no fuel
+    expect(plan.totalElectricPowerKW).toBeCloseTo(180); // 2 drills * 90kW
+  });
+
+  it('supports per-item fuel overrides', () => {
+    const plan = solve(graph, 'iron-plate', 1, undefined, { smelting: 'stone-furnace' }, {
+      fuels: testFuels,
+      defaultFuel: 'coal',
+      fuelOverrides: { 'iron-plate': 'solid-fuel' },
+    });
+    // stone-furnace: 3.2 * 90 / 12000 = 0.024 solid-fuel/s
+    expect(plan.root.fuel).toBe('solid-fuel');
+    expect(plan.root.fuelPerSecond).toBeCloseTo(0.024);
+    expect(plan.totalFuel['solid-fuel']).toBeCloseTo(0.024);
+  });
+
+  it('reports zero power for void machines (offshore pump)', () => {
+    const plan = solve(graph, 'water', 1200, undefined, undefined, { fuels: testFuels });
+    expect(plan.root.powerKW).toBe(0);
+    expect(plan.root.fuelPerSecond).toBe(0);
+    expect(plan.totalElectricPowerKW).toBe(0);
+  });
+
+  it('handles burner machine with empty fuels array', () => {
+    const plan = solve(graph, 'iron-plate', 1, undefined, { smelting: 'stone-furnace' }, {
+      fuels: [],
+      defaultFuel: 'coal',
+    });
+    // No fuels in map → fuelMap.get returns undefined → 0 fuel
+    expect(plan.root.fuelPerSecond).toBe(0);
+    expect(plan.root.fuel).toBeNull();
+  });
+
+  it('handles burner machine with unknown fuel name', () => {
+    const plan = solve(graph, 'iron-plate', 1, undefined, { smelting: 'stone-furnace' }, {
+      fuels: testFuels,
+      defaultFuel: 'nonexistent-fuel',
+    });
+    expect(plan.root.fuelPerSecond).toBe(0);
+    expect(plan.root.fuel).toBeNull();
+  });
+
+  it('rejects fuel with incompatible category', () => {
+    const nuclearFuels: Fuel[] = [
+      ...testFuels,
+      { name: 'uranium-fuel-cell', fuel_value: '8GJ', fuel_value_kj: 8000000, fuel_category: 'nuclear' },
+    ];
+    // stone-furnace only accepts 'chemical', not 'nuclear'
+    const plan = solve(graph, 'iron-plate', 1, undefined, { smelting: 'stone-furnace' }, {
+      fuels: nuclearFuels,
+      defaultFuel: 'uranium-fuel-cell',
+    });
+    expect(plan.root.fuelPerSecond).toBe(0);
+    expect(plan.root.fuel).toBeNull();
+  });
+
+  it('positional machineOverrides apply correctly', () => {
+    const overrides: MachineOverrides = { 'iron-plate': 'stone-furnace' };
+    const plan = solve(graph, 'iron-plate', 1, overrides, undefined, {
+      fuels: testFuels,
+      defaultFuel: 'coal',
+    });
+    // stone-furnace (speed 1, burner) via positional machineOverrides
+    expect(plan.root.machine?.name).toBe('stone-furnace');
   });
 });

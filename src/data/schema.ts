@@ -35,6 +35,8 @@ export interface Machine {
   crafting_categories: string[];
   energy_usage: string;
   module_slots: number;
+  energy_type: 'electric' | 'burner' | 'void';
+  fuel_categories?: string[]; // only present when energy_type is "burner"
 }
 
 /** A mining drill or pump entity. */
@@ -45,6 +47,16 @@ export interface MiningDrill {
   resource_categories: string[];
   energy_usage: string;
   module_slots: number;
+  energy_type: 'electric' | 'burner' | 'void';
+  fuel_categories?: string[]; // only present when energy_type is "burner"
+}
+
+/** A fuel item (wood, coal, solid fuel, etc.). */
+export interface Fuel {
+  name: string;
+  fuel_value: string;    // raw from prototype, e.g. "4MJ"
+  fuel_value_kj: number; // parsed to kJ for calculation
+  fuel_category: string; // e.g. "chemical", "nuclear"
 }
 
 /** A minable resource entity. */

@@ -14,6 +14,8 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
+  SelectGroup,
+  SelectLabel,
   Tabs,
   TabsList,
   TabsTrigger,
@@ -28,6 +30,9 @@ const TechTree = lazy(() =>
 const PowerCalculator = lazy(() =>
   import('./components/power-calculator/PowerCalculator.js').then(m => ({ default: m.PowerCalculator })),
 );
+
+/** All categories that assembling machines can handle. */
+const ASSEMBLER_CATEGORIES = ['crafting', 'basic-crafting', 'advanced-crafting', 'crafting-with-fluid'];
 
 export function App() {
   const [activeTab, setActiveTab] = useState('calculator');
@@ -45,6 +50,11 @@ export function App() {
     setMachineOverrides,
     categoryOverrides,
     setCategoryOverrides,
+    defaultFuel,
+    setDefaultFuel,
+    fuelOverrides,
+    setFuelOverrides,
+    fuels,
     plan,
   } = useCalculator();
 
@@ -71,6 +81,8 @@ export function App() {
   );
 
   const smeltingMachines = graph.categoryToMachines.get('smelting') ?? [];
+  const assemblingMachines = graph.categoryToMachines.get('crafting') ?? [];
+  const miningDrills = graph.categoryToMachines.get('basic-solid') ?? [];
 
   return (
     <TooltipProvider>
@@ -133,6 +145,104 @@ export function App() {
                   </Select>
                 </div>
               )}
+              {assemblingMachines.length > 0 && (
+                <div>
+                  <Label className="mb-1">Assembler</Label>
+                  <Select
+                    value={categoryOverrides['crafting'] ?? '__default__'}
+                    onValueChange={v => {
+                      setCategoryOverrides(prev => {
+                        const next = { ...prev };
+                        // Clear all assembler category overrides first
+                        for (const cat of ASSEMBLER_CATEGORIES) delete next[cat];
+                        if (v === '__default__') return next;
+                        // Only override categories the selected machine actually supports
+                        const machine = assemblingMachines.find(m => m.name === v);
+                        if (machine) {
+                          for (const cat of machine.crafting_categories) {
+                            if (ASSEMBLER_CATEGORIES.includes(cat)) next[cat] = v;
+                          }
+                        }
+                        return next;
+                      });
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__default__">Default (best)</SelectItem>
+                      {assemblingMachines.map(m => (
+                        <SelectItem key={m.name} value={m.name}>
+                          <ItemIcon name={m.name} size={16} />
+                          {m.name.replace(/-/g, ' ')}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+              {miningDrills.length > 0 && (
+                <div>
+                  <Label className="mb-1">Mining Drill</Label>
+                  <Select
+                    value={categoryOverrides['basic-solid'] ?? '__default__'}
+                    onValueChange={v => {
+                      setCategoryOverrides(prev => {
+                        if (v === '__default__') {
+                          const { 'basic-solid': _, ...rest } = prev;
+                          return rest;
+                        }
+                        return { ...prev, 'basic-solid': v };
+                      });
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__default__">Default (best)</SelectItem>
+                      {miningDrills.map(m => (
+                        <SelectItem key={m.name} value={m.name}>
+                          <ItemIcon name={m.name} size={16} />
+                          {m.name.replace(/-/g, ' ')}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+              {fuels.length > 0 && (
+                <div>
+                  <Label className="mb-1">Default Fuel</Label>
+                  <Select
+                    value={defaultFuel}
+                    onValueChange={setDefaultFuel}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(
+                        fuels.reduce<Record<string, typeof fuels>>((groups, f) => {
+                          (groups[f.fuel_category] ??= []).push(f);
+                          return groups;
+                        }, {}),
+                      ).map(([category, categoryFuels]) => (
+                        <SelectGroup key={category}>
+                          <SelectLabel>{category.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</SelectLabel>
+                          {categoryFuels.map(f => (
+                            <SelectItem key={f.name} value={f.name}>
+                              <ItemIcon name={f.name} size={16} />
+                              {f.name.replace(/-/g, ' ')}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
             </div>
 
             {plan && (
@@ -153,6 +263,11 @@ export function App() {
                   }
                   itemToTech={itemToTech}
                   onTechClick={handleViewTech}
+                  fuels={fuels}
+                  fuelOverrides={fuelOverrides}
+                  onFuelChange={(item, fuel) =>
+                    setFuelOverrides(prev => ({ ...prev, [item]: fuel }))
+                  }
                 />
               </>
             )}

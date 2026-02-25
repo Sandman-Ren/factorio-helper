@@ -1,5 +1,14 @@
 import type { RecipeGraph } from './recipe-graph.js';
-import type { ProductionNode, ProductionPlan, MachineOverrides } from './types.js';
+import type { Fuel } from '../data/schema.js';
+import type { ProductionNode, ProductionPlan, MachineOverrides, FuelOverrides } from './types.js';
+import { parseEnergyKilo } from './energy.js';
+
+/** Options for the solver beyond the basic graph/target/rate. */
+export interface SolverOptions {
+  fuelOverrides?: FuelOverrides;
+  defaultFuel?: string;
+  fuels?: Fuel[];
+}
 
 /**
  * Recursively solve the production chain for a target item at a desired rate.
@@ -7,7 +16,8 @@ import type { ProductionNode, ProductionPlan, MachineOverrides } from './types.j
  * @param graph - The recipe/machine dependency graph
  * @param targetItem - The item or fluid to produce
  * @param desiredRatePerSecond - How many per second to produce
- * @returns A production plan with the full tree, aggregated machines, and raw resources
+ * @returns A production plan with the full tree, aggregated machines, raw resources,
+ *          total electric power draw, and fuel consumption by type
  */
 export function solve(
   graph: RecipeGraph,
@@ -15,13 +25,27 @@ export function solve(
   desiredRatePerSecond: number,
   machineOverrides?: MachineOverrides,
   categoryOverrides?: Record<string, string>,
+  options?: SolverOptions,
 ): ProductionPlan {
   const totalMachines: Record<string, number> = {};
   const rawResources: Record<string, number> = {};
+  let totalElectricPowerKW = 0;
+  const totalFuel: Record<string, number> = {};
 
-  const root = solveNode(graph, targetItem, desiredRatePerSecond, totalMachines, rawResources, new Set(), machineOverrides, categoryOverrides);
+  const fuelMap = new Map<string, Fuel>();
+  if (options?.fuels) {
+    for (const f of options.fuels) fuelMap.set(f.name, f);
+  }
 
-  return { root, totalMachines, rawResources };
+  const root = solveNode(
+    graph, targetItem, desiredRatePerSecond,
+    totalMachines, rawResources, new Set(),
+    machineOverrides, categoryOverrides, options, fuelMap,
+    (kw) => { totalElectricPowerKW += kw; },
+    (fuelName, rate) => { totalFuel[fuelName] = (totalFuel[fuelName] ?? 0) + rate; },
+  );
+
+  return { root, totalMachines, rawResources, totalElectricPowerKW, totalFuel };
 }
 
 function solveNode(
@@ -31,16 +55,19 @@ function solveNode(
   totalMachines: Record<string, number>,
   rawResources: Record<string, number>,
   visited: Set<string>,
-  machineOverrides?: MachineOverrides,
-  categoryOverrides?: Record<string, string>,
+  machineOverrides: MachineOverrides | undefined,
+  categoryOverrides: Record<string, string> | undefined,
+  options: SolverOptions | undefined,
+  fuelMap: Map<string, Fuel>,
+  addPower: (kw: number) => void,
+  addFuel: (fuelName: string, rate: number) => void,
 ): ProductionNode {
   // Determine item type by checking if it's a fluid recipe result
   const recipe = graph.itemToRecipe.get(itemName);
   const itemType = recipe?.results.find(r => r.name === itemName)?.type ?? 'item';
 
-  // Base case: no recipe (truly unproducible items like wood)
-  if (!recipe) {
-    rawResources[itemName] = (rawResources[itemName] ?? 0) + ratePerSecond;
+  const emptyNode = (addToRaw: boolean): ProductionNode => {
+    if (addToRaw) rawResources[itemName] = (rawResources[itemName] ?? 0) + ratePerSecond;
     return {
       item: itemName,
       itemType: itemType as 'item' | 'fluid',
@@ -49,22 +76,17 @@ function solveNode(
       ratePerSecond,
       machinesNeeded: 0,
       children: [],
+      powerKW: 0,
+      fuelPerSecond: 0,
+      fuel: null,
     };
-  }
+  };
+
+  // Base case: no recipe (truly unproducible items like wood)
+  if (!recipe) return emptyNode(true);
 
   // Cycle detection
-  if (visited.has(itemName)) {
-    rawResources[itemName] = (rawResources[itemName] ?? 0) + ratePerSecond;
-    return {
-      item: itemName,
-      itemType: itemType as 'item' | 'fluid',
-      recipe: null,
-      machine: null,
-      ratePerSecond,
-      machinesNeeded: 0,
-      children: [],
-    };
-  }
+  if (visited.has(itemName)) return emptyNode(true);
 
   // Track mined resources in the raw resources summary
   if (graph.minedResources.has(itemName)) {
@@ -100,11 +122,47 @@ function solveNode(
     totalMachines[machine.name] = (totalMachines[machine.name] ?? 0) + machinesNeeded;
   }
 
+  // Compute power / fuel consumption
+  let powerKW = 0;
+  let fuelPerSecond = 0;
+  let fuel: string | null = null;
+
+  if (machine) {
+    const energyKW = parseEnergyKilo(machine.energy_usage);
+
+    if (machine.energy_type === 'electric') {
+      powerKW = machinesNeeded * energyKW;
+      addPower(powerKW);
+    } else if (machine.energy_type === 'burner') {
+      // Determine fuel for this machine
+      const fuelName = options?.fuelOverrides?.[itemName] || options?.defaultFuel || 'coal';
+      const fuelData = fuelMap.get(fuelName);
+      if (!fuelData) {
+        console.warn(`[solver] Unknown fuel "${fuelName}" for burner machine "${machine.name}" (item: ${itemName})`);
+      }
+      const compatible = !fuelData || !machine.fuel_categories
+        || machine.fuel_categories.includes(fuelData.fuel_category);
+      if (!compatible) {
+        console.warn(`[solver] Fuel "${fuelName}" (category: ${fuelData!.fuel_category}) incompatible with machine "${machine.name}" (accepts: ${machine.fuel_categories!.join(', ')})`);
+      }
+      if (fuelData && compatible && fuelData.fuel_value_kj > 0) {
+        fuelPerSecond = machinesNeeded * energyKW / fuelData.fuel_value_kj;
+        fuel = fuelName;
+        addFuel(fuelName, fuelPerSecond);
+      }
+    }
+    // energy_type === 'void' → no power, no fuel (offshore pump)
+  }
+
   // Recurse into ingredients
   const children: ProductionNode[] = [];
   for (const ingredient of recipe.ingredients) {
     const ingredientRate = craftsPerSecond * ingredient.amount;
-    const child = solveNode(graph, ingredient.name, ingredientRate, totalMachines, rawResources, visited, machineOverrides, categoryOverrides);
+    const child = solveNode(
+      graph, ingredient.name, ingredientRate,
+      totalMachines, rawResources, visited,
+      machineOverrides, categoryOverrides, options, fuelMap, addPower, addFuel,
+    );
     children.push(child);
   }
 
@@ -116,6 +174,9 @@ function solveNode(
     ratePerSecond,
     machinesNeeded,
     children,
+    powerKW,
+    fuelPerSecond,
+    fuel,
   };
 }
 

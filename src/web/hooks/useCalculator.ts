@@ -1,11 +1,14 @@
 import { useMemo, useState } from 'react';
 import { buildRecipeGraph, solve } from '../../calculator/index.js';
-import type { RecipeGraph, ProductionPlan, MachineOverrides } from '../../calculator/index.js';
+import type { RecipeGraph, ProductionPlan, MachineOverrides, FuelOverrides, SolverOptions } from '../../calculator/index.js';
 import recipesData from '../../data/generated/recipes.json';
 import machinesData from '../../data/generated/machines.json';
 import minersData from '../../data/generated/miners.json';
 import resourcesData from '../../data/generated/resources.json';
-import type { Recipe, Machine, MiningDrill, Resource } from '../../data/schema.js';
+import fuelsData from '../../data/generated/fuels.json';
+import type { Recipe, Machine, MiningDrill, Resource, Fuel } from '../../data/schema.js';
+
+const fuels = fuelsData as Fuel[];
 
 export type TimeUnit = 'sec' | 'min' | 'hour';
 
@@ -20,7 +23,11 @@ export function useCalculator() {
   const [amount, setAmount] = useState(1);
   const [timeUnit, setTimeUnit] = useState<TimeUnit>('sec');
   const [machineOverrides, setMachineOverrides] = useState<MachineOverrides>({});
-  const [categoryOverrides, setCategoryOverrides] = useState<Record<string, string>>({});
+  const [categoryOverrides, setCategoryOverrides] = useState<Record<string, string>>({
+    'basic-solid': 'electric-mining-drill',
+  });
+  const [defaultFuel, setDefaultFuel] = useState('coal');
+  const [fuelOverrides, setFuelOverrides] = useState<FuelOverrides>({});
 
   const graph: RecipeGraph = useMemo(
     () => buildRecipeGraph(
@@ -38,8 +45,13 @@ export function useCalculator() {
       return null;
     }
     const ratePerSecond = amount * TIME_MULTIPLIERS[timeUnit];
-    return solve(graph, targetItem, ratePerSecond, machineOverrides, categoryOverrides);
-  }, [graph, targetItem, amount, timeUnit, machineOverrides, categoryOverrides]);
+    const solverOptions: SolverOptions = {
+      fuelOverrides,
+      defaultFuel,
+      fuels,
+    };
+    return solve(graph, targetItem, ratePerSecond, machineOverrides, categoryOverrides, solverOptions);
+  }, [graph, targetItem, amount, timeUnit, machineOverrides, categoryOverrides, defaultFuel, fuelOverrides]);
 
   return {
     graph,
@@ -53,6 +65,11 @@ export function useCalculator() {
     setMachineOverrides,
     categoryOverrides,
     setCategoryOverrides,
+    defaultFuel,
+    setDefaultFuel,
+    fuelOverrides,
+    setFuelOverrides,
+    fuels,
     plan,
   };
 }
