@@ -103,7 +103,7 @@ export function App() {
 
         <TabsContent value="calculator" style={{ overflow: 'auto', flex: 1 }}>
           <div style={{ maxWidth: 900, margin: '0 auto', padding: 20 }}>
-            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 24 }}>
+            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 16 }}>
               <ItemSelector
                 items={graph.allProducts}
                 value={targetItem}
@@ -115,135 +115,141 @@ export function App() {
                 timeUnit={timeUnit}
                 onTimeUnitChange={setTimeUnit}
               />
-              {smeltingMachines.length > 0 && (
-                <div>
-                  <Label className="mb-1">Furnace</Label>
-                  <Select
-                    value={categoryOverrides['smelting'] ?? '__default__'}
-                    onValueChange={v => {
-                      setCategoryOverrides(prev => {
-                        if (v === '__default__') {
-                          const { smelting: _, ...rest } = prev;
-                          return rest;
-                        }
-                        return { ...prev, smelting: v };
-                      });
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="__default__">Default (best)</SelectItem>
-                      {smeltingMachines.map(m => (
-                        <SelectItem key={m.name} value={m.name}>
-                          <ItemIcon name={m.name} size={16} />
-                          {m.name.replace(/-/g, ' ')}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-              {assemblingMachines.length > 0 && (
-                <div>
-                  <Label className="mb-1">Assembler</Label>
-                  <Select
-                    value={categoryOverrides['crafting'] ?? '__default__'}
-                    onValueChange={v => {
-                      setCategoryOverrides(prev => {
-                        const next = { ...prev };
-                        // Clear all assembler category overrides first
-                        for (const cat of ASSEMBLER_CATEGORIES) delete next[cat];
-                        if (v === '__default__') return next;
-                        // Only override categories the selected machine actually supports
-                        const machine = assemblingMachines.find(m => m.name === v);
-                        if (machine) {
-                          for (const cat of machine.crafting_categories) {
-                            if (ASSEMBLER_CATEGORIES.includes(cat)) next[cat] = v;
-                          }
-                        }
-                        return next;
-                      });
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="__default__">Default (best)</SelectItem>
-                      {assemblingMachines.map(m => (
-                        <SelectItem key={m.name} value={m.name}>
-                          <ItemIcon name={m.name} size={16} />
-                          {m.name.replace(/-/g, ' ')}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-              {miningDrills.length > 0 && (
-                <div>
-                  <Label className="mb-1">Mining Drill</Label>
-                  <Select
-                    value={categoryOverrides['basic-solid'] ?? '__default__'}
-                    onValueChange={v => {
-                      setCategoryOverrides(prev => {
-                        if (v === '__default__') {
-                          const { 'basic-solid': _, ...rest } = prev;
-                          return rest;
-                        }
-                        return { ...prev, 'basic-solid': v };
-                      });
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="__default__">Default (best)</SelectItem>
-                      {miningDrills.map(m => (
-                        <SelectItem key={m.name} value={m.name}>
-                          <ItemIcon name={m.name} size={16} />
-                          {m.name.replace(/-/g, ' ')}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-              {fuels.length > 0 && (
-                <div>
-                  <Label className="mb-1">Default Fuel</Label>
-                  <Select
-                    value={defaultFuel}
-                    onValueChange={setDefaultFuel}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(
-                        fuels.reduce<Record<string, typeof fuels>>((groups, f) => {
-                          (groups[f.fuel_category] ??= []).push(f);
-                          return groups;
-                        }, {}),
-                      ).map(([category, categoryFuels]) => (
-                        <SelectGroup key={category}>
-                          <SelectLabel>{category.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</SelectLabel>
-                          {categoryFuels.map(f => (
-                            <SelectItem key={f.name} value={f.name}>
-                              <ItemIcon name={f.name} size={16} />
-                              {f.name.replace(/-/g, ' ')}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
             </div>
+
+            <details className="group mb-6 rounded-md border border-border bg-card/50 p-3">
+              <summary className="cursor-pointer text-sm text-muted-foreground select-none">
+                Machine &amp; Fuel Defaults
+              </summary>
+              <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 12 }}>
+                {smeltingMachines.length > 0 && (
+                  <div>
+                    <Label className="mb-1">Furnace</Label>
+                    <Select
+                      value={categoryOverrides['smelting'] ?? '__default__'}
+                      onValueChange={v => {
+                        setCategoryOverrides(prev => {
+                          if (v === '__default__') {
+                            const { smelting: _, ...rest } = prev;
+                            return rest;
+                          }
+                          return { ...prev, smelting: v };
+                        });
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__default__">Default (best)</SelectItem>
+                        {smeltingMachines.map(m => (
+                          <SelectItem key={m.name} value={m.name}>
+                            <ItemIcon name={m.name} size={16} />
+                            {m.name.replace(/-/g, ' ')}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {assemblingMachines.length > 0 && (
+                  <div>
+                    <Label className="mb-1">Assembler</Label>
+                    <Select
+                      value={categoryOverrides['crafting'] ?? '__default__'}
+                      onValueChange={v => {
+                        setCategoryOverrides(prev => {
+                          const next = { ...prev };
+                          for (const cat of ASSEMBLER_CATEGORIES) delete next[cat];
+                          if (v === '__default__') return next;
+                          const machine = assemblingMachines.find(m => m.name === v);
+                          if (machine) {
+                            for (const cat of machine.crafting_categories) {
+                              if (ASSEMBLER_CATEGORIES.includes(cat)) next[cat] = v;
+                            }
+                          }
+                          return next;
+                        });
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__default__">Default (best)</SelectItem>
+                        {assemblingMachines.map(m => (
+                          <SelectItem key={m.name} value={m.name}>
+                            <ItemIcon name={m.name} size={16} />
+                            {m.name.replace(/-/g, ' ')}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {miningDrills.length > 0 && (
+                  <div>
+                    <Label className="mb-1">Mining Drill</Label>
+                    <Select
+                      value={categoryOverrides['basic-solid'] ?? '__default__'}
+                      onValueChange={v => {
+                        setCategoryOverrides(prev => {
+                          if (v === '__default__') {
+                            const { 'basic-solid': _, ...rest } = prev;
+                            return rest;
+                          }
+                          return { ...prev, 'basic-solid': v };
+                        });
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__default__">Default (best)</SelectItem>
+                        {miningDrills.map(m => (
+                          <SelectItem key={m.name} value={m.name}>
+                            <ItemIcon name={m.name} size={16} />
+                            {m.name.replace(/-/g, ' ')}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {fuels.length > 0 && (
+                  <div>
+                    <Label className="mb-1">Default Fuel</Label>
+                    <Select
+                      value={defaultFuel}
+                      onValueChange={setDefaultFuel}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(
+                          fuels.reduce<Record<string, typeof fuels>>((groups, f) => {
+                            (groups[f.fuel_category] ??= []).push(f);
+                            return groups;
+                          }, {}),
+                        ).map(([category, categoryFuels]) => (
+                          <SelectGroup key={category}>
+                            <SelectLabel>{category.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</SelectLabel>
+                            {categoryFuels.map(f => (
+                              <SelectItem key={f.name} value={f.name}>
+                                <ItemIcon name={f.name} size={16} />
+                                {f.name.replace(/-/g, ' ')}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </div>
+            </details>
 
             {plan && (
               <>
