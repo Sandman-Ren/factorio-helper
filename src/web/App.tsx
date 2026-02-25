@@ -5,7 +5,7 @@ import { RateInput } from './components/RateInput.js';
 import { ProductionChain } from './components/ProductionChain.js';
 import { Summary } from './components/Summary.js';
 import { ItemIcon } from './components/ItemIcon.js';
-import { Label, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from './ui/index.js';
+import { Label, Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectGroup, SelectLabel } from './ui/index.js';
 /** All categories that assembling machines can handle. */
 const ASSEMBLER_CATEGORIES = ['crafting', 'basic-crafting', 'advanced-crafting', 'crafting-with-fluid'];
 
@@ -161,14 +161,22 @@ export function App() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {fuels
-                  .filter(f => f.fuel_category === 'chemical')
-                  .map(f => (
-                    <SelectItem key={f.name} value={f.name}>
-                      <ItemIcon name={f.name} size={16} />
-                      {f.name.replace(/-/g, ' ')}
-                    </SelectItem>
-                  ))}
+                {Object.entries(
+                  fuels.reduce<Record<string, typeof fuels>>((groups, f) => {
+                    (groups[f.fuel_category] ??= []).push(f);
+                    return groups;
+                  }, {}),
+                ).map(([category, categoryFuels]) => (
+                  <SelectGroup key={category}>
+                    <SelectLabel>{category.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</SelectLabel>
+                    {categoryFuels.map(f => (
+                      <SelectItem key={f.name} value={f.name}>
+                        <ItemIcon name={f.name} size={16} />
+                        {f.name.replace(/-/g, ' ')}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                ))}
               </SelectContent>
             </Select>
           </div>

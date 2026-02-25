@@ -5,8 +5,6 @@ import { parseEnergyKilo } from './energy.js';
 
 /** Options for the solver beyond the basic graph/target/rate. */
 export interface SolverOptions {
-  machineOverrides?: MachineOverrides;
-  categoryOverrides?: Record<string, string>;
   fuelOverrides?: FuelOverrides;
   defaultFuel?: string;
   fuels?: Fuel[];
@@ -34,22 +32,15 @@ export function solve(
   let totalElectricPowerKW = 0;
   const totalFuel: Record<string, number> = {};
 
-  const mergedOptions: SolverOptions = {
-    ...options,
-    // Explicit params take precedence over options bag
-    machineOverrides: machineOverrides ?? options?.machineOverrides,
-    categoryOverrides: categoryOverrides ?? options?.categoryOverrides,
-  };
-
   const fuelMap = new Map<string, Fuel>();
-  if (mergedOptions.fuels) {
-    for (const f of mergedOptions.fuels) fuelMap.set(f.name, f);
+  if (options?.fuels) {
+    for (const f of options.fuels) fuelMap.set(f.name, f);
   }
 
   const root = solveNode(
     graph, targetItem, desiredRatePerSecond,
     totalMachines, rawResources, new Set(),
-    mergedOptions, fuelMap,
+    machineOverrides, categoryOverrides, options, fuelMap,
     (kw) => { totalElectricPowerKW += kw; },
     (fuelName, rate) => { totalFuel[fuelName] = (totalFuel[fuelName] ?? 0) + rate; },
   );
@@ -64,7 +55,9 @@ function solveNode(
   totalMachines: Record<string, number>,
   rawResources: Record<string, number>,
   visited: Set<string>,
-  options: SolverOptions,
+  machineOverrides: MachineOverrides | undefined,
+  categoryOverrides: Record<string, string> | undefined,
+  options: SolverOptions | undefined,
   fuelMap: Map<string, Fuel>,
   addPower: (kw: number) => void,
   addFuel: (fuelName: string, rate: number) => void,
@@ -104,7 +97,7 @@ function solveNode(
   visited.add(itemName);
 
   // Find the machine for this recipe (check per-item override first)
-  const overrideName = options.machineOverrides?.[itemName] ?? options.categoryOverrides?.[recipe.category];
+  const overrideName = machineOverrides?.[itemName] ?? categoryOverrides?.[recipe.category];
   const machine = (
     overrideName
       ? graph.categoryToMachines.get(recipe.category)?.find(m => m.name === overrideName)
@@ -142,7 +135,7 @@ function solveNode(
       addPower(powerKW);
     } else if (machine.energy_type === 'burner') {
       // Determine fuel for this machine
-      const fuelName = options.fuelOverrides?.[itemName] || options.defaultFuel || 'coal';
+      const fuelName = options?.fuelOverrides?.[itemName] || options?.defaultFuel || 'coal';
       const fuelData = fuelMap.get(fuelName);
       if (!fuelData) {
         console.warn(`[solver] Unknown fuel "${fuelName}" for burner machine "${machine.name}" (item: ${itemName})`);
@@ -168,7 +161,7 @@ function solveNode(
     const child = solveNode(
       graph, ingredient.name, ingredientRate,
       totalMachines, rawResources, visited,
-      options, fuelMap, addPower, addFuel,
+      machineOverrides, categoryOverrides, options, fuelMap, addPower, addFuel,
     );
     children.push(child);
   }

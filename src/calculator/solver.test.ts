@@ -415,15 +415,13 @@ describe('solver power and fuel', () => {
     expect(plan.root.fuel).toBeNull();
   });
 
-  it('explicit params override options bag', () => {
-    const explicitOverrides: MachineOverrides = { 'iron-plate': 'stone-furnace' };
-    const optionsOverrides: MachineOverrides = { 'iron-plate': 'electric-furnace' };
-    const plan = solve(graph, 'iron-plate', 1, explicitOverrides, undefined, {
-      machineOverrides: optionsOverrides,
+  it('positional machineOverrides apply correctly', () => {
+    const overrides: MachineOverrides = { 'iron-plate': 'stone-furnace' };
+    const plan = solve(graph, 'iron-plate', 1, overrides, undefined, {
       fuels: testFuels,
       defaultFuel: 'coal',
     });
-    // Explicit param wins — stone-furnace (speed 1, burner)
+    // stone-furnace (speed 1, burner) via positional machineOverrides
     expect(plan.root.machine?.name).toBe('stone-furnace');
   });
 });
