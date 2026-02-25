@@ -43,9 +43,9 @@ export function EntityList({ entries, onUpdateCount, onUpdateFuel, onRemove, def
             <Input
               type="number"
               min={0}
-              step={1}
+              step="any"
               value={entry.count}
-              onChange={e => onUpdateCount(entry.id, parseInt(e.target.value, 10) || 0)}
+              onChange={e => onUpdateCount(entry.id, parseFloat(e.target.value) || 0)}
               className="w-20 tabular-nums text-right"
             />
 

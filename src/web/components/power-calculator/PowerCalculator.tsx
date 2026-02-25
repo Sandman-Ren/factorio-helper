@@ -1,4 +1,5 @@
-import { usePowerCalculator, allFuels } from '../../hooks/usePowerCalculator.js';
+import type { usePowerCalculator } from '../../hooks/usePowerCalculator.js';
+import { allFuels } from '../../hooks/usePowerCalculator.js';
 import { ItemIcon } from '../ItemIcon.js';
 import { EntityPicker } from './EntityPicker.js';
 import { EntityList } from './EntityList.js';
@@ -13,7 +14,9 @@ import {
   SelectItem,
 } from '../../ui/index.js';
 
-export function PowerCalculator() {
+type PowerCalcState = ReturnType<typeof usePowerCalculator>;
+
+export function PowerCalculator(props: PowerCalcState) {
   const {
     entries,
     computedEntries,
@@ -24,13 +27,15 @@ export function PowerCalculator() {
     defaultFuel,
     setDefaultFuel,
     clearAll,
+    roundUpAll,
+    hasFractional,
     electricSummary,
     fuelSummary,
     totalElectricKW,
     totalElectricDisplay,
     totalPeakDisplay,
     hasPeakDifference,
-  } = usePowerCalculator();
+  } = props;
 
   return (
     <div style={{ maxWidth: 900, margin: '0 auto', padding: 20 }}>
@@ -73,6 +78,9 @@ export function PowerCalculator() {
             </SelectContent>
           </Select>
         </div>
+        {hasFractional && (
+          <Button variant="outline" onClick={roundUpAll}>Round Up</Button>
+        )}
         {entries.length > 0 && (
           <Button variant="ghost" onClick={clearAll}>Clear All</Button>
         )}

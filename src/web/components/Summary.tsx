@@ -9,12 +9,13 @@ interface Props {
   timeUnit: TimeUnit;
   integerMultiplier: number | null;
   onApplyMultiplier?: (multiplier: number) => void;
+  onApplyToPower?: () => void;
 }
 
 const TIME_LABELS: Record<TimeUnit, string> = { sec: '/s', min: '/min', hour: '/hr' };
 const TIME_MULTIPLIERS: Record<TimeUnit, number> = { sec: 1, min: 60, hour: 3600 };
 
-export function Summary({ plan, timeUnit, integerMultiplier, onApplyMultiplier }: Props) {
+export function Summary({ plan, timeUnit, integerMultiplier, onApplyMultiplier, onApplyToPower }: Props) {
   const machineEntries = Object.entries(plan.totalMachines).sort(
     ([, a], [, b]) => b - a,
   );
@@ -104,7 +105,14 @@ export function Summary({ plan, timeUnit, integerMultiplier, onApplyMultiplier }
           borderRadius: 8,
           padding: 16,
         }}>
-          <h3 style={{ margin: '0 0 12px', fontSize: 16 }}>Power &amp; Fuel</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+            <h3 style={{ margin: 0, fontSize: 16 }}>Power &amp; Fuel</h3>
+            {onApplyToPower && (
+              <Button variant="outline" size="sm" onClick={onApplyToPower}>
+                Open in Power Calculator
+              </Button>
+            )}
+          </div>
           {plan.totalElectricPowerKW > 0 && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: fuelEntries.length > 0 ? 12 : 0, fontSize: 14 }}>
               <span>{'\u26A1'}</span>

@@ -2,6 +2,7 @@ import { lazy, Suspense, useState, useCallback } from 'react';
 import { findIntegerMultiplier } from '../calculator/index.js';
 import { useCalculator } from './hooks/useCalculator.js';
 import { useRecipeTechMaps } from './hooks/use-recipe-tech-map.js';
+import { usePowerCalculator } from './hooks/usePowerCalculator.js';
 import { ItemSelector } from './components/ItemSelector.js';
 import { RateInput } from './components/RateInput.js';
 import { ProductionChain } from './components/ProductionChain.js';
@@ -59,6 +60,13 @@ export function App() {
   } = useCalculator();
 
   const { itemToTech } = useRecipeTechMaps();
+  const powerCalc = usePowerCalculator();
+
+  const handleApplyToPower = useCallback(() => {
+    if (!plan) return;
+    powerCalc.loadFromPlan(plan.totalMachines);
+    setActiveTab('power');
+  }, [plan, powerCalc.loadFromPlan]);
 
   const handleCalculateRecipe = useCallback(
     (recipeName: string) => {
@@ -258,6 +266,7 @@ export function App() {
                   timeUnit={timeUnit}
                   integerMultiplier={findIntegerMultiplier(plan)}
                   onApplyMultiplier={(k) => setAmount(prev => prev * k)}
+                  onApplyToPower={handleApplyToPower}
                 />
                 <ProductionChain
                   node={plan.root}
@@ -304,7 +313,7 @@ export function App() {
               </div>
             }
           >
-            <PowerCalculator />
+            <PowerCalculator {...powerCalc} />
           </Suspense>
         </TabsContent>
       </Tabs>

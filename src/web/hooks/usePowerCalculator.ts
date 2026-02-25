@@ -72,6 +72,21 @@ export function usePowerCalculator() {
     setEntries([]);
   }, []);
 
+  const loadFromPlan = useCallback((totalMachines: Record<string, number>) => {
+    const newEntries: PowerEntry[] = [];
+    for (const [machineName, count] of Object.entries(totalMachines)) {
+      if (!entityMap.has(machineName) || count <= 0) continue;
+      newEntries.push({ id: String(++nextIdRef.current), entityName: machineName, count });
+    }
+    setEntries(newEntries);
+  }, []);
+
+  const roundUpAll = useCallback(() => {
+    setEntries(prev => prev.map(e => ({ ...e, count: Math.ceil(e.count) })));
+  }, []);
+
+  const hasFractional = entries.some(e => e.count !== Math.ceil(e.count));
+
   const computedEntries: ComputedEntry[] = useMemo(() => {
     return entries.map(entry => {
       const entity = entityMap.get(entry.entityName);
@@ -201,6 +216,9 @@ export function usePowerCalculator() {
     defaultFuel,
     setDefaultFuel,
     clearAll,
+    loadFromPlan,
+    roundUpAll,
+    hasFractional,
     totalElectricKW,
     totalPeakKW,
     hasPeakDifference,
