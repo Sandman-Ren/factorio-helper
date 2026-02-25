@@ -213,6 +213,18 @@ export function useBlueprintEditor() {
     });
   }, [selectedPath]);
 
+  /** Apply an updater to the root book (for structural book mutations). */
+  const updateRootBook = useCallback((
+    updater: (book: BlueprintBook) => BlueprintBook,
+  ) => {
+    setDecoded(prev => {
+      if (!prev || !('blueprint_book' in prev.raw)) return prev;
+      const newBook = updater(prev.raw.blueprint_book);
+      if (newBook === prev.raw.blueprint_book) return prev;
+      return { ...prev, raw: { blueprint_book: newBook } };
+    });
+  }, []);
+
   const resolved = useMemo(() => {
     if (!decoded) return null;
     return resolveNodeAtPath(decoded.raw, selectedPath);
@@ -252,6 +264,7 @@ export function useBlueprintEditor() {
     selectedNode,
     selectedNodeType,
     updateSelectedNode,
+    updateRootBook,
     reEncodedString: reEncoded.string,
     reEncodeError: reEncoded.error,
     formattedVersion,

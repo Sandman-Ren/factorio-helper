@@ -7,11 +7,14 @@ import { BlueprintMetadataEditor } from './BlueprintMetadataEditor.js';
 import { BlueprintActions } from './BlueprintActions.js';
 import { BlueprintStats } from './BlueprintStats.js';
 import { BlueprintBookTree } from './BlueprintBookTree.js';
+import { BlueprintBookActions } from './BlueprintBookActions.js';
 import { BlueprintJsonViewer } from './BlueprintJsonViewer.js';
+import { BlueprintJsonEditor } from './BlueprintJsonEditor.js';
 import { BlueprintExport } from './BlueprintExport.js';
 import { Button } from '../../ui/index.js';
 import PencilIcon from 'lucide-react/dist/esm/icons/pencil';
 import EyeIcon from 'lucide-react/dist/esm/icons/eye';
+import CodeIcon from 'lucide-react/dist/esm/icons/code';
 
 type BlueprintEditorState = ReturnType<typeof useBlueprintEditor>;
 
@@ -28,12 +31,14 @@ export function BlueprintTab(props: BlueprintEditorState) {
     selectedNode,
     selectedNodeType,
     updateSelectedNode,
+    updateRootBook,
     reEncodedString,
     reEncodeError,
     formattedVersion,
   } = props;
 
   const [editMode, setEditMode] = useState(false);
+  const [jsonEditMode, setJsonEditMode] = useState(false);
 
   const isBook = decoded?.type === 'blueprint_book';
   const book = isBook && decoded ? (decoded.raw as { blueprint_book: BlueprintBook }).blueprint_book : null;
@@ -61,12 +66,20 @@ export function BlueprintTab(props: BlueprintEditorState) {
             alignItems: 'start',
           } : undefined}
         >
-          {/* Sidebar: Book tree (only for blueprint books) */}
+          {/* Sidebar: Book tree + actions (only for blueprint books) */}
           {isBook && book && (
-            <div className="rounded-lg border border-border bg-card" style={{ minHeight: 200, maxHeight: 'calc(100vh - 250px)', overflow: 'hidden' }}>
-              <BlueprintBookTree
+            <div className="rounded-lg border border-border bg-card" style={{ minHeight: 200, maxHeight: 'calc(100vh - 250px)', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ flex: 1, overflow: 'auto' }}>
+                <BlueprintBookTree
+                  book={book}
+                  selectedPath={selectedPath}
+                  onSelectPath={setSelectedPath}
+                />
+              </div>
+              <BlueprintBookActions
                 book={book}
                 selectedPath={selectedPath}
+                onUpdateBook={updateRootBook}
                 onSelectPath={setSelectedPath}
               />
             </div>
@@ -108,10 +121,27 @@ export function BlueprintTab(props: BlueprintEditorState) {
               <BlueprintStats blueprint={selectedNode as Blueprint} />
             )}
 
-            <BlueprintJsonViewer
-              data={selectedNode}
-              maxInitialDepth={1}
-            />
+            {jsonEditMode ? (
+              <BlueprintJsonEditor
+                data={selectedNode}
+                nodeType={selectedNodeType}
+                onApply={updateSelectedNode}
+                onClose={() => setJsonEditMode(false)}
+              />
+            ) : (
+              <div>
+                <div className="flex items-center justify-end mb-1">
+                  <Button variant="ghost" size="sm" onClick={() => setJsonEditMode(true)}>
+                    <CodeIcon className="size-3.5 mr-1.5" />
+                    Edit JSON
+                  </Button>
+                </div>
+                <BlueprintJsonViewer
+                  data={selectedNode}
+                  maxInitialDepth={1}
+                />
+              </div>
+            )}
 
             <BlueprintExport
               reEncodedString={reEncodedString}

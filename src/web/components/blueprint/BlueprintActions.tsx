@@ -10,6 +10,11 @@ import {
   getEntityNames,
   removeByType,
   replaceEntity,
+  getTileNames,
+  addTilesUnderEntities,
+  addTilesFillBounds,
+  removeTilesByType,
+  clearAllTiles,
 } from '../../../blueprint/index.js';
 import { Button, Input, Label } from '../../ui/index.js';
 import CrosshairIcon from 'lucide-react/dist/esm/icons/crosshair';
@@ -19,6 +24,13 @@ import FlipHorizontal2Icon from 'lucide-react/dist/esm/icons/flip-horizontal-2';
 import FlipVertical2Icon from 'lucide-react/dist/esm/icons/flip-vertical-2';
 import Trash2Icon from 'lucide-react/dist/esm/icons/trash-2';
 import ArrowRightLeftIcon from 'lucide-react/dist/esm/icons/arrow-right-left';
+import GridIcon from 'lucide-react/dist/esm/icons/grid-3x3';
+import SquareIcon from 'lucide-react/dist/esm/icons/square';
+import XIcon from 'lucide-react/dist/esm/icons/x';
+
+const SELECT_CLASS = "bg-input/30 border-input text-foreground h-8 rounded-md border px-2 text-xs focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none";
+
+const COMMON_TILES = ["landfill", "stone-path", "concrete", "hazard-concrete-left", "refined-concrete", "refined-hazard-concrete-left"];
 
 interface BlueprintActionsProps {
   node: BlueprintNode;
@@ -31,10 +43,13 @@ export function BlueprintActions({ node, nodeType, onUpdate }: BlueprintActionsP
   const bp = isBlueprint ? (node as Blueprint) : null;
   const hasEntities = bp && ((bp.entities?.length ?? 0) > 0 || (bp.tiles?.length ?? 0) > 0);
   const entityNames = bp ? getEntityNames(bp) : [];
+  const tileNames = bp ? getTileNames(bp) : [];
 
   const [removeTarget, setRemoveTarget] = useState('');
   const [replaceFrom, setReplaceFrom] = useState('');
   const [replaceTo, setReplaceTo] = useState('');
+  const [addTileName, setAddTileName] = useState('landfill');
+  const [removeTileTarget, setRemoveTileTarget] = useState('');
 
   const makeTransformHandler = useCallback(
     (fn: (bp: Blueprint) => Blueprint) => () => {
@@ -64,6 +79,36 @@ export function BlueprintActions({ node, nodeType, onUpdate }: BlueprintActionsP
     setReplaceFrom('');
     setReplaceTo('');
   }, [onUpdate, replaceFrom, replaceTo]);
+
+  const handleAddTilesUnder = useCallback(() => {
+    onUpdate((n, type) => {
+      if (type !== 'blueprint') return n;
+      return addTilesUnderEntities(n as Blueprint, addTileName);
+    });
+  }, [onUpdate, addTileName]);
+
+  const handleAddTilesFill = useCallback(() => {
+    onUpdate((n, type) => {
+      if (type !== 'blueprint') return n;
+      return addTilesFillBounds(n as Blueprint, addTileName);
+    });
+  }, [onUpdate, addTileName]);
+
+  const handleRemoveTiles = useCallback(() => {
+    if (!removeTileTarget) return;
+    onUpdate((n, type) => {
+      if (type !== 'blueprint') return n;
+      return removeTilesByType(n as Blueprint, removeTileTarget);
+    });
+    setRemoveTileTarget('');
+  }, [onUpdate, removeTileTarget]);
+
+  const handleClearTiles = useCallback(() => {
+    onUpdate((n, type) => {
+      if (type !== 'blueprint') return n;
+      return clearAllTiles(n as Blueprint);
+    });
+  }, [onUpdate]);
 
   if (!isBlueprint || !hasEntities) return null;
 
@@ -99,15 +144,10 @@ export function BlueprintActions({ node, nodeType, onUpdate }: BlueprintActionsP
         <div className="flex items-end gap-2 flex-wrap">
           <span className="text-xs text-muted-foreground mr-1 self-center">Entities</span>
 
-          {/* Remove by type */}
           <div className="flex items-end gap-1">
             <div>
               <Label className="text-xs text-muted-foreground">Remove</Label>
-              <select
-                className="bg-input/30 border-input text-foreground h-8 rounded-md border px-2 text-xs focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none"
-                value={removeTarget}
-                onChange={e => setRemoveTarget(e.target.value)}
-              >
+              <select className={SELECT_CLASS} value={removeTarget} onChange={e => setRemoveTarget(e.target.value)}>
                 <option value="">Select entity...</option>
                 {entityNames.map(name => (
                   <option key={name} value={name}>{name}</option>
@@ -120,15 +160,10 @@ export function BlueprintActions({ node, nodeType, onUpdate }: BlueprintActionsP
             </Button>
           </div>
 
-          {/* Replace entity */}
           <div className="flex items-end gap-1">
             <div>
               <Label className="text-xs text-muted-foreground">Replace</Label>
-              <select
-                className="bg-input/30 border-input text-foreground h-8 rounded-md border px-2 text-xs focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none"
-                value={replaceFrom}
-                onChange={e => setReplaceFrom(e.target.value)}
-              >
+              <select className={SELECT_CLASS} value={replaceFrom} onChange={e => setReplaceFrom(e.target.value)}>
                 <option value="">From...</option>
                 {entityNames.map(name => (
                   <option key={name} value={name}>{name}</option>
@@ -151,6 +186,52 @@ export function BlueprintActions({ node, nodeType, onUpdate }: BlueprintActionsP
           </div>
         </div>
       )}
+
+      {/* Tile operations */}
+      <div className="flex items-end gap-2 flex-wrap">
+        <span className="text-xs text-muted-foreground mr-1 self-center">Tiles</span>
+
+        <div className="flex items-end gap-1">
+          <div>
+            <Label className="text-xs text-muted-foreground">Add</Label>
+            <select className={SELECT_CLASS} value={addTileName} onChange={e => setAddTileName(e.target.value)}>
+              {COMMON_TILES.map(name => (
+                <option key={name} value={name}>{name}</option>
+              ))}
+            </select>
+          </div>
+          <Button variant="outline" size="sm" onClick={handleAddTilesUnder} disabled={!bp?.entities?.length}>
+            <SquareIcon className="size-3.5 mr-1.5" />
+            Under entities
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleAddTilesFill}>
+            <GridIcon className="size-3.5 mr-1.5" />
+            Fill bounds
+          </Button>
+        </div>
+
+        {tileNames.length > 0 && (
+          <div className="flex items-end gap-1">
+            <div>
+              <Label className="text-xs text-muted-foreground">Remove</Label>
+              <select className={SELECT_CLASS} value={removeTileTarget} onChange={e => setRemoveTileTarget(e.target.value)}>
+                <option value="">Select tile...</option>
+                {tileNames.map(name => (
+                  <option key={name} value={name}>{name}</option>
+                ))}
+              </select>
+            </div>
+            <Button variant="outline" size="sm" onClick={handleRemoveTiles} disabled={!removeTileTarget}>
+              <Trash2Icon className="size-3.5 mr-1.5" />
+              Remove
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleClearTiles}>
+              <XIcon className="size-3.5 mr-1.5" />
+              Clear all
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
