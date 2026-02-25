@@ -1,6 +1,4 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const dagre = require('@dagrejs/dagre');
+import dagre from '@dagrejs/dagre';
 
 export interface TechPosition {
   x: number;

@@ -9,19 +9,26 @@ const layout = techTreeLayout as {
 };
 
 export function buildTechTree(technologies: Technology[]): { nodes: TechNode[]; edges: TechEdge[] } {
-  const nodes: TechNode[] = technologies.map(tech => ({
-    id: tech.name,
-    type: 'tech' as const,
-    position: layout.positions[tech.name] ?? { x: 0, y: 0 },
-    data: {
-      label: formatName(tech.name),
-      technology: tech,
-      highlighted: false,
-      dimmed: false,
-      selected: false,
-    } satisfies TechNodeData,
-    draggable: false,
-  }));
+  const nodes: TechNode[] = technologies.map(tech => {
+    const pos = layout.positions[tech.name];
+    if (!pos && import.meta.env.DEV) {
+      console.warn(`[tech-tree] Missing layout position for "${tech.name}", falling back to (0,0)`);
+    }
+
+    return {
+      id: tech.name,
+      type: 'tech' as const,
+      position: pos ?? { x: 0, y: 0 },
+      data: {
+        label: formatName(tech.name),
+        technology: tech,
+        highlighted: false,
+        dimmed: false,
+        selected: false,
+      } satisfies TechNodeData,
+      draggable: false,
+    };
+  });
 
   const edges: TechEdge[] = layout.edges.map(e => ({
     id: `${e.source}->${e.target}`,

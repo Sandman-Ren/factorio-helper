@@ -72,7 +72,7 @@ console.log(`  ${technologies.length} technologies`);
 
 console.log('Generating tech tree layout...');
 const techLayout = generateTechLayout(technologies);
-writeFileSync(join(OUT_DIR, 'tech-tree-layout.json'), JSON.stringify(techLayout));
+writeFileSync(join(OUT_DIR, 'tech-tree-layout.json'), JSON.stringify(techLayout, null, 2));
 console.log(`  ${Object.keys(techLayout.positions).length} positions, ${techLayout.edges.length} edges`);
 
 console.log('Extracting fuels...');
