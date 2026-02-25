@@ -11,6 +11,7 @@ import { BlueprintBookActions } from './BlueprintBookActions.js';
 import { BlueprintJsonViewer } from './BlueprintJsonViewer.js';
 import { BlueprintJsonEditor } from './BlueprintJsonEditor.js';
 import { BlueprintExport } from './BlueprintExport.js';
+import { BlueprintPreview } from './preview/BlueprintPreview.js';
 import { Button } from '../../ui/index.js';
 import PencilIcon from 'lucide-react/dist/esm/icons/pencil';
 import EyeIcon from 'lucide-react/dist/esm/icons/eye';
@@ -119,6 +120,10 @@ export function BlueprintTab(props: BlueprintEditorState) {
 
             {isBlueprint && (
               <BlueprintStats blueprint={selectedNode as Blueprint} />
+            )}
+
+            {isBlueprint && (
+              <BlueprintPreview blueprint={selectedNode as Blueprint} />
             )}
 
             {jsonEditMode ? (
