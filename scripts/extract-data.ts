@@ -10,6 +10,7 @@ import { extractItemGroups } from '../src/parser/extract-item-groups.js';
 import { extractTechnologies } from '../src/parser/extract-technologies.js';
 import { extractFuels } from '../src/parser/extract-fuels.js';
 import { extractPowerEntities } from '../src/parser/extract-power-entities.js';
+import { generateTechLayout } from './generate-tech-layout.js';
 
 const DATA_ROOT = join(import.meta.dirname, '..', 'factorio-data', 'base', 'prototypes');
 const SPACE_AGE_ROOT = join(import.meta.dirname, '..', 'factorio-data', 'space-age', 'prototypes');
@@ -68,6 +69,11 @@ const technologies = extractTechnologies(
 );
 writeFileSync(join(OUT_DIR, 'technologies.json'), JSON.stringify(technologies, null, 2));
 console.log(`  ${technologies.length} technologies`);
+
+console.log('Generating tech tree layout...');
+const techLayout = generateTechLayout(technologies);
+writeFileSync(join(OUT_DIR, 'tech-tree-layout.json'), JSON.stringify(techLayout, null, 2));
+console.log(`  ${Object.keys(techLayout.positions).length} positions, ${techLayout.edges.length} edges`);
 
 console.log('Extracting fuels...');
 const fuels = [
