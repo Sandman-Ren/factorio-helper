@@ -151,16 +151,15 @@ export function usePowerCalculator() {
     });
   }, [entries, defaultFuel]);
 
-  const totalElectricKW = useMemo(() => {
-    return computedEntries
-      .filter(e => e.entity.energy_type !== 'burner')
-      .reduce((sum, e) => sum + e.sustainedKW, 0);
-  }, [computedEntries]);
-
-  const totalPeakKW = useMemo(() => {
-    return computedEntries
-      .filter(e => e.entity.energy_type !== 'burner')
-      .reduce((sum, e) => sum + (e.peakKW ?? e.sustainedKW), 0);
+  const { totalElectricKW, totalPeakKW } = useMemo(() => {
+    let electric = 0;
+    let peak = 0;
+    for (const e of computedEntries) {
+      if (e.entity.energy_type === 'burner') continue;
+      electric += e.sustainedKW;
+      peak += e.peakKW ?? e.sustainedKW;
+    }
+    return { totalElectricKW: electric, totalPeakKW: peak };
   }, [computedEntries]);
 
   const hasPeakDifference = totalPeakKW !== totalElectricKW;

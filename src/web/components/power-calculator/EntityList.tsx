@@ -44,6 +44,7 @@ export function EntityList({ entries, onUpdateCount, onUpdateFuel, onRemove, def
               type="number"
               min={0}
               step="any"
+              aria-label={`${entry.entityName.replace(/-/g, ' ')} count`}
               value={entry.count}
               onChange={e => onUpdateCount(entry.id, parseFloat(e.target.value) || 0)}
               className="w-20 tabular-nums text-right"

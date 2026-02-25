@@ -126,7 +126,7 @@ export function App() {
             </div>
 
             <details className="group mb-6 rounded-md border border-border bg-card/50 p-3">
-              <summary className="cursor-pointer text-sm text-muted-foreground select-none">
+              <summary className="cursor-pointer text-sm text-muted-foreground select-none rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 Machine &amp; Fuel Defaults
               </summary>
               <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 12 }}>
