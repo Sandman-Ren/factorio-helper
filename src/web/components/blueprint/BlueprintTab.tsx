@@ -3,7 +3,7 @@ import type { useBlueprintEditor } from '../../hooks/useBlueprintEditor.js';
 import { useHotkeys } from '../../hooks/useHotkeys.js';
 import { useEntitySelection } from '../../hooks/useEntitySelection.js';
 import type { Blueprint, BlueprintBook, Entity } from '../../../blueprint/index.js';
-import { removeEntities, rotateEntities } from '../../../blueprint/index.js';
+import { addEntity, removeEntities, rotateEntities } from '../../../blueprint/index.js';
 import { BlueprintImport } from './BlueprintImport.js';
 import { BlueprintMetadata } from './BlueprintMetadata.js';
 import { BlueprintMetadataEditor } from './BlueprintMetadataEditor.js';
@@ -16,6 +16,7 @@ import { BlueprintJsonEditor } from './BlueprintJsonEditor.js';
 import { BlueprintExport } from './BlueprintExport.js';
 import { BlueprintPreview } from './preview/BlueprintPreview.js';
 import { EntityPropertyPanel } from './EntityPropertyPanel.js';
+import { EntityPalette } from './EntityPalette.js';
 import { Button } from '../../ui/index.js';
 import PencilIcon from 'lucide-react/dist/esm/icons/pencil';
 import EyeIcon from 'lucide-react/dist/esm/icons/eye';
@@ -81,6 +82,20 @@ export function BlueprintTab(props: BlueprintEditorState) {
     });
   }, [updateSelectedNode]);
 
+  // Entity palette: select entity to enter place mode
+  const handlePaletteSelect = useCallback((name: string) => {
+    if (_editorMode.mode.type === 'place' && _editorMode.mode.entityName === name) {
+      _editorMode.resetMode(); // toggle off
+    } else {
+      _editorMode.startPlacing(name);
+    }
+  }, [_editorMode]);
+
+  // Place entity on canvas click
+  const handlePlaceEntity = useCallback((name: string, x: number, y: number, direction: number) => {
+    handleBlueprintUpdate(b => addEntity(b, { name, position: { x, y }, direction }));
+  }, [handleBlueprintUpdate]);
+
   // Keyboard shortcuts
   const hotkeys = useMemo(() => ({
     'ctrl+z': () => undo(),
@@ -97,12 +112,16 @@ export function BlueprintTab(props: BlueprintEditorState) {
       }
     },
     'r': () => {
-      if (selection.selected.size > 0 && bp) {
+      if (_editorMode.mode.type === 'place') {
+        _editorMode.rotatePlacementDirection(true);
+      } else if (selection.selected.size > 0 && bp) {
         handleBlueprintUpdate(b => rotateEntities(b, selection.selected, true));
       }
     },
     'shift+r': () => {
-      if (selection.selected.size > 0 && bp) {
+      if (_editorMode.mode.type === 'place') {
+        _editorMode.rotatePlacementDirection(false);
+      } else if (selection.selected.size > 0 && bp) {
         handleBlueprintUpdate(b => rotateEntities(b, selection.selected, false));
       }
     },
@@ -215,11 +234,29 @@ export function BlueprintTab(props: BlueprintEditorState) {
             )}
 
             {isBlueprint && (
-              <BlueprintPreview
-                blueprint={selectedNode as Blueprint}
-                selectedEntityNumbers={selection.selected}
-                onEntitySelect={handleEntitySelect}
-                onClearSelection={selection.clearSelection}
+              <div style={{ display: 'grid', gridTemplateColumns: _editorMode.mode.type === 'place' ? '180px 1fr' : '1fr', gap: 8 }}>
+                {_editorMode.mode.type === 'place' && (
+                  <EntityPalette
+                    activeEntity={_editorMode.mode.entityName}
+                    onSelectEntity={handlePaletteSelect}
+                  />
+                )}
+                <BlueprintPreview
+                  blueprint={selectedNode as Blueprint}
+                  selectedEntityNumbers={selection.selected}
+                  onEntitySelect={handleEntitySelect}
+                  onClearSelection={selection.clearSelection}
+                  editorMode={_editorMode.mode}
+                  onPlaceEntity={handlePlaceEntity}
+                />
+              </div>
+            )}
+
+            {/* Entity palette toggle (when not in place mode) */}
+            {isBlueprint && _editorMode.mode.type !== 'place' && (
+              <EntityPalette
+                activeEntity={null}
+                onSelectEntity={handlePaletteSelect}
               />
             )}
 

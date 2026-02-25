@@ -1,10 +1,12 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type { Blueprint, Entity } from '../../../../blueprint/types.js';
+import type { EditorMode } from '../../../hooks/useEditorMode.js';
 import { useViewport } from './useViewport.js';
 import { useBlueprintLayout } from './useBlueprintLayout.js';
 import { BlueprintTileLayer } from './BlueprintTileLayer.js';
 import { BlueprintEntityLayer } from './BlueprintEntityLayer.js';
 import { BlueprintWireLayer } from './BlueprintWireLayer.js';
+import { PlacementGhost, screenToWorld } from './PlacementGhost.js';
 import { exportPreviewPng } from './exportImage.js';
 import { TILE_SIZE } from './constants.js';
 import { Button } from '../../../ui/index.js';
@@ -28,6 +30,8 @@ interface BlueprintPreviewProps {
   onEntitySelect: (entity: Entity, ctrlKey: boolean) => void;
   onClearSelection: () => void;
   onEntityHover?: (entity: Entity | null) => void;
+  editorMode?: EditorMode;
+  onPlaceEntity?: (name: string, x: number, y: number, direction: number) => void;
 }
 
 export function BlueprintPreview({
@@ -36,6 +40,8 @@ export function BlueprintPreview({
   onEntitySelect,
   onClearSelection,
   onEntityHover: onEntityHoverProp,
+  editorMode,
+  onPlaceEntity,
 }: BlueprintPreviewProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const { panX, panY, zoom, isPanning, onWheel, onMouseDown, onMouseMove, onMouseUp, fitToBounds } = useViewport();
@@ -93,6 +99,34 @@ export function BlueprintPreview({
       setExporting(false);
     }
   }, [blueprint, wireSegments, layers]);
+
+  // Place mode: track cursor world position
+  const isPlacing = editorMode?.type === 'place';
+  const [cursorWorld, setCursorWorld] = useState<{ x: number; y: number } | null>(null);
+
+  const handleViewportMouseMove = useCallback((e: React.MouseEvent) => {
+    onMouseMove(e);
+    if (isPlacing && viewportRef.current) {
+      const rect = viewportRef.current.getBoundingClientRect();
+      setCursorWorld(screenToWorld(e.clientX, e.clientY, rect, panX, panY, zoom));
+    }
+  }, [onMouseMove, isPlacing, panX, panY, zoom]);
+
+  const handleViewportClick = useCallback((e: React.MouseEvent) => {
+    if (isPlacing && editorMode.type === 'place' && cursorWorld && onPlaceEntity) {
+      e.stopPropagation();
+      const snappedX = Math.round(cursorWorld.x - 0.5) + 0.5;
+      const snappedY = Math.round(cursorWorld.y - 0.5) + 0.5;
+      onPlaceEntity(editorMode.entityName, snappedX, snappedY, editorMode.direction);
+      return;
+    }
+    onClearSelection();
+  }, [isPlacing, editorMode, cursorWorld, onPlaceEntity, onClearSelection]);
+
+  const handleViewportLeave = useCallback(() => {
+    onMouseUp();
+    setCursorWorld(null);
+  }, [onMouseUp]);
 
   const entities = blueprint.entities ?? [];
   const tiles = blueprint.tiles ?? [];
@@ -167,15 +201,15 @@ export function BlueprintPreview({
           position: 'relative',
           height: 400,
           overflow: 'hidden',
-          cursor: isPanning ? 'grabbing' : 'grab',
+          cursor: isPanning ? 'grabbing' : isPlacing ? 'crosshair' : 'grab',
           backgroundColor: 'var(--background)',
         }}
         onWheel={onWheel}
         onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
+        onMouseMove={handleViewportMouseMove}
         onMouseUp={onMouseUp}
-        onMouseLeave={onMouseUp}
-        onClick={onClearSelection}
+        onMouseLeave={handleViewportLeave}
+        onClick={handleViewportClick}
       >
         {/* World container — transformed by pan/zoom */}
         <div
@@ -224,6 +258,16 @@ export function BlueprintPreview({
               selectedEntityNumbers={selectedEntityNumbers}
               onEntitySelect={onEntitySelect}
               onEntityHover={handleEntityHover}
+            />
+          )}
+
+          {/* Placement ghost */}
+          {isPlacing && editorMode.type === 'place' && cursorWorld && (
+            <PlacementGhost
+              entityName={editorMode.entityName}
+              worldX={cursorWorld.x}
+              worldY={cursorWorld.y}
+              direction={editorMode.direction}
             />
           )}
         </div>
