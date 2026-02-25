@@ -8,6 +8,8 @@ import type {
   UpgradePlanner,
   DeconstructionPlanner,
 } from '../../blueprint/index.js';
+import { useEditorHistory } from './useEditorHistory.js';
+import { useEditorMode } from './useEditorMode.js';
 
 export type BlueprintType =
   | 'blueprint'
@@ -165,6 +167,12 @@ export function useBlueprintEditor() {
   const [decodeError, setDecodeError] = useState<string | null>(null);
   const [selectedPath, setSelectedPath] = useState<NodePath>([]);
 
+  // History (undo/redo) — must be before callbacks that reference it
+  const history = useEditorHistory(decoded, selectedPath, setDecoded, setSelectedPath);
+
+  // Editor mode (select / place / wire)
+  const editorMode = useEditorMode();
+
   const handleDecode = useCallback((value?: string) => {
     const raw = (value ?? inputString).trim();
     if (!raw) {
@@ -176,6 +184,8 @@ export function useBlueprintEditor() {
       const type = detectType(data);
       setDecoded({ raw: data, type, originalString: raw });
       setDecodeError(null);
+      history.reset();
+      editorMode.resetMode();
 
       // Auto-select: for books, select the active_index child; otherwise root
       if (type === 'blueprint_book' && 'blueprint_book' in data) {
@@ -192,17 +202,19 @@ export function useBlueprintEditor() {
       setDecoded(null);
       setDecodeError(err instanceof Error ? err.message : 'Failed to decode blueprint string');
     }
-  }, [inputString]);
+  }, [inputString, history.reset, editorMode.resetMode]);
 
   const handleClear = useCallback(() => {
     setInputString('');
     setDecoded(null);
     setDecodeError(null);
     setSelectedPath([]);
-  }, []);
+    history.reset();
+    editorMode.resetMode();
+  }, [history.reset, editorMode.resetMode]);
 
-  /** Apply an updater function to the currently selected node. */
-  const updateSelectedNode = useCallback((
+  /** Apply an updater function to the currently selected node (raw, no history). */
+  const applyNodeUpdate = useCallback((
     updater: (node: BlueprintNode, type: BlueprintType) => BlueprintNode,
   ) => {
     setDecoded(prev => {
@@ -213,17 +225,26 @@ export function useBlueprintEditor() {
     });
   }, [selectedPath]);
 
-  /** Apply an updater to the root book (for structural book mutations). */
+  /** Apply an updater function to the currently selected node, with undo support. */
+  const updateSelectedNode = useCallback((
+    updater: (node: BlueprintNode, type: BlueprintType) => BlueprintNode,
+  ) => {
+    history.pushSnapshot();
+    applyNodeUpdate(updater);
+  }, [history.pushSnapshot, applyNodeUpdate]);
+
+  /** Apply an updater to the root book (for structural book mutations), with undo support. */
   const updateRootBook = useCallback((
     updater: (book: BlueprintBook) => BlueprintBook,
   ) => {
+    history.pushSnapshot();
     setDecoded(prev => {
       if (!prev || !('blueprint_book' in prev.raw)) return prev;
       const newBook = updater(prev.raw.blueprint_book);
       if (newBook === prev.raw.blueprint_book) return prev;
       return { ...prev, raw: { blueprint_book: newBook } };
     });
-  }, []);
+  }, [history.pushSnapshot]);
 
   const resolved = useMemo(() => {
     if (!decoded) return null;
@@ -268,5 +289,12 @@ export function useBlueprintEditor() {
     reEncodedString: reEncoded.string,
     reEncodeError: reEncoded.error,
     formattedVersion,
+    // Undo/redo
+    undo: history.undo,
+    redo: history.redo,
+    canUndo: history.canUndo,
+    canRedo: history.canRedo,
+    // Editor mode
+    editorMode,
   };
 }

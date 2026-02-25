@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { useBlueprintEditor } from '../../hooks/useBlueprintEditor.js';
+import { useHotkeys } from '../../hooks/useHotkeys.js';
 import type { Blueprint, BlueprintBook } from '../../../blueprint/index.js';
 import { BlueprintImport } from './BlueprintImport.js';
 import { BlueprintMetadata } from './BlueprintMetadata.js';
@@ -16,6 +17,8 @@ import { Button } from '../../ui/index.js';
 import PencilIcon from 'lucide-react/dist/esm/icons/pencil';
 import EyeIcon from 'lucide-react/dist/esm/icons/eye';
 import CodeIcon from 'lucide-react/dist/esm/icons/code';
+import UndoIcon from 'lucide-react/dist/esm/icons/undo-2';
+import RedoIcon from 'lucide-react/dist/esm/icons/redo-2';
 
 type BlueprintEditorState = ReturnType<typeof useBlueprintEditor>;
 
@@ -36,10 +39,24 @@ export function BlueprintTab(props: BlueprintEditorState) {
     reEncodedString,
     reEncodeError,
     formattedVersion,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    editorMode: _editorMode,
   } = props;
 
   const [editMode, setEditMode] = useState(false);
   const [jsonEditMode, setJsonEditMode] = useState(false);
+
+  // Global keyboard shortcuts
+  const hotkeys = useMemo(() => ({
+    'ctrl+z': () => undo(),
+    'ctrl+shift+z': () => redo(),
+    'ctrl+y': () => redo(),
+    'escape': () => _editorMode.resetMode(),
+  }), [undo, redo, _editorMode.resetMode]);
+  useHotkeys(hotkeys, !!decoded);
 
   const isBook = decoded?.type === 'blueprint_book';
   const book = isBook && decoded ? (decoded.raw as { blueprint_book: BlueprintBook }).blueprint_book : null;
@@ -88,24 +105,47 @@ export function BlueprintTab(props: BlueprintEditorState) {
 
           {/* Main content */}
           <div className="space-y-4">
-            {/* View/Edit toggle */}
+            {/* Toolbar */}
             <div className="flex items-center justify-between">
               <BlueprintActions
                 node={selectedNode}
                 nodeType={selectedNodeType}
                 onUpdate={updateSelectedNode}
               />
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setEditMode(!editMode)}
-              >
-                {editMode ? (
-                  <><EyeIcon className="size-3.5 mr-1.5" />View</>
-                ) : (
-                  <><PencilIcon className="size-3.5 mr-1.5" />Edit</>
-                )}
-              </Button>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-1.5"
+                  onClick={undo}
+                  disabled={!canUndo}
+                  title="Undo (Ctrl+Z)"
+                >
+                  <UndoIcon className="size-3.5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-1.5"
+                  onClick={redo}
+                  disabled={!canRedo}
+                  title="Redo (Ctrl+Shift+Z)"
+                >
+                  <RedoIcon className="size-3.5" />
+                </Button>
+                <span className="w-px h-4 bg-border mx-0.5" />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setEditMode(!editMode)}
+                >
+                  {editMode ? (
+                    <><EyeIcon className="size-3.5 mr-1.5" />View</>
+                  ) : (
+                    <><PencilIcon className="size-3.5 mr-1.5" />Edit</>
+                  )}
+                </Button>
+              </div>
             </div>
 
             {editMode ? (
