@@ -5,9 +5,11 @@ import { useBlueprintLayout } from './useBlueprintLayout.js';
 import { BlueprintTileLayer } from './BlueprintTileLayer.js';
 import { BlueprintEntityLayer } from './BlueprintEntityLayer.js';
 import { BlueprintWireLayer } from './BlueprintWireLayer.js';
+import { exportPreviewPng } from './exportImage.js';
 import { TILE_SIZE } from './constants.js';
 import { Button } from '../../../ui/index.js';
 import MaximizeIcon from 'lucide-react/dist/esm/icons/maximize';
+import DownloadIcon from 'lucide-react/dist/esm/icons/download';
 import GridIcon from 'lucide-react/dist/esm/icons/grid-3x3';
 import BoxIcon from 'lucide-react/dist/esm/icons/box';
 import SquareIcon from 'lucide-react/dist/esm/icons/square';
@@ -71,6 +73,22 @@ export function BlueprintPreview({ blueprint }: BlueprintPreviewProps) {
     setHoveredEntity(entity);
   }, []);
 
+  const [exporting, setExporting] = useState(false);
+
+  const handleExport = useCallback(async () => {
+    setExporting(true);
+    try {
+      await exportPreviewPng(blueprint, wireSegments, {
+        showGrid: layers.grid,
+        showTiles: layers.tiles,
+        showEntities: layers.entities,
+        showWires: layers.wires,
+      });
+    } finally {
+      setExporting(false);
+    }
+  }, [blueprint, wireSegments, layers]);
+
   const handleViewportClick = useCallback(() => {
     setSelectedEntity(null);
   }, []);
@@ -85,6 +103,9 @@ export function BlueprintPreview({ blueprint }: BlueprintPreviewProps) {
         <span className="text-xs text-muted-foreground mr-1">Preview</span>
         <Button variant="ghost" size="sm" className="h-7 px-1.5" onClick={handleFit} title="Fit to view">
           <MaximizeIcon className="size-3.5" />
+        </Button>
+        <Button variant="ghost" size="sm" className="h-7 px-1.5" onClick={handleExport} disabled={exporting} title="Export as PNG">
+          <DownloadIcon className="size-3.5" />
         </Button>
         <span className="w-px h-4 bg-border mx-0.5" />
         <Button
