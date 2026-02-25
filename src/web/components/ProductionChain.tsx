@@ -21,7 +21,6 @@ import ChevronDownIcon from 'lucide-react/dist/esm/icons/chevron-down';
 interface Props {
   node: ProductionNode;
   timeUnit: TimeUnit;
-  depth?: number;
   categoryMachines?: Map<string, Machine[]>;
   machineOverrides?: MachineOverrides;
   onMachineChange?: (item: string, machineName: string) => void;
@@ -34,6 +33,7 @@ interface Props {
 
 const TIME_LABELS: Record<TimeUnit, string> = { sec: '/s', min: '/min', hour: '/hr' };
 const TIME_MULTIPLIERS: Record<TimeUnit, number> = { sec: 1, min: 60, hour: 3600 };
+const GRID_COLUMNS = '16px auto auto auto 1fr auto';
 
 function formatRate(ratePerSecond: number, timeUnit: TimeUnit): string {
   const rate = ratePerSecond * TIME_MULTIPLIERS[timeUnit];
@@ -112,23 +112,203 @@ function MachineSelector({ current, alternatives, onSelect }: {
   );
 }
 
-export function ProductionChain({ node, timeUnit, depth = 0, categoryMachines, machineOverrides, onMachineChange, fuels, fuelOverrides, onFuelChange, itemToTech, onTechClick }: Props) {
-  const [expanded, setExpanded] = useState(depth < 3);
-  const hasChildren = node.children.length > 0;
-  const isRaw = !node.recipe;
-  const tech = itemToTech?.get(node.item);
+/** Renders the tech badge with a technology icon. */
+function TechBadge({ tech, onTechClick }: { tech: Technology; onTechClick?: (name: string) => void }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span
+          onClick={e => {
+            e.stopPropagation();
+            onTechClick?.(tech.name);
+          }}
+          className={onTechClick ? 'cursor-pointer' : undefined}
+        >
+          <Badge variant="outline" className="text-[10px] text-muted-foreground gap-1 py-0 px-1.5">
+            <ItemIcon name={tech.name} size={12} category="technology" />
+            {tech.name.replace(/-/g, ' ')}
+          </Badge>
+        </span>
+      </TooltipTrigger>
+      <TooltipContent>Requires: {tech.name.replace(/-/g, ' ')}</TooltipContent>
+    </Tooltip>
+  );
+}
 
-  // Filter fuels to the machine's fuel categories (usually "chemical")
+/** Machine badge content shared between root and node rows. */
+function MachineBadge({ node, timeUnit, categoryMachines, onMachineChange, fuels, fuelOverrides, onFuelChange }: {
+  node: ProductionNode;
+  timeUnit: TimeUnit;
+  categoryMachines?: Map<string, Machine[]>;
+  onMachineChange?: (item: string, machineName: string) => void;
+  fuels?: Fuel[];
+  fuelOverrides?: FuelOverrides;
+  onFuelChange?: (item: string, fuelName: string) => void;
+}) {
+  if (!node.machine) return null;
+
+  const alternatives = categoryMachines?.get(node.recipe?.category ?? '');
+  const hasAlternatives = alternatives && alternatives.length > 1;
+  const isBurner = node.machine.energy_type === 'burner';
+  const isElectric = node.machine.energy_type === 'electric';
   const compatibleFuels = fuels?.filter(f => {
     const cats = node.machine?.fuel_categories;
     return cats ? cats.includes(f.fuel_category) : f.fuel_category === 'chemical';
   }) ?? [];
 
-  const isBurner = node.machine?.energy_type === 'burner';
-  const isElectric = node.machine?.energy_type === 'electric';
+  return (
+    <span style={{
+      fontSize: 13,
+      color: 'var(--foreground)',
+      background: 'var(--accent)',
+      padding: '2px 8px',
+      borderRadius: 4,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 4,
+    }}>
+      {formatMachines(node.machinesNeeded)} x{' '}
+      {hasAlternatives ? (
+        <MachineSelector
+          current={node.machine}
+          alternatives={alternatives}
+          onSelect={name => onMachineChange?.(node.item, name)}
+        />
+      ) : (
+        <ItemIcon name={node.machine.name} size={24} />
+      )}
+
+      {isElectric && node.powerKW > 0 && (
+        <span className="text-foreground/80 text-xs ml-1">
+          {'\u26A1'}{formatPower(node.powerKW)}
+        </span>
+      )}
+      {isBurner && node.fuel && (
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 2, marginLeft: 4 }}>
+          {compatibleFuels.length > 1 && onFuelChange ? (
+            <FuelSelector
+              current={fuelOverrides?.[node.item] ?? node.fuel}
+              fuels={compatibleFuels}
+              onSelect={name => onFuelChange(node.item, name)}
+            />
+          ) : (
+            <ItemIcon name={node.fuel} size={20} />
+          )}
+          <span className="text-foreground/80 text-xs">
+            {formatRate(node.fuelPerSecond, timeUnit)}{TIME_LABELS[timeUnit]}
+          </span>
+        </span>
+      )}
+    </span>
+  );
+}
+
+/** Internal recursive node that renders as grid items (row + children) via subgrid. */
+function ProductionChainNode({ node, timeUnit, depth, categoryMachines, onMachineChange, fuels, fuelOverrides, onFuelChange, itemToTech, onTechClick }: Props & { depth: number }) {
+  const [expanded, setExpanded] = useState(depth < 3);
+  const hasChildren = node.children.length > 0;
+  const isRaw = !node.recipe;
+  const tech = itemToTech?.get(node.item);
 
   return (
-    <div style={{ marginLeft: depth > 0 ? 20 : 0 }}>
+    <>
+      {/* Row — subgrid aligns columns with siblings */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'subgrid',
+          gridColumn: '1 / -1',
+          alignItems: 'center',
+          padding: '6px 8px',
+          cursor: hasChildren ? 'pointer' : 'default',
+          userSelect: 'none',
+        }}
+        onClick={() => hasChildren && setExpanded(!expanded)}
+      >
+        {/* Col 1: Arrow */}
+        <span style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>
+          {hasChildren ? (expanded ? '\u25BC' : '\u25B6') : ''}
+        </span>
+
+        {/* Col 2: Item icon */}
+        <ItemIcon name={node.item} size={28} />
+
+        {/* Col 3: Rate */}
+        <span style={{ color: 'var(--muted-foreground)', fontSize: 14 }}>
+          {formatRate(node.ratePerSecond, timeUnit)}{TIME_LABELS[timeUnit]}
+        </span>
+
+        {/* Col 4: Tech badge (wrapped to guarantee single grid item) */}
+        <span>
+          {tech ? <TechBadge tech={tech} onTechClick={onTechClick} /> : null}
+        </span>
+
+        {/* Col 5: Spacer */}
+        <span />
+
+        {/* Col 6: Machine badge / raw label */}
+        <span style={{ justifySelf: 'end' }}>
+          {node.machine ? (
+            <MachineBadge
+              node={node}
+              timeUnit={timeUnit}
+              categoryMachines={categoryMachines}
+              onMachineChange={onMachineChange}
+              fuels={fuels}
+              fuelOverrides={fuelOverrides}
+              onFuelChange={onFuelChange}
+            />
+          ) : isRaw ? (
+            <span style={{ fontSize: 13, color: 'var(--primary)', fontStyle: 'italic' }}>
+              raw resource
+            </span>
+          ) : null}
+        </span>
+      </div>
+
+      {/* Children subtree — own grid for next-level sibling alignment */}
+      {expanded && hasChildren && (
+        <div
+          style={{
+            gridColumn: '1 / -1',
+            borderLeft: '2px solid var(--border)',
+            marginLeft: 7,
+            paddingLeft: 20,
+            display: 'grid',
+            gridTemplateColumns: GRID_COLUMNS,
+            columnGap: 8,
+          }}
+        >
+          {node.children.map((child, i) => (
+            <ProductionChainNode
+              key={`${child.item}-${i}`}
+              node={child}
+              depth={depth + 1}
+              timeUnit={timeUnit}
+              categoryMachines={categoryMachines}
+              onMachineChange={onMachineChange}
+              fuels={fuels}
+              fuelOverrides={fuelOverrides}
+              onFuelChange={onFuelChange}
+              itemToTech={itemToTech}
+              onTechClick={onTechClick}
+            />
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
+export function ProductionChain({ node, timeUnit, categoryMachines, onMachineChange, fuels, fuelOverrides, onFuelChange, itemToTech, onTechClick }: Props) {
+  const [expanded, setExpanded] = useState(true);
+  const hasChildren = node.children.length > 0;
+  const isRaw = !node.recipe;
+  const tech = itemToTech?.get(node.item);
+
+  return (
+    <div>
+      {/* Root row — flex layout (single row, alignment N/A) */}
       <div
         onClick={() => hasChildren && setExpanded(!expanded)}
         style={{
@@ -138,95 +318,39 @@ export function ProductionChain({ node, timeUnit, depth = 0, categoryMachines, m
           padding: '6px 8px',
           cursor: hasChildren ? 'pointer' : 'default',
           borderRadius: 4,
-          background: depth === 0 ? 'var(--card)' : 'transparent',
+          background: 'var(--card)',
           userSelect: 'none',
         }}
       >
-        {hasChildren && (
+        {hasChildren ? (
           <span style={{ fontSize: 12, width: 16, color: 'var(--muted-foreground)' }}>
             {expanded ? '\u25BC' : '\u25B6'}
           </span>
+        ) : (
+          <span style={{ width: 16 }} />
         )}
-        {!hasChildren && <span style={{ width: 16 }} />}
 
-        <ItemIcon name={node.item} size={depth === 0 ? 32 : 28} />
+        <ItemIcon name={node.item} size={32} />
 
         <span style={{ color: 'var(--muted-foreground)', fontSize: 14 }}>
           {formatRate(node.ratePerSecond, timeUnit)}{TIME_LABELS[timeUnit]}
         </span>
 
-        {tech && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span
-                onClick={e => {
-                  e.stopPropagation();
-                  onTechClick?.(tech.name);
-                }}
-                className={onTechClick ? 'cursor-pointer' : undefined}
-              >
-                <Badge variant="outline" className="text-[10px] text-muted-foreground gap-1 py-0 px-1.5">
-                  <ItemIcon name={tech.name} size={12} />
-                  {tech.name.replace(/-/g, ' ')}
-                </Badge>
-              </span>
-            </TooltipTrigger>
-            <TooltipContent>Requires: {tech.name.replace(/-/g, ' ')}</TooltipContent>
-          </Tooltip>
+        {tech && <TechBadge tech={tech} onTechClick={onTechClick} />}
+
+        {node.machine && (
+          <span style={{ marginLeft: 'auto' }}>
+            <MachineBadge
+              node={node}
+              timeUnit={timeUnit}
+              categoryMachines={categoryMachines}
+              onMachineChange={onMachineChange}
+              fuels={fuels}
+              fuelOverrides={fuelOverrides}
+              onFuelChange={onFuelChange}
+            />
+          </span>
         )}
-
-        {node.machine && (() => {
-          const alternatives = categoryMachines?.get(node.recipe?.category ?? '');
-          const hasAlternatives = alternatives && alternatives.length > 1;
-
-          return (
-            <span style={{
-              marginLeft: 'auto',
-              fontSize: 13,
-              color: 'var(--foreground)',
-              background: 'var(--accent)',
-              padding: '2px 8px',
-              borderRadius: 4,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-            }}>
-              {formatMachines(node.machinesNeeded)} x{' '}
-              {hasAlternatives ? (
-                <MachineSelector
-                  current={node.machine}
-                  alternatives={alternatives}
-                  onSelect={name => onMachineChange?.(node.item, name)}
-                />
-              ) : (
-                <ItemIcon name={node.machine.name} size={24} />
-              )}
-
-              {/* Power/fuel info */}
-              {isElectric && node.powerKW > 0 && (
-                <span className="text-foreground/80 text-xs ml-1">
-                  {'\u26A1'}{formatPower(node.powerKW)}
-                </span>
-              )}
-              {isBurner && node.fuel && (
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 2, marginLeft: 4 }}>
-                  {compatibleFuels.length > 1 && onFuelChange ? (
-                    <FuelSelector
-                      current={fuelOverrides?.[node.item] ?? node.fuel}
-                      fuels={compatibleFuels}
-                      onSelect={name => onFuelChange(node.item, name)}
-                    />
-                  ) : (
-                    <ItemIcon name={node.fuel} size={20} />
-                  )}
-                  <span className="text-foreground/80 text-xs">
-                    {formatRate(node.fuelPerSecond, timeUnit)}{TIME_LABELS[timeUnit]}
-                  </span>
-                </span>
-              )}
-            </span>
-          );
-        })()}
 
         {isRaw && (
           <span style={{
@@ -240,10 +364,30 @@ export function ProductionChain({ node, timeUnit, depth = 0, categoryMachines, m
         )}
       </div>
 
+      {/* Children — grid container for sibling column alignment */}
       {expanded && hasChildren && (
-        <div style={{ borderLeft: '2px solid var(--border)', marginLeft: 7 }}>
+        <div style={{
+          borderLeft: '2px solid var(--border)',
+          marginLeft: 7,
+          paddingLeft: 20,
+          display: 'grid',
+          gridTemplateColumns: GRID_COLUMNS,
+          columnGap: 8,
+        }}>
           {node.children.map((child, i) => (
-            <ProductionChain key={`${child.item}-${i}`} node={child} timeUnit={timeUnit} depth={depth + 1} categoryMachines={categoryMachines} machineOverrides={machineOverrides} onMachineChange={onMachineChange} fuels={fuels} fuelOverrides={fuelOverrides} onFuelChange={onFuelChange} itemToTech={itemToTech} onTechClick={onTechClick} />
+            <ProductionChainNode
+              key={`${child.item}-${i}`}
+              node={child}
+              depth={1}
+              timeUnit={timeUnit}
+              categoryMachines={categoryMachines}
+              onMachineChange={onMachineChange}
+              fuels={fuels}
+              fuelOverrides={fuelOverrides}
+              onFuelChange={onFuelChange}
+              itemToTech={itemToTech}
+              onTechClick={onTechClick}
+            />
           ))}
         </div>
       )}
