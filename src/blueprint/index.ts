@@ -16,7 +16,18 @@ export { BlueprintBookBuilder, BlueprintBuilder } from "./builder";
 export { connectGreen, connectPower, connectRed } from "./wire";
 
 // Transforms
-export { computeBounds, translateBy, translateToOrigin } from "./transforms";
+export {
+  computeBounds,
+  mirrorHorizontal,
+  mirrorVertical,
+  rotate90CCW,
+  rotate90CW,
+  translateBy,
+  translateToOrigin,
+} from "./transforms";
+
+// Entity operations
+export { getEntityNames, removeByType, replaceEntity } from "./entity-ops";
 
 // Types
 export type {
