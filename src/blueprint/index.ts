@@ -27,7 +27,17 @@ export {
 } from "./transforms";
 
 // Entity operations
-export { getEntityNames, removeByType, replaceEntity } from "./entity-ops";
+export {
+  addEntity,
+  cloneEntities,
+  getEntityNames,
+  moveEntities,
+  removeByType,
+  removeEntities,
+  replaceEntity,
+  rotateEntities,
+  updateEntity,
+} from "./entity-ops";
 
 // Tile operations
 export {

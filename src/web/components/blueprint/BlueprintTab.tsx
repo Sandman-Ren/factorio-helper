@@ -1,7 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import type { useBlueprintEditor } from '../../hooks/useBlueprintEditor.js';
 import { useHotkeys } from '../../hooks/useHotkeys.js';
-import type { Blueprint, BlueprintBook } from '../../../blueprint/index.js';
+import { useEntitySelection } from '../../hooks/useEntitySelection.js';
+import type { Blueprint, BlueprintBook, Entity } from '../../../blueprint/index.js';
+import { removeEntities, rotateEntities } from '../../../blueprint/index.js';
 import { BlueprintImport } from './BlueprintImport.js';
 import { BlueprintMetadata } from './BlueprintMetadata.js';
 import { BlueprintMetadataEditor } from './BlueprintMetadataEditor.js';
@@ -13,6 +15,7 @@ import { BlueprintJsonViewer } from './BlueprintJsonViewer.js';
 import { BlueprintJsonEditor } from './BlueprintJsonEditor.js';
 import { BlueprintExport } from './BlueprintExport.js';
 import { BlueprintPreview } from './preview/BlueprintPreview.js';
+import { EntityPropertyPanel } from './EntityPropertyPanel.js';
 import { Button } from '../../ui/index.js';
 import PencilIcon from 'lucide-react/dist/esm/icons/pencil';
 import EyeIcon from 'lucide-react/dist/esm/icons/eye';
@@ -48,19 +51,68 @@ export function BlueprintTab(props: BlueprintEditorState) {
 
   const [editMode, setEditMode] = useState(false);
   const [jsonEditMode, setJsonEditMode] = useState(false);
-
-  // Global keyboard shortcuts
-  const hotkeys = useMemo(() => ({
-    'ctrl+z': () => undo(),
-    'ctrl+shift+z': () => redo(),
-    'ctrl+y': () => redo(),
-    'escape': () => _editorMode.resetMode(),
-  }), [undo, redo, _editorMode.resetMode]);
-  useHotkeys(hotkeys, !!decoded);
+  const selection = useEntitySelection();
 
   const isBook = decoded?.type === 'blueprint_book';
   const book = isBook && decoded ? (decoded.raw as { blueprint_book: BlueprintBook }).blueprint_book : null;
   const isBlueprint = selectedNodeType === 'blueprint';
+  const bp = isBlueprint ? (selectedNode as Blueprint) : null;
+
+  // Find the single selected entity (for property panel)
+  const selectedEntity = useMemo(() => {
+    if (!bp?.entities || selection.selected.size !== 1) return null;
+    const num = [...selection.selected][0]!;
+    return bp.entities.find(e => e.entity_number === num) ?? null;
+  }, [bp, selection.selected]);
+
+  const handleEntitySelect = useCallback((entity: Entity, ctrlKey: boolean) => {
+    if (ctrlKey) {
+      selection.toggleOne(entity.entity_number);
+    } else {
+      selection.selectOne(entity.entity_number);
+    }
+  }, [selection.toggleOne, selection.selectOne]);
+
+  // Blueprint-level update wrapper for property panel
+  const handleBlueprintUpdate = useCallback((updater: (bp: Blueprint) => Blueprint) => {
+    updateSelectedNode((node, type) => {
+      if (type !== 'blueprint') return node;
+      return updater(node as Blueprint);
+    });
+  }, [updateSelectedNode]);
+
+  // Keyboard shortcuts
+  const hotkeys = useMemo(() => ({
+    'ctrl+z': () => undo(),
+    'ctrl+shift+z': () => redo(),
+    'ctrl+y': () => redo(),
+    'escape': () => {
+      if (selection.selected.size > 0) selection.clearSelection();
+      else _editorMode.resetMode();
+    },
+    'delete': () => {
+      if (selection.selected.size > 0 && bp) {
+        handleBlueprintUpdate(b => removeEntities(b, selection.selected));
+        selection.clearSelection();
+      }
+    },
+    'r': () => {
+      if (selection.selected.size > 0 && bp) {
+        handleBlueprintUpdate(b => rotateEntities(b, selection.selected, true));
+      }
+    },
+    'shift+r': () => {
+      if (selection.selected.size > 0 && bp) {
+        handleBlueprintUpdate(b => rotateEntities(b, selection.selected, false));
+      }
+    },
+    'ctrl+a': () => {
+      if (bp?.entities) {
+        selection.selectAll(bp.entities.map(e => e.entity_number));
+      }
+    },
+  }), [undo, redo, _editorMode.resetMode, selection, bp, handleBlueprintUpdate]);
+  useHotkeys(hotkeys, !!decoded);
 
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto', padding: 20 }}>
@@ -163,7 +215,30 @@ export function BlueprintTab(props: BlueprintEditorState) {
             )}
 
             {isBlueprint && (
-              <BlueprintPreview blueprint={selectedNode as Blueprint} />
+              <BlueprintPreview
+                blueprint={selectedNode as Blueprint}
+                selectedEntityNumbers={selection.selected}
+                onEntitySelect={handleEntitySelect}
+                onClearSelection={selection.clearSelection}
+              />
+            )}
+
+            {/* Entity property panel */}
+            {selectedEntity && (
+              <EntityPropertyPanel
+                entity={selectedEntity}
+                onUpdate={handleBlueprintUpdate}
+              />
+            )}
+
+            {/* Selection summary for multi-select */}
+            {selection.selected.size > 1 && (
+              <div className="rounded-lg border border-border bg-card p-3">
+                <div className="text-sm text-muted-foreground">
+                  {selection.selected.size} entities selected
+                  <span className="text-xs ml-2">(Delete to remove, R to rotate, Escape to deselect)</span>
+                </div>
+              </div>
             )}
 
             {jsonEditMode ? (

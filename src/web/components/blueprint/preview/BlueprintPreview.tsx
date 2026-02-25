@@ -24,9 +24,19 @@ interface LayerVisibility {
 
 interface BlueprintPreviewProps {
   blueprint: Blueprint;
+  selectedEntityNumbers: ReadonlySet<number>;
+  onEntitySelect: (entity: Entity, ctrlKey: boolean) => void;
+  onClearSelection: () => void;
+  onEntityHover?: (entity: Entity | null) => void;
 }
 
-export function BlueprintPreview({ blueprint }: BlueprintPreviewProps) {
+export function BlueprintPreview({
+  blueprint,
+  selectedEntityNumbers,
+  onEntitySelect,
+  onClearSelection,
+  onEntityHover: onEntityHoverProp,
+}: BlueprintPreviewProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const { panX, panY, zoom, isPanning, onWheel, onMouseDown, onMouseMove, onMouseUp, fitToBounds } = useViewport();
   const { bounds, wireSegments } = useBlueprintLayout(blueprint);
@@ -37,7 +47,6 @@ export function BlueprintPreview({ blueprint }: BlueprintPreviewProps) {
     entities: true,
     wires: true,
   });
-  const [selectedEntity, setSelectedEntity] = useState<number | null>(null);
   const [hoveredEntity, setHoveredEntity] = useState<Entity | null>(null);
 
   const toggleLayer = useCallback((layer: keyof LayerVisibility) => {
@@ -55,7 +64,6 @@ export function BlueprintPreview({ blueprint }: BlueprintPreviewProps) {
   useEffect(() => {
     if (bounds && !initialFitDone.current) {
       initialFitDone.current = true;
-      // Defer to next frame so viewport has dimensions
       requestAnimationFrame(handleFit);
     }
   }, [bounds, handleFit]);
@@ -65,13 +73,10 @@ export function BlueprintPreview({ blueprint }: BlueprintPreviewProps) {
     initialFitDone.current = false;
   }, [blueprint]);
 
-  const handleEntitySelect = useCallback((entity: Entity | null) => {
-    setSelectedEntity(entity?.entity_number ?? null);
-  }, []);
-
   const handleEntityHover = useCallback((entity: Entity | null) => {
     setHoveredEntity(entity);
-  }, []);
+    onEntityHoverProp?.(entity);
+  }, [onEntityHoverProp]);
 
   const [exporting, setExporting] = useState(false);
 
@@ -88,10 +93,6 @@ export function BlueprintPreview({ blueprint }: BlueprintPreviewProps) {
       setExporting(false);
     }
   }, [blueprint, wireSegments, layers]);
-
-  const handleViewportClick = useCallback(() => {
-    setSelectedEntity(null);
-  }, []);
 
   const entities = blueprint.entities ?? [];
   const tiles = blueprint.tiles ?? [];
@@ -174,7 +175,7 @@ export function BlueprintPreview({ blueprint }: BlueprintPreviewProps) {
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseUp}
-        onClick={handleViewportClick}
+        onClick={onClearSelection}
       >
         {/* World container — transformed by pan/zoom */}
         <div
@@ -211,7 +212,7 @@ export function BlueprintPreview({ blueprint }: BlueprintPreviewProps) {
           {layers.wires && wireSegments.length > 0 && (
             <BlueprintWireLayer
               wireSegments={wireSegments}
-              highlightEntity={selectedEntity}
+              highlightEntity={null}
               entityPositions={new Map()}
             />
           )}
@@ -220,8 +221,8 @@ export function BlueprintPreview({ blueprint }: BlueprintPreviewProps) {
           {layers.entities && entities.length > 0 && (
             <BlueprintEntityLayer
               entities={entities}
-              selectedEntityNumber={selectedEntity}
-              onEntitySelect={handleEntitySelect}
+              selectedEntityNumbers={selectedEntityNumbers}
+              onEntitySelect={onEntitySelect}
               onEntityHover={handleEntityHover}
             />
           )}

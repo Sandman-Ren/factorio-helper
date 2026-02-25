@@ -1,12 +1,12 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import type { Entity } from '../../../../blueprint/types.js';
 import { getIconUrl } from '../../ItemIcon.js';
 import { TILE_SIZE } from './constants.js';
 
 interface BlueprintEntityLayerProps {
   entities: Entity[];
-  selectedEntityNumber: number | null;
-  onEntitySelect: (entity: Entity | null) => void;
+  selectedEntityNumbers: ReadonlySet<number>;
+  onEntitySelect: (entity: Entity, ctrlKey: boolean) => void;
   onEntityHover: (entity: Entity | null) => void;
 }
 
@@ -17,7 +17,7 @@ function directionToDegrees(direction: number | undefined): number {
 function EntityIcon({ entity, isSelected, onSelect, onHover }: {
   entity: Entity;
   isSelected: boolean;
-  onSelect: (entity: Entity) => void;
+  onSelect: (entity: Entity, ctrlKey: boolean) => void;
   onHover: (entity: Entity | null) => void;
 }) {
   const [failed, setFailed] = useState(false);
@@ -39,7 +39,7 @@ function EntityIcon({ entity, isSelected, onSelect, onHover }: {
         borderRadius: 2,
         zIndex: isSelected ? 10 : undefined,
       }}
-      onClick={(e) => { e.stopPropagation(); onSelect(entity); }}
+      onClick={(e) => { e.stopPropagation(); onSelect(entity, e.ctrlKey || e.metaKey); }}
       onMouseEnter={() => onHover(entity)}
       onMouseLeave={() => onHover(null)}
     >
@@ -82,22 +82,18 @@ function EntityIcon({ entity, isSelected, onSelect, onHover }: {
 
 export function BlueprintEntityLayer({
   entities,
-  selectedEntityNumber,
+  selectedEntityNumbers,
   onEntitySelect,
   onEntityHover,
 }: BlueprintEntityLayerProps) {
-  const handleSelect = useCallback((entity: Entity) => {
-    onEntitySelect(entity);
-  }, [onEntitySelect]);
-
   return (
     <>
       {entities.map((entity) => (
         <EntityIcon
           key={entity.entity_number}
           entity={entity}
-          isSelected={entity.entity_number === selectedEntityNumber}
-          onSelect={handleSelect}
+          isSelected={selectedEntityNumbers.has(entity.entity_number)}
+          onSelect={onEntitySelect}
           onHover={onEntityHover}
         />
       ))}
