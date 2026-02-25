@@ -1,13 +1,18 @@
 import type { LuaValue } from './lua-table-parser.js';
 
-/**
- * Extract energy_source.type and fuel_categories from a Lua prototype entry.
- * Returns the energy type and optional fuel categories for burner machines.
- */
-export function extractEnergySource(entry: Record<string, LuaValue>): {
+export interface EnergySourceInfo {
   energy_type: 'electric' | 'burner' | 'void';
   fuel_categories?: string[];
-} {
+  drain?: string;
+  buffer_capacity?: string;
+  input_flow_limit?: string;
+  usage_priority?: string;
+}
+
+/**
+ * Extract energy_source info from a Lua prototype entry.
+ */
+export function extractEnergySource(entry: Record<string, LuaValue>): EnergySourceInfo {
   const energySource = entry['energy_source'];
   if (!energySource || typeof energySource !== 'object' || Array.isArray(energySource)) {
     return { energy_type: 'electric' };
@@ -38,5 +43,20 @@ export function extractEnergySource(entry: Record<string, LuaValue>): {
     console.warn(`[extract-energy-source] Unknown energy_source.type: "${sourceType}"`);
   }
 
-  return { energy_type: 'electric' };
+  // Electric -- extract optional fields
+  const result: EnergySourceInfo = { energy_type: 'electric' };
+
+  const drain = sourceObj['drain'];
+  if (typeof drain === 'string') result.drain = drain;
+
+  const buffer_capacity = sourceObj['buffer_capacity'];
+  if (typeof buffer_capacity === 'string') result.buffer_capacity = buffer_capacity;
+
+  const input_flow_limit = sourceObj['input_flow_limit'];
+  if (typeof input_flow_limit === 'string') result.input_flow_limit = input_flow_limit;
+
+  const usage_priority = sourceObj['usage_priority'];
+  if (typeof usage_priority === 'string') result.usage_priority = usage_priority;
+
+  return result;
 }

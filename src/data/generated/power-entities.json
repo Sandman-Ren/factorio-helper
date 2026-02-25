@@ -1,0 +1,356 @@
+[
+  {
+    "name": "stone-furnace",
+    "type": "furnace",
+    "category": "Furnaces",
+    "energy_type": "burner",
+    "energy_usage": "90kW",
+    "energy_usage_kw": 90,
+    "fuel_categories": [
+      "chemical"
+    ]
+  },
+  {
+    "name": "inserter",
+    "type": "inserter",
+    "category": "Logistics",
+    "energy_type": "electric",
+    "drain": "0.4kW",
+    "drain_kw": 0.4
+  },
+  {
+    "name": "fast-inserter",
+    "type": "inserter",
+    "category": "Logistics",
+    "energy_type": "electric",
+    "drain": "0.5kW",
+    "drain_kw": 0.5
+  },
+  {
+    "name": "long-handed-inserter",
+    "type": "inserter",
+    "category": "Logistics",
+    "energy_type": "electric",
+    "drain": "0.4kW",
+    "drain_kw": 0.4
+  },
+  {
+    "name": "burner-inserter",
+    "type": "inserter",
+    "category": "Logistics",
+    "energy_type": "burner",
+    "fuel_categories": [
+      "chemical"
+    ]
+  },
+  {
+    "name": "radar",
+    "type": "radar",
+    "category": "Infrastructure",
+    "energy_type": "electric",
+    "energy_usage": "300kW",
+    "energy_usage_kw": 300
+  },
+  {
+    "name": "small-lamp",
+    "type": "lamp",
+    "category": "Infrastructure",
+    "energy_type": "electric",
+    "energy_usage_per_tick": "5kW",
+    "energy_usage_kw": 5
+  },
+  {
+    "name": "assembling-machine-1",
+    "type": "assembling-machine",
+    "category": "Assemblers",
+    "energy_type": "electric",
+    "energy_usage": "75kW",
+    "energy_usage_kw": 75
+  },
+  {
+    "name": "assembling-machine-2",
+    "type": "assembling-machine",
+    "category": "Assemblers",
+    "energy_type": "electric",
+    "energy_usage": "150kW",
+    "energy_usage_kw": 150
+  },
+  {
+    "name": "lab",
+    "type": "lab",
+    "category": "Science",
+    "energy_type": "electric",
+    "energy_usage": "60kW",
+    "energy_usage_kw": 60
+  },
+  {
+    "name": "electric-furnace",
+    "type": "furnace",
+    "category": "Furnaces",
+    "energy_type": "electric",
+    "energy_usage": "180kW",
+    "energy_usage_kw": 180
+  },
+  {
+    "name": "steel-furnace",
+    "type": "furnace",
+    "category": "Furnaces",
+    "energy_type": "burner",
+    "energy_usage": "90kW",
+    "energy_usage_kw": 90,
+    "fuel_categories": [
+      "chemical"
+    ]
+  },
+  {
+    "name": "assembling-machine-3",
+    "type": "assembling-machine",
+    "category": "Assemblers",
+    "energy_type": "electric",
+    "energy_usage": "375kW",
+    "energy_usage_kw": 375
+  },
+  {
+    "name": "bulk-inserter",
+    "type": "inserter",
+    "category": "Logistics",
+    "energy_type": "electric",
+    "drain": "1kW",
+    "drain_kw": 1
+  },
+  {
+    "name": "rocket-silo",
+    "type": "rocket-silo",
+    "category": "Space",
+    "energy_type": "electric",
+    "energy_usage": "250kW",
+    "energy_usage_kw": 250,
+    "active_energy_usage": "3990kW",
+    "active_energy_usage_kw": 3990
+  },
+  {
+    "name": "roboport",
+    "type": "roboport",
+    "category": "Infrastructure",
+    "energy_type": "electric",
+    "energy_usage": "50kW",
+    "energy_usage_kw": 50,
+    "buffer_capacity": "100MJ",
+    "buffer_capacity_kj": 100000,
+    "input_flow_limit": "5MW",
+    "input_flow_limit_kw": 5000,
+    "charging_energy": "500kW",
+    "charging_energy_kw": 500
+  },
+  {
+    "name": "pump",
+    "type": "pump",
+    "category": "Logistics",
+    "energy_type": "electric",
+    "energy_usage": "29kW",
+    "energy_usage_kw": 29,
+    "drain": "1kW",
+    "drain_kw": 1
+  },
+  {
+    "name": "beacon",
+    "type": "beacon",
+    "category": "Infrastructure",
+    "energy_type": "electric",
+    "energy_usage": "480kW",
+    "energy_usage_kw": 480
+  },
+  {
+    "name": "oil-refinery",
+    "type": "assembling-machine",
+    "category": "Assemblers",
+    "energy_type": "electric",
+    "energy_usage": "420kW",
+    "energy_usage_kw": 420
+  },
+  {
+    "name": "chemical-plant",
+    "type": "assembling-machine",
+    "category": "Assemblers",
+    "energy_type": "electric",
+    "energy_usage": "210kW",
+    "energy_usage_kw": 210
+  },
+  {
+    "name": "centrifuge",
+    "type": "assembling-machine",
+    "category": "Assemblers",
+    "energy_type": "electric",
+    "energy_usage": "350kW",
+    "energy_usage_kw": 350
+  },
+  {
+    "name": "laser-turret",
+    "type": "electric-turret",
+    "category": "Combat",
+    "energy_type": "electric",
+    "drain": "24kW",
+    "drain_kw": 24,
+    "buffer_capacity": "801kJ",
+    "buffer_capacity_kj": 801,
+    "input_flow_limit": "9600kW",
+    "input_flow_limit_kw": 9600
+  },
+  {
+    "name": "arithmetic-combinator",
+    "type": "arithmetic-combinator",
+    "category": "Circuit",
+    "energy_type": "electric",
+    "active_energy_usage": "1kW",
+    "active_energy_usage_kw": 1
+  },
+  {
+    "name": "decider-combinator",
+    "type": "decider-combinator",
+    "category": "Circuit",
+    "energy_type": "electric",
+    "active_energy_usage": "1kW",
+    "active_energy_usage_kw": 1
+  },
+  {
+    "name": "programmable-speaker",
+    "type": "programmable-speaker",
+    "category": "Infrastructure",
+    "energy_type": "electric",
+    "energy_usage_per_tick": "2kW",
+    "energy_usage_kw": 2
+  },
+  {
+    "name": "selector-combinator",
+    "type": "selector-combinator",
+    "category": "Circuit",
+    "energy_type": "electric",
+    "active_energy_usage": "1kW",
+    "active_energy_usage_kw": 1
+  },
+  {
+    "name": "electric-mining-drill",
+    "type": "mining-drill",
+    "category": "Mining",
+    "energy_type": "electric",
+    "energy_usage": "90kW",
+    "energy_usage_kw": 90
+  },
+  {
+    "name": "burner-mining-drill",
+    "type": "mining-drill",
+    "category": "Mining",
+    "energy_type": "burner",
+    "energy_usage": "150kW",
+    "energy_usage_kw": 150,
+    "fuel_categories": [
+      "chemical"
+    ]
+  },
+  {
+    "name": "pumpjack",
+    "type": "mining-drill",
+    "category": "Mining",
+    "energy_type": "electric",
+    "energy_usage": "90kW",
+    "energy_usage_kw": 90
+  },
+  {
+    "name": "biochamber",
+    "type": "assembling-machine",
+    "category": "Assemblers",
+    "energy_type": "burner",
+    "energy_usage": "500kW",
+    "energy_usage_kw": 500,
+    "fuel_categories": [
+      "nutrients"
+    ]
+  },
+  {
+    "name": "crusher",
+    "type": "assembling-machine",
+    "category": "Assemblers",
+    "energy_type": "electric",
+    "energy_usage": "540kW",
+    "energy_usage_kw": 540
+  },
+  {
+    "name": "foundry",
+    "type": "assembling-machine",
+    "category": "Assemblers",
+    "energy_type": "electric",
+    "energy_usage": "2500kW",
+    "energy_usage_kw": 2500
+  },
+  {
+    "name": "agricultural-tower",
+    "type": "agricultural-tower",
+    "category": "Space",
+    "energy_type": "electric",
+    "energy_usage": "100kW",
+    "energy_usage_kw": 100
+  },
+  {
+    "name": "captive-biter-spawner",
+    "type": "assembling-machine",
+    "category": "Assemblers",
+    "energy_type": "burner",
+    "energy_usage": "100kW",
+    "energy_usage_kw": 100,
+    "fuel_categories": [
+      "food"
+    ]
+  },
+  {
+    "name": "biolab",
+    "type": "lab",
+    "category": "Science",
+    "energy_type": "electric",
+    "energy_usage": "300kW",
+    "energy_usage_kw": 300
+  },
+  {
+    "name": "electromagnetic-plant",
+    "type": "assembling-machine",
+    "category": "Assemblers",
+    "energy_type": "electric",
+    "energy_usage": "2000kW",
+    "energy_usage_kw": 2000
+  },
+  {
+    "name": "cryogenic-plant",
+    "type": "assembling-machine",
+    "category": "Assemblers",
+    "energy_type": "electric",
+    "energy_usage": "1500kW",
+    "energy_usage_kw": 1500
+  },
+  {
+    "name": "stack-inserter",
+    "type": "inserter",
+    "category": "Logistics",
+    "energy_type": "electric",
+    "drain": "1kW",
+    "drain_kw": 1
+  },
+  {
+    "name": "tesla-turret",
+    "type": "electric-turret",
+    "category": "Combat",
+    "energy_type": "electric",
+    "drain": "1MW",
+    "drain_kw": 1000,
+    "buffer_capacity": "15MJ",
+    "buffer_capacity_kj": 15000,
+    "input_flow_limit": "7MW",
+    "input_flow_limit_kw": 7000
+  },
+  {
+    "name": "big-mining-drill",
+    "type": "mining-drill",
+    "category": "Mining",
+    "energy_type": "electric",
+    "energy_usage": "300kW",
+    "energy_usage_kw": 300
+  }
+]

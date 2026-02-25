@@ -104,6 +104,35 @@ describe('LuaTableParser', () => {
     const result = parser.parseValuePublic();
     expect(result).toEqual({ name: 'test', speed: 1.5 });
   });
+
+  it('extracts table from function-wrapped entry (funcname { ... })', () => {
+    const parser = new LuaTableParser('{generate_foo {type = "bar", name = "baz"}, {type = "plain", name = "qux"}}');
+    const result = parser.parseValuePublic();
+    expect(result).toEqual([
+      { type: 'bar', name: 'baz' },
+      { type: 'plain', name: 'qux' },
+    ]);
+  });
+
+  it('extracts data:extend block without parentheses', () => {
+    const source = `
+      data:extend
+      {
+        {type = "item", name = "iron-plate", stack_size = 100}
+      }
+    `;
+    const parser = new LuaTableParser(source);
+    const blocks = parser.extractDataExtend();
+    expect(blocks).toHaveLength(1);
+    expect(blocks[0]).toHaveLength(1);
+    expect((blocks[0]![0] as Record<string, unknown>)['name']).toBe('iron-plate');
+  });
+
+  it('still skips dotted function calls with table args', () => {
+    const parser = new LuaTableParser('{name = "test", sprite = util.draw_as_glow {x = 48}, speed = 1.5}');
+    const result = parser.parseValuePublic();
+    expect(result).toEqual({ name: 'test', speed: 1.5 });
+  });
 });
 
 describe('parseLuaPrototypes', () => {

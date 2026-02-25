@@ -1,0 +1,2998 @@
+{
+  "positions": {
+    "steam-power": {
+      "x": 0,
+      "y": 2312.5
+    },
+    "electronics": {
+      "x": 0,
+      "y": 2422.5
+    },
+    "automation-science-pack": {
+      "x": 280,
+      "y": 2367.5
+    },
+    "electric-mining-drill": {
+      "x": 5600,
+      "y": 7765
+    },
+    "repair-pack": {
+      "x": 560,
+      "y": 1350
+    },
+    "radar": {
+      "x": 3920,
+      "y": 3540
+    },
+    "physical-projectile-damage-1": {
+      "x": 2800,
+      "y": 110
+    },
+    "physical-projectile-damage-2": {
+      "x": 3080,
+      "y": 142.5
+    },
+    "weapon-shooting-speed-1": {
+      "x": 2800,
+      "y": 562.5
+    },
+    "weapon-shooting-speed-2": {
+      "x": 3080,
+      "y": 595
+    },
+    "stronger-explosives-1": {
+      "x": 3080,
+      "y": 4007.5
+    },
+    "physical-projectile-damage-3": {
+      "x": 3360,
+      "y": 152.5
+    },
+    "physical-projectile-damage-4": {
+      "x": 3640,
+      "y": 152.5
+    },
+    "physical-projectile-damage-5": {
+      "x": 3920,
+      "y": 185
+    },
+    "physical-projectile-damage-6": {
+      "x": 4200,
+      "y": 195
+    },
+    "physical-projectile-damage-7": {
+      "x": 4760,
+      "y": 205
+    },
+    "stronger-explosives-2": {
+      "x": 3360,
+      "y": 4017.5
+    },
+    "stronger-explosives-3": {
+      "x": 3640,
+      "y": 292.5
+    },
+    "stronger-explosives-4": {
+      "x": 4200,
+      "y": 335
+    },
+    "stronger-explosives-5": {
+      "x": 4480,
+      "y": 335
+    },
+    "stronger-explosives-6": {
+      "x": 4760,
+      "y": 335
+    },
+    "stronger-explosives-7": {
+      "x": 5040,
+      "y": 367.5
+    },
+    "refined-flammables-1": {
+      "x": 3640,
+      "y": 412.5
+    },
+    "refined-flammables-2": {
+      "x": 3920,
+      "y": 412.5
+    },
+    "refined-flammables-3": {
+      "x": 4200,
+      "y": 455
+    },
+    "refined-flammables-4": {
+      "x": 4480,
+      "y": 487.5
+    },
+    "refined-flammables-5": {
+      "x": 4760,
+      "y": 487.5
+    },
+    "refined-flammables-6": {
+      "x": 5040,
+      "y": 487.5
+    },
+    "refined-flammables-7": {
+      "x": 5320,
+      "y": 2850
+    },
+    "laser-weapons-damage-1": {
+      "x": 3360,
+      "y": 777.5
+    },
+    "laser-weapons-damage-2": {
+      "x": 3640,
+      "y": 777.5
+    },
+    "laser-weapons-damage-3": {
+      "x": 3920,
+      "y": 777.5
+    },
+    "laser-weapons-damage-4": {
+      "x": 4200,
+      "y": 777.5
+    },
+    "laser-weapons-damage-5": {
+      "x": 4480,
+      "y": 810
+    },
+    "laser-weapons-damage-6": {
+      "x": 4760,
+      "y": 810
+    },
+    "laser-weapons-damage-7": {
+      "x": 5040,
+      "y": 1240
+    },
+    "weapon-shooting-speed-3": {
+      "x": 3360,
+      "y": 605
+    },
+    "weapon-shooting-speed-4": {
+      "x": 3640,
+      "y": 605
+    },
+    "weapon-shooting-speed-5": {
+      "x": 3920,
+      "y": 637.5
+    },
+    "weapon-shooting-speed-6": {
+      "x": 4200,
+      "y": 647.5
+    },
+    "laser-shooting-speed-1": {
+      "x": 3360,
+      "y": 2225
+    },
+    "laser-shooting-speed-2": {
+      "x": 3640,
+      "y": 2225
+    },
+    "laser-shooting-speed-3": {
+      "x": 3920,
+      "y": 2225
+    },
+    "laser-shooting-speed-4": {
+      "x": 4200,
+      "y": 2225
+    },
+    "laser-shooting-speed-5": {
+      "x": 4480,
+      "y": 2280
+    },
+    "laser-shooting-speed-6": {
+      "x": 4760,
+      "y": 2280
+    },
+    "laser-shooting-speed-7": {
+      "x": 5040,
+      "y": 2280
+    },
+    "artillery-shell-range-1": {
+      "x": 4760,
+      "y": 920
+    },
+    "artillery-shell-speed-1": {
+      "x": 4760,
+      "y": 1135
+    },
+    "follower-robot-count-5": {
+      "x": 4760,
+      "y": 1245
+    },
+    "bulk-inserter": {
+      "x": 2520,
+      "y": 3802.5
+    },
+    "inserter-capacity-bonus-1": {
+      "x": 2800,
+      "y": 1050
+    },
+    "inserter-capacity-bonus-2": {
+      "x": 3080,
+      "y": 1050
+    },
+    "inserter-capacity-bonus-3": {
+      "x": 3360,
+      "y": 1137.5
+    },
+    "inserter-capacity-bonus-4": {
+      "x": 3920,
+      "y": 1147.5
+    },
+    "inserter-capacity-bonus-5": {
+      "x": 4200,
+      "y": 1147.5
+    },
+    "inserter-capacity-bonus-6": {
+      "x": 4480,
+      "y": 1147.5
+    },
+    "inserter-capacity-bonus-7": {
+      "x": 4760,
+      "y": 1780
+    },
+    "automation": {
+      "x": 560,
+      "y": 2275
+    },
+    "automation-2": {
+      "x": 840,
+      "y": 2285
+    },
+    "logistic-science-pack": {
+      "x": 560,
+      "y": 2710
+    },
+    "steel-processing": {
+      "x": 560,
+      "y": 2820
+    },
+    "steel-axe": {
+      "x": 840,
+      "y": 390
+    },
+    "military": {
+      "x": 2520,
+      "y": 1795
+    },
+    "military-2": {
+      "x": 2800,
+      "y": 2752.5
+    },
+    "fast-inserter": {
+      "x": 2240,
+      "y": 3737.5
+    },
+    "logistics": {
+      "x": 560,
+      "y": 2095
+    },
+    "railway": {
+      "x": 1120,
+      "y": 1970
+    },
+    "automated-rail-transportation": {
+      "x": 1400,
+      "y": 0
+    },
+    "automobilism": {
+      "x": 1120,
+      "y": 1530
+    },
+    "lamp": {
+      "x": 560,
+      "y": 2385
+    },
+    "solar-energy": {
+      "x": 3080,
+      "y": 3877.5
+    },
+    "heavy-armor": {
+      "x": 2800,
+      "y": 4072.5
+    },
+    "gun-turret": {
+      "x": 560,
+      "y": 2600
+    },
+    "research-speed-1": {
+      "x": 2240,
+      "y": 1332.5
+    },
+    "research-speed-2": {
+      "x": 2520,
+      "y": 1332.5
+    },
+    "electric-energy-distribution-1": {
+      "x": 2520,
+      "y": 3012.5
+    },
+    "advanced-material-processing": {
+      "x": 2800,
+      "y": 4312.5
+    },
+    "concrete": {
+      "x": 3080,
+      "y": 4400
+    },
+    "engine": {
+      "x": 840,
+      "y": 2030
+    },
+    "landfill": {
+      "x": 4760,
+      "y": 9007.5
+    },
+    "logistics-2": {
+      "x": 840,
+      "y": 2140
+    },
+    "toolbelt": {
+      "x": 7000,
+      "y": 7940
+    },
+    "stone-wall": {
+      "x": 2800,
+      "y": 2210
+    },
+    "gate": {
+      "x": 3080,
+      "y": 812.5
+    },
+    "chemical-science-pack": {
+      "x": 2520,
+      "y": 2687.5
+    },
+    "military-science-pack": {
+      "x": 3080,
+      "y": 3142.5
+    },
+    "production-science-pack": {
+      "x": 3640,
+      "y": 5062.5
+    },
+    "utility-science-pack": {
+      "x": 3920,
+      "y": 4592.5
+    },
+    "space-science-pack": {
+      "x": 4480,
+      "y": 3370
+    },
+    "military-3": {
+      "x": 3640,
+      "y": 3055
+    },
+    "military-4": {
+      "x": 4200,
+      "y": 3390
+    },
+    "uranium-ammo": {
+      "x": 4480,
+      "y": 1890
+    },
+    "atomic-bomb": {
+      "x": 4480,
+      "y": 2000
+    },
+    "automation-3": {
+      "x": 3920,
+      "y": 1365
+    },
+    "explosives": {
+      "x": 3360,
+      "y": 2515
+    },
+    "cliff-explosives": {
+      "x": 3640,
+      "y": 887.5
+    },
+    "flammables": {
+      "x": 3080,
+      "y": 3672.5
+    },
+    "land-mine": {
+      "x": 3640,
+      "y": 997.5
+    },
+    "flamethrower": {
+      "x": 3360,
+      "y": 412.5
+    },
+    "advanced-circuit": {
+      "x": 2240,
+      "y": 4042.5
+    },
+    "processing-unit": {
+      "x": 3360,
+      "y": 4745
+    },
+    "fluid-wagon": {
+      "x": 1400,
+      "y": 110
+    },
+    "braking-force-1": {
+      "x": 2800,
+      "y": 2370
+    },
+    "braking-force-2": {
+      "x": 3640,
+      "y": 2370
+    },
+    "braking-force-3": {
+      "x": 3920,
+      "y": 2400
+    },
+    "braking-force-4": {
+      "x": 4200,
+      "y": 2400
+    },
+    "braking-force-5": {
+      "x": 4480,
+      "y": 2400
+    },
+    "braking-force-6": {
+      "x": 4760,
+      "y": 2647.5
+    },
+    "braking-force-7": {
+      "x": 5040,
+      "y": 2647.5
+    },
+    "tank": {
+      "x": 3920,
+      "y": 1585
+    },
+    "logistics-3": {
+      "x": 3920,
+      "y": 5700
+    },
+    "laser": {
+      "x": 3080,
+      "y": 3032.5
+    },
+    "rocketry": {
+      "x": 3640,
+      "y": 4887.5
+    },
+    "explosive-rocketry": {
+      "x": 3920,
+      "y": 1805
+    },
+    "modular-armor": {
+      "x": 3080,
+      "y": 4160
+    },
+    "power-armor": {
+      "x": 3640,
+      "y": 5192.5
+    },
+    "power-armor-mk2": {
+      "x": 4480,
+      "y": 6517.5
+    },
+    "laser-turret": {
+      "x": 3640,
+      "y": 2675
+    },
+    "robotics": {
+      "x": 3640,
+      "y": 3475
+    },
+    "rocket-fuel": {
+      "x": 3360,
+      "y": 5235
+    },
+    "low-density-structure": {
+      "x": 3640,
+      "y": 3877.5
+    },
+    "rocket-silo": {
+      "x": 4200,
+      "y": 4492.5
+    },
+    "research-speed-3": {
+      "x": 2800,
+      "y": 1440
+    },
+    "research-speed-4": {
+      "x": 3080,
+      "y": 1440
+    },
+    "research-speed-5": {
+      "x": 3920,
+      "y": 1475
+    },
+    "research-speed-6": {
+      "x": 4200,
+      "y": 1485
+    },
+    "electric-energy-distribution-2": {
+      "x": 2800,
+      "y": 1160
+    },
+    "electric-energy-accumulators": {
+      "x": 3080,
+      "y": 5215
+    },
+    "advanced-material-processing-2": {
+      "x": 3080,
+      "y": 5062.5
+    },
+    "effect-transmission": {
+      "x": 3920,
+      "y": 1990
+    },
+    "lubricant": {
+      "x": 3080,
+      "y": 4842.5
+    },
+    "electric-engine": {
+      "x": 3360,
+      "y": 3705
+    },
+    "battery": {
+      "x": 2800,
+      "y": 4497.5
+    },
+    "construction-robotics": {
+      "x": 3920,
+      "y": 3155
+    },
+    "logistic-robotics": {
+      "x": 3920,
+      "y": 1695
+    },
+    "logistic-system": {
+      "x": 4200,
+      "y": 1685
+    },
+    "worker-robots-speed-1": {
+      "x": 3920,
+      "y": 6625
+    },
+    "worker-robots-speed-2": {
+      "x": 4200,
+      "y": 6625
+    },
+    "worker-robots-speed-3": {
+      "x": 4480,
+      "y": 6657.5
+    },
+    "worker-robots-speed-4": {
+      "x": 4760,
+      "y": 6657.5
+    },
+    "worker-robots-speed-5": {
+      "x": 5040,
+      "y": 6692.5
+    },
+    "worker-robots-speed-6": {
+      "x": 5320,
+      "y": 6845
+    },
+    "worker-robots-storage-1": {
+      "x": 3920,
+      "y": 2630
+    },
+    "worker-robots-storage-2": {
+      "x": 4200,
+      "y": 2765
+    },
+    "worker-robots-storage-3": {
+      "x": 4480,
+      "y": 2765
+    },
+    "energy-shield-equipment": {
+      "x": 3640,
+      "y": 2490
+    },
+    "night-vision-equipment": {
+      "x": 3640,
+      "y": 1770
+    },
+    "belt-immunity-equipment": {
+      "x": 3640,
+      "y": 1880
+    },
+    "energy-shield-mk2-equipment": {
+      "x": 3920,
+      "y": 2520
+    },
+    "battery-equipment": {
+      "x": 3640,
+      "y": 6330
+    },
+    "battery-mk2-equipment": {
+      "x": 3920,
+      "y": 6350
+    },
+    "solar-panel-equipment": {
+      "x": 3360,
+      "y": 3220
+    },
+    "personal-laser-defense-equipment": {
+      "x": 3920,
+      "y": 2740
+    },
+    "discharge-defense-equipment": {
+      "x": 3920,
+      "y": 2850
+    },
+    "fission-reactor-equipment": {
+      "x": 4200,
+      "y": 7147.5
+    },
+    "exoskeleton-equipment": {
+      "x": 3640,
+      "y": 4172.5
+    },
+    "personal-roboport-equipment": {
+      "x": 4200,
+      "y": 3187.5
+    },
+    "personal-roboport-mk2-equipment": {
+      "x": 4480,
+      "y": 3220
+    },
+    "fluid-handling": {
+      "x": 1120,
+      "y": 2090
+    },
+    "oil-gathering": {
+      "x": 1400,
+      "y": 3672.5
+    },
+    "oil-processing": {
+      "x": 1680,
+      "y": 3672.5
+    },
+    "advanced-oil-processing": {
+      "x": 2800,
+      "y": 4182.5
+    },
+    "coal-liquefaction": {
+      "x": 3920,
+      "y": 2960
+    },
+    "sulfur-processing": {
+      "x": 2240,
+      "y": 3087.5
+    },
+    "plastics": {
+      "x": 1960,
+      "y": 4042.5
+    },
+    "modules": {
+      "x": 3080,
+      "y": 4952.5
+    },
+    "speed-module": {
+      "x": 3360,
+      "y": 4525
+    },
+    "speed-module-2": {
+      "x": 3640,
+      "y": 5885
+    },
+    "speed-module-3": {
+      "x": 3920,
+      "y": 4702.5
+    },
+    "productivity-module": {
+      "x": 3360,
+      "y": 4635
+    },
+    "productivity-module-2": {
+      "x": 3640,
+      "y": 4777.5
+    },
+    "productivity-module-3": {
+      "x": 3920,
+      "y": 4822.5
+    },
+    "efficiency-module": {
+      "x": 3360,
+      "y": 6070
+    },
+    "efficiency-module-2": {
+      "x": 3640,
+      "y": 6090
+    },
+    "efficiency-module-3": {
+      "x": 3920,
+      "y": 5247.5
+    },
+    "defender": {
+      "x": 3640,
+      "y": 5775
+    },
+    "distractor": {
+      "x": 3920,
+      "y": 5850
+    },
+    "destroyer": {
+      "x": 4480,
+      "y": 5850
+    },
+    "uranium-mining": {
+      "x": 3360,
+      "y": 5345
+    },
+    "uranium-processing": {
+      "x": 3640,
+      "y": 5345
+    },
+    "nuclear-power": {
+      "x": 3920,
+      "y": 5137.5
+    },
+    "kovarex-enrichment-process": {
+      "x": 3920,
+      "y": 6132.5
+    },
+    "nuclear-fuel-reprocessing": {
+      "x": 4200,
+      "y": 2065
+    },
+    "mining-productivity-1": {
+      "x": 2520,
+      "y": 5407.5
+    },
+    "mining-productivity-2": {
+      "x": 2800,
+      "y": 5475
+    },
+    "mining-productivity-3": {
+      "x": 4200,
+      "y": 5495
+    },
+    "mining-productivity-4": {
+      "x": 4760,
+      "y": 5505
+    },
+    "artillery": {
+      "x": 4480,
+      "y": 1290
+    },
+    "spidertron": {
+      "x": 4480,
+      "y": 4800
+    },
+    "circuit-network": {
+      "x": 2520,
+      "y": 1905
+    },
+    "advanced-combinators": {
+      "x": 2800,
+      "y": 1915
+    },
+    "space-platform": {
+      "x": 4480,
+      "y": 5287.5
+    },
+    "electric-weapons-damage-1": {
+      "x": 4760,
+      "y": 5850
+    },
+    "electric-weapons-damage-2": {
+      "x": 5040,
+      "y": 5990
+    },
+    "electric-weapons-damage-3": {
+      "x": 5320,
+      "y": 6045
+    },
+    "electric-weapons-damage-4": {
+      "x": 5600,
+      "y": 6045
+    },
+    "artillery-shell-damage-1": {
+      "x": 4760,
+      "y": 5635
+    },
+    "railgun-shooting-speed-1": {
+      "x": 9240,
+      "y": 8007.5
+    },
+    "railgun-damage-1": {
+      "x": 9240,
+      "y": 8810
+    },
+    "space-platform-thruster": {
+      "x": 4760,
+      "y": 7342.5
+    },
+    "planet-discovery-vulcanus": {
+      "x": 5040,
+      "y": 7622.5
+    },
+    "planet-discovery-gleba": {
+      "x": 5040,
+      "y": 8997.5
+    },
+    "planet-discovery-fulgora": {
+      "x": 5040,
+      "y": 6252.5
+    },
+    "planet-discovery-aquilo": {
+      "x": 7560,
+      "y": 9350
+    },
+    "worker-robots-speed-7": {
+      "x": 5600,
+      "y": 6877.5
+    },
+    "battery-mk3-equipment": {
+      "x": 5040,
+      "y": 6362.5
+    },
+    "rocket-turret": {
+      "x": 7280,
+      "y": 9222.5
+    },
+    "toolbelt-equipment": {
+      "x": 7280,
+      "y": 7850
+    },
+    "calcite-processing": {
+      "x": 5320,
+      "y": 7567.5
+    },
+    "tungsten-carbide": {
+      "x": 5320,
+      "y": 7677.5
+    },
+    "big-mining-drill": {
+      "x": 5880,
+      "y": 7677.5
+    },
+    "foundry": {
+      "x": 5600,
+      "y": 7622.5
+    },
+    "tungsten-steel": {
+      "x": 6160,
+      "y": 7677.5
+    },
+    "turbo-transport-belt": {
+      "x": 6720,
+      "y": 5690
+    },
+    "metallurgic-science-pack": {
+      "x": 6440,
+      "y": 7677.5
+    },
+    "railgun": {
+      "x": 8960,
+      "y": 8062.5
+    },
+    "mech-armor": {
+      "x": 5040,
+      "y": 6472.5
+    },
+    "agriculture": {
+      "x": 5320,
+      "y": 8385
+    },
+    "yumako": {
+      "x": 5600,
+      "y": 8355
+    },
+    "biochamber": {
+      "x": 5880,
+      "y": 8345
+    },
+    "jellynut": {
+      "x": 5600,
+      "y": 8487.5
+    },
+    "bioflux": {
+      "x": 6160,
+      "y": 8345
+    },
+    "artificial-soil": {
+      "x": 5880,
+      "y": 8497.5
+    },
+    "bacteria-cultivation": {
+      "x": 6440,
+      "y": 8400
+    },
+    "bioflux-processing": {
+      "x": 6440,
+      "y": 8290
+    },
+    "agricultural-science-pack": {
+      "x": 6720,
+      "y": 8397.5
+    },
+    "tree-seeding": {
+      "x": 7000,
+      "y": 8627.5
+    },
+    "stack-inserter": {
+      "x": 7280,
+      "y": 7242.5
+    },
+    "transport-belt-capacity-1": {
+      "x": 7560,
+      "y": 7242.5
+    },
+    "transport-belt-capacity-2": {
+      "x": 7840,
+      "y": 7242.5
+    },
+    "captivity": {
+      "x": 7000,
+      "y": 8867.5
+    },
+    "biolab": {
+      "x": 7560,
+      "y": 8440
+    },
+    "biter-egg-handling": {
+      "x": 7280,
+      "y": 8867.5
+    },
+    "overgrowth-soil": {
+      "x": 7560,
+      "y": 8932.5
+    },
+    "carbon-fiber": {
+      "x": 7000,
+      "y": 8397.5
+    },
+    "health": {
+      "x": 7000,
+      "y": 7830
+    },
+    "fish-breeding": {
+      "x": 7280,
+      "y": 8627.5
+    },
+    "holmium-processing": {
+      "x": 4200,
+      "y": 6890
+    },
+    "electromagnetic-plant": {
+      "x": 4480,
+      "y": 6890
+    },
+    "electromagnetic-science-pack": {
+      "x": 4760,
+      "y": 6890
+    },
+    "lightning-collector": {
+      "x": 5040,
+      "y": 6582.5
+    },
+    "rail-support-foundations": {
+      "x": 6720,
+      "y": 7212.5
+    },
+    "tesla-weapons": {
+      "x": 5040,
+      "y": 6142.5
+    },
+    "heating-tower": {
+      "x": 7280,
+      "y": 9352.5
+    },
+    "lithium-processing": {
+      "x": 7840,
+      "y": 9350
+    },
+    "cryogenic-plant": {
+      "x": 8120,
+      "y": 9350
+    },
+    "asteroid-reprocessing": {
+      "x": 6720,
+      "y": 9417.5
+    },
+    "advanced-asteroid-processing": {
+      "x": 7000,
+      "y": 9137.5
+    },
+    "quantum-processor": {
+      "x": 8680,
+      "y": 8062.5
+    },
+    "cryogenic-science-pack": {
+      "x": 8400,
+      "y": 9350
+    },
+    "fusion-reactor": {
+      "x": 8960,
+      "y": 9762.5
+    },
+    "fusion-reactor-equipment": {
+      "x": 9240,
+      "y": 9697.5
+    },
+    "captive-biter-spawner": {
+      "x": 8680,
+      "y": 8215
+    },
+    "promethium-science-pack": {
+      "x": 9240,
+      "y": 9847.5
+    },
+    "foundation": {
+      "x": 8680,
+      "y": 9522.5
+    },
+    "asteroid-productivity": {
+      "x": 7280,
+      "y": 8757.5
+    },
+    "research-productivity": {
+      "x": 9520,
+      "y": 9847.5
+    },
+    "processing-unit-productivity": {
+      "x": 5040,
+      "y": 6802.5
+    },
+    "scrap-recycling-productivity": {
+      "x": 5040,
+      "y": 6922.5
+    },
+    "steel-plate-productivity": {
+      "x": 3920,
+      "y": 3650
+    },
+    "low-density-structure-productivity": {
+      "x": 6720,
+      "y": 7417.5
+    },
+    "plastic-bar-productivity": {
+      "x": 7000,
+      "y": 8050
+    },
+    "rocket-fuel-productivity": {
+      "x": 7000,
+      "y": 8160
+    },
+    "rocket-part-productivity": {
+      "x": 8680,
+      "y": 9632.5
+    },
+    "quality-module": {
+      "x": 3360,
+      "y": 4952.5
+    },
+    "quality-module-2": {
+      "x": 3640,
+      "y": 3715
+    },
+    "quality-module-3": {
+      "x": 3920,
+      "y": 3760
+    },
+    "epic-quality": {
+      "x": 4200,
+      "y": 6035
+    },
+    "legendary-quality": {
+      "x": 4760,
+      "y": 6012.5
+    },
+    "recycling": {
+      "x": 3920,
+      "y": 6890
+    }
+  },
+  "edges": [
+    {
+      "source": "steam-power",
+      "target": "automation-science-pack"
+    },
+    {
+      "source": "electronics",
+      "target": "automation-science-pack"
+    },
+    {
+      "source": "automation-science-pack",
+      "target": "electric-mining-drill"
+    },
+    {
+      "source": "automation-science-pack",
+      "target": "repair-pack"
+    },
+    {
+      "source": "automation-science-pack",
+      "target": "radar"
+    },
+    {
+      "source": "military",
+      "target": "physical-projectile-damage-1"
+    },
+    {
+      "source": "physical-projectile-damage-1",
+      "target": "physical-projectile-damage-2"
+    },
+    {
+      "source": "logistic-science-pack",
+      "target": "physical-projectile-damage-2"
+    },
+    {
+      "source": "military",
+      "target": "weapon-shooting-speed-1"
+    },
+    {
+      "source": "weapon-shooting-speed-1",
+      "target": "weapon-shooting-speed-2"
+    },
+    {
+      "source": "logistic-science-pack",
+      "target": "weapon-shooting-speed-2"
+    },
+    {
+      "source": "military-2",
+      "target": "stronger-explosives-1"
+    },
+    {
+      "source": "physical-projectile-damage-2",
+      "target": "physical-projectile-damage-3"
+    },
+    {
+      "source": "military-science-pack",
+      "target": "physical-projectile-damage-3"
+    },
+    {
+      "source": "physical-projectile-damage-3",
+      "target": "physical-projectile-damage-4"
+    },
+    {
+      "source": "physical-projectile-damage-4",
+      "target": "physical-projectile-damage-5"
+    },
+    {
+      "source": "chemical-science-pack",
+      "target": "physical-projectile-damage-5"
+    },
+    {
+      "source": "physical-projectile-damage-5",
+      "target": "physical-projectile-damage-6"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "physical-projectile-damage-6"
+    },
+    {
+      "source": "physical-projectile-damage-6",
+      "target": "physical-projectile-damage-7"
+    },
+    {
+      "source": "space-science-pack",
+      "target": "physical-projectile-damage-7"
+    },
+    {
+      "source": "stronger-explosives-1",
+      "target": "stronger-explosives-2"
+    },
+    {
+      "source": "military-science-pack",
+      "target": "stronger-explosives-2"
+    },
+    {
+      "source": "stronger-explosives-2",
+      "target": "stronger-explosives-3"
+    },
+    {
+      "source": "chemical-science-pack",
+      "target": "stronger-explosives-3"
+    },
+    {
+      "source": "stronger-explosives-3",
+      "target": "stronger-explosives-4"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "stronger-explosives-4"
+    },
+    {
+      "source": "stronger-explosives-4",
+      "target": "stronger-explosives-5"
+    },
+    {
+      "source": "stronger-explosives-5",
+      "target": "stronger-explosives-6"
+    },
+    {
+      "source": "stronger-explosives-6",
+      "target": "stronger-explosives-7"
+    },
+    {
+      "source": "space-science-pack",
+      "target": "stronger-explosives-7"
+    },
+    {
+      "source": "flamethrower",
+      "target": "refined-flammables-1"
+    },
+    {
+      "source": "refined-flammables-1",
+      "target": "refined-flammables-2"
+    },
+    {
+      "source": "refined-flammables-2",
+      "target": "refined-flammables-3"
+    },
+    {
+      "source": "chemical-science-pack",
+      "target": "refined-flammables-3"
+    },
+    {
+      "source": "refined-flammables-3",
+      "target": "refined-flammables-4"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "refined-flammables-4"
+    },
+    {
+      "source": "refined-flammables-4",
+      "target": "refined-flammables-5"
+    },
+    {
+      "source": "refined-flammables-5",
+      "target": "refined-flammables-6"
+    },
+    {
+      "source": "refined-flammables-6",
+      "target": "refined-flammables-7"
+    },
+    {
+      "source": "space-science-pack",
+      "target": "refined-flammables-7"
+    },
+    {
+      "source": "laser",
+      "target": "laser-weapons-damage-1"
+    },
+    {
+      "source": "military-science-pack",
+      "target": "laser-weapons-damage-1"
+    },
+    {
+      "source": "laser-weapons-damage-1",
+      "target": "laser-weapons-damage-2"
+    },
+    {
+      "source": "laser-weapons-damage-2",
+      "target": "laser-weapons-damage-3"
+    },
+    {
+      "source": "laser-weapons-damage-3",
+      "target": "laser-weapons-damage-4"
+    },
+    {
+      "source": "laser-weapons-damage-4",
+      "target": "laser-weapons-damage-5"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "laser-weapons-damage-5"
+    },
+    {
+      "source": "laser-weapons-damage-5",
+      "target": "laser-weapons-damage-6"
+    },
+    {
+      "source": "laser-weapons-damage-6",
+      "target": "laser-weapons-damage-7"
+    },
+    {
+      "source": "space-science-pack",
+      "target": "laser-weapons-damage-7"
+    },
+    {
+      "source": "weapon-shooting-speed-2",
+      "target": "weapon-shooting-speed-3"
+    },
+    {
+      "source": "military-science-pack",
+      "target": "weapon-shooting-speed-3"
+    },
+    {
+      "source": "weapon-shooting-speed-3",
+      "target": "weapon-shooting-speed-4"
+    },
+    {
+      "source": "weapon-shooting-speed-4",
+      "target": "weapon-shooting-speed-5"
+    },
+    {
+      "source": "chemical-science-pack",
+      "target": "weapon-shooting-speed-5"
+    },
+    {
+      "source": "weapon-shooting-speed-5",
+      "target": "weapon-shooting-speed-6"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "weapon-shooting-speed-6"
+    },
+    {
+      "source": "laser",
+      "target": "laser-shooting-speed-1"
+    },
+    {
+      "source": "military-science-pack",
+      "target": "laser-shooting-speed-1"
+    },
+    {
+      "source": "laser-shooting-speed-1",
+      "target": "laser-shooting-speed-2"
+    },
+    {
+      "source": "laser-shooting-speed-2",
+      "target": "laser-shooting-speed-3"
+    },
+    {
+      "source": "laser-shooting-speed-3",
+      "target": "laser-shooting-speed-4"
+    },
+    {
+      "source": "laser-shooting-speed-4",
+      "target": "laser-shooting-speed-5"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "laser-shooting-speed-5"
+    },
+    {
+      "source": "laser-shooting-speed-5",
+      "target": "laser-shooting-speed-6"
+    },
+    {
+      "source": "laser-shooting-speed-6",
+      "target": "laser-shooting-speed-7"
+    },
+    {
+      "source": "artillery",
+      "target": "artillery-shell-range-1"
+    },
+    {
+      "source": "space-science-pack",
+      "target": "artillery-shell-range-1"
+    },
+    {
+      "source": "artillery",
+      "target": "artillery-shell-speed-1"
+    },
+    {
+      "source": "space-science-pack",
+      "target": "artillery-shell-speed-1"
+    },
+    {
+      "source": "space-science-pack",
+      "target": "follower-robot-count-5"
+    },
+    {
+      "source": "fast-inserter",
+      "target": "bulk-inserter"
+    },
+    {
+      "source": "logistics-2",
+      "target": "bulk-inserter"
+    },
+    {
+      "source": "advanced-circuit",
+      "target": "bulk-inserter"
+    },
+    {
+      "source": "bulk-inserter",
+      "target": "inserter-capacity-bonus-1"
+    },
+    {
+      "source": "inserter-capacity-bonus-1",
+      "target": "inserter-capacity-bonus-2"
+    },
+    {
+      "source": "inserter-capacity-bonus-2",
+      "target": "inserter-capacity-bonus-3"
+    },
+    {
+      "source": "chemical-science-pack",
+      "target": "inserter-capacity-bonus-3"
+    },
+    {
+      "source": "inserter-capacity-bonus-3",
+      "target": "inserter-capacity-bonus-4"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "inserter-capacity-bonus-4"
+    },
+    {
+      "source": "inserter-capacity-bonus-4",
+      "target": "inserter-capacity-bonus-5"
+    },
+    {
+      "source": "inserter-capacity-bonus-5",
+      "target": "inserter-capacity-bonus-6"
+    },
+    {
+      "source": "inserter-capacity-bonus-6",
+      "target": "inserter-capacity-bonus-7"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "inserter-capacity-bonus-7"
+    },
+    {
+      "source": "automation-science-pack",
+      "target": "automation"
+    },
+    {
+      "source": "automation",
+      "target": "automation-2"
+    },
+    {
+      "source": "steel-processing",
+      "target": "automation-2"
+    },
+    {
+      "source": "logistic-science-pack",
+      "target": "automation-2"
+    },
+    {
+      "source": "automation-science-pack",
+      "target": "logistic-science-pack"
+    },
+    {
+      "source": "automation-science-pack",
+      "target": "steel-processing"
+    },
+    {
+      "source": "steel-processing",
+      "target": "steel-axe"
+    },
+    {
+      "source": "automation-science-pack",
+      "target": "military"
+    },
+    {
+      "source": "military",
+      "target": "military-2"
+    },
+    {
+      "source": "steel-processing",
+      "target": "military-2"
+    },
+    {
+      "source": "logistic-science-pack",
+      "target": "military-2"
+    },
+    {
+      "source": "automation-science-pack",
+      "target": "fast-inserter"
+    },
+    {
+      "source": "automation-science-pack",
+      "target": "logistics"
+    },
+    {
+      "source": "logistics-2",
+      "target": "railway"
+    },
+    {
+      "source": "engine",
+      "target": "railway"
+    },
+    {
+      "source": "railway",
+      "target": "automated-rail-transportation"
+    },
+    {
+      "source": "logistics-2",
+      "target": "automobilism"
+    },
+    {
+      "source": "engine",
+      "target": "automobilism"
+    },
+    {
+      "source": "automation-science-pack",
+      "target": "lamp"
+    },
+    {
+      "source": "steel-processing",
+      "target": "solar-energy"
+    },
+    {
+      "source": "logistic-science-pack",
+      "target": "solar-energy"
+    },
+    {
+      "source": "military",
+      "target": "heavy-armor"
+    },
+    {
+      "source": "steel-processing",
+      "target": "heavy-armor"
+    },
+    {
+      "source": "automation-science-pack",
+      "target": "gun-turret"
+    },
+    {
+      "source": "automation-2",
+      "target": "research-speed-1"
+    },
+    {
+      "source": "research-speed-1",
+      "target": "research-speed-2"
+    },
+    {
+      "source": "steel-processing",
+      "target": "electric-energy-distribution-1"
+    },
+    {
+      "source": "logistic-science-pack",
+      "target": "electric-energy-distribution-1"
+    },
+    {
+      "source": "steel-processing",
+      "target": "advanced-material-processing"
+    },
+    {
+      "source": "logistic-science-pack",
+      "target": "advanced-material-processing"
+    },
+    {
+      "source": "advanced-material-processing",
+      "target": "concrete"
+    },
+    {
+      "source": "automation-2",
+      "target": "concrete"
+    },
+    {
+      "source": "steel-processing",
+      "target": "engine"
+    },
+    {
+      "source": "logistic-science-pack",
+      "target": "engine"
+    },
+    {
+      "source": "logistic-science-pack",
+      "target": "landfill"
+    },
+    {
+      "source": "logistics",
+      "target": "logistics-2"
+    },
+    {
+      "source": "logistic-science-pack",
+      "target": "logistics-2"
+    },
+    {
+      "source": "logistic-science-pack",
+      "target": "toolbelt"
+    },
+    {
+      "source": "automation-science-pack",
+      "target": "stone-wall"
+    },
+    {
+      "source": "stone-wall",
+      "target": "gate"
+    },
+    {
+      "source": "military-2",
+      "target": "gate"
+    },
+    {
+      "source": "advanced-circuit",
+      "target": "chemical-science-pack"
+    },
+    {
+      "source": "sulfur-processing",
+      "target": "chemical-science-pack"
+    },
+    {
+      "source": "military-2",
+      "target": "military-science-pack"
+    },
+    {
+      "source": "stone-wall",
+      "target": "military-science-pack"
+    },
+    {
+      "source": "productivity-module",
+      "target": "production-science-pack"
+    },
+    {
+      "source": "advanced-material-processing-2",
+      "target": "production-science-pack"
+    },
+    {
+      "source": "railway",
+      "target": "production-science-pack"
+    },
+    {
+      "source": "robotics",
+      "target": "utility-science-pack"
+    },
+    {
+      "source": "processing-unit",
+      "target": "utility-science-pack"
+    },
+    {
+      "source": "low-density-structure",
+      "target": "utility-science-pack"
+    },
+    {
+      "source": "rocket-silo",
+      "target": "space-science-pack"
+    },
+    {
+      "source": "chemical-science-pack",
+      "target": "military-3"
+    },
+    {
+      "source": "military-science-pack",
+      "target": "military-3"
+    },
+    {
+      "source": "military-3",
+      "target": "military-4"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "military-4"
+    },
+    {
+      "source": "explosives",
+      "target": "military-4"
+    },
+    {
+      "source": "uranium-processing",
+      "target": "uranium-ammo"
+    },
+    {
+      "source": "military-4",
+      "target": "uranium-ammo"
+    },
+    {
+      "source": "tank",
+      "target": "uranium-ammo"
+    },
+    {
+      "source": "military-4",
+      "target": "atomic-bomb"
+    },
+    {
+      "source": "kovarex-enrichment-process",
+      "target": "atomic-bomb"
+    },
+    {
+      "source": "rocketry",
+      "target": "atomic-bomb"
+    },
+    {
+      "source": "speed-module",
+      "target": "automation-3"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "automation-3"
+    },
+    {
+      "source": "electric-engine",
+      "target": "automation-3"
+    },
+    {
+      "source": "sulfur-processing",
+      "target": "explosives"
+    },
+    {
+      "source": "explosives",
+      "target": "cliff-explosives"
+    },
+    {
+      "source": "military-2",
+      "target": "cliff-explosives"
+    },
+    {
+      "source": "oil-processing",
+      "target": "flammables"
+    },
+    {
+      "source": "explosives",
+      "target": "land-mine"
+    },
+    {
+      "source": "military-science-pack",
+      "target": "land-mine"
+    },
+    {
+      "source": "flammables",
+      "target": "flamethrower"
+    },
+    {
+      "source": "military-science-pack",
+      "target": "flamethrower"
+    },
+    {
+      "source": "plastics",
+      "target": "advanced-circuit"
+    },
+    {
+      "source": "chemical-science-pack",
+      "target": "processing-unit"
+    },
+    {
+      "source": "railway",
+      "target": "fluid-wagon"
+    },
+    {
+      "source": "fluid-handling",
+      "target": "fluid-wagon"
+    },
+    {
+      "source": "railway",
+      "target": "braking-force-1"
+    },
+    {
+      "source": "chemical-science-pack",
+      "target": "braking-force-1"
+    },
+    {
+      "source": "braking-force-1",
+      "target": "braking-force-2"
+    },
+    {
+      "source": "braking-force-2",
+      "target": "braking-force-3"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "braking-force-3"
+    },
+    {
+      "source": "braking-force-3",
+      "target": "braking-force-4"
+    },
+    {
+      "source": "braking-force-4",
+      "target": "braking-force-5"
+    },
+    {
+      "source": "braking-force-5",
+      "target": "braking-force-6"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "braking-force-6"
+    },
+    {
+      "source": "braking-force-6",
+      "target": "braking-force-7"
+    },
+    {
+      "source": "automobilism",
+      "target": "tank"
+    },
+    {
+      "source": "military-3",
+      "target": "tank"
+    },
+    {
+      "source": "explosives",
+      "target": "tank"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "logistics-3"
+    },
+    {
+      "source": "lubricant",
+      "target": "logistics-3"
+    },
+    {
+      "source": "battery",
+      "target": "laser"
+    },
+    {
+      "source": "chemical-science-pack",
+      "target": "laser"
+    },
+    {
+      "source": "explosives",
+      "target": "rocketry"
+    },
+    {
+      "source": "flammables",
+      "target": "rocketry"
+    },
+    {
+      "source": "military-science-pack",
+      "target": "rocketry"
+    },
+    {
+      "source": "rocketry",
+      "target": "explosive-rocketry"
+    },
+    {
+      "source": "military-3",
+      "target": "explosive-rocketry"
+    },
+    {
+      "source": "heavy-armor",
+      "target": "modular-armor"
+    },
+    {
+      "source": "advanced-circuit",
+      "target": "modular-armor"
+    },
+    {
+      "source": "modular-armor",
+      "target": "power-armor"
+    },
+    {
+      "source": "electric-engine",
+      "target": "power-armor"
+    },
+    {
+      "source": "processing-unit",
+      "target": "power-armor"
+    },
+    {
+      "source": "power-armor",
+      "target": "power-armor-mk2"
+    },
+    {
+      "source": "military-4",
+      "target": "power-armor-mk2"
+    },
+    {
+      "source": "speed-module-2",
+      "target": "power-armor-mk2"
+    },
+    {
+      "source": "efficiency-module-2",
+      "target": "power-armor-mk2"
+    },
+    {
+      "source": "laser",
+      "target": "laser-turret"
+    },
+    {
+      "source": "military-science-pack",
+      "target": "laser-turret"
+    },
+    {
+      "source": "electric-engine",
+      "target": "robotics"
+    },
+    {
+      "source": "battery",
+      "target": "robotics"
+    },
+    {
+      "source": "flammables",
+      "target": "rocket-fuel"
+    },
+    {
+      "source": "advanced-oil-processing",
+      "target": "rocket-fuel"
+    },
+    {
+      "source": "advanced-material-processing",
+      "target": "low-density-structure"
+    },
+    {
+      "source": "chemical-science-pack",
+      "target": "low-density-structure"
+    },
+    {
+      "source": "concrete",
+      "target": "rocket-silo"
+    },
+    {
+      "source": "rocket-fuel",
+      "target": "rocket-silo"
+    },
+    {
+      "source": "electric-energy-accumulators",
+      "target": "rocket-silo"
+    },
+    {
+      "source": "solar-energy",
+      "target": "rocket-silo"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "rocket-silo"
+    },
+    {
+      "source": "speed-module-3",
+      "target": "rocket-silo"
+    },
+    {
+      "source": "productivity-module-3",
+      "target": "rocket-silo"
+    },
+    {
+      "source": "radar",
+      "target": "rocket-silo"
+    },
+    {
+      "source": "research-speed-2",
+      "target": "research-speed-3"
+    },
+    {
+      "source": "chemical-science-pack",
+      "target": "research-speed-3"
+    },
+    {
+      "source": "research-speed-3",
+      "target": "research-speed-4"
+    },
+    {
+      "source": "research-speed-4",
+      "target": "research-speed-5"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "research-speed-5"
+    },
+    {
+      "source": "research-speed-5",
+      "target": "research-speed-6"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "research-speed-6"
+    },
+    {
+      "source": "electric-energy-distribution-1",
+      "target": "electric-energy-distribution-2"
+    },
+    {
+      "source": "chemical-science-pack",
+      "target": "electric-energy-distribution-2"
+    },
+    {
+      "source": "electric-energy-distribution-1",
+      "target": "electric-energy-accumulators"
+    },
+    {
+      "source": "battery",
+      "target": "electric-energy-accumulators"
+    },
+    {
+      "source": "advanced-material-processing",
+      "target": "advanced-material-processing-2"
+    },
+    {
+      "source": "chemical-science-pack",
+      "target": "advanced-material-processing-2"
+    },
+    {
+      "source": "processing-unit",
+      "target": "effect-transmission"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "effect-transmission"
+    },
+    {
+      "source": "advanced-oil-processing",
+      "target": "lubricant"
+    },
+    {
+      "source": "lubricant",
+      "target": "electric-engine"
+    },
+    {
+      "source": "sulfur-processing",
+      "target": "battery"
+    },
+    {
+      "source": "robotics",
+      "target": "construction-robotics"
+    },
+    {
+      "source": "robotics",
+      "target": "logistic-robotics"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "logistic-system"
+    },
+    {
+      "source": "logistic-robotics",
+      "target": "logistic-system"
+    },
+    {
+      "source": "robotics",
+      "target": "worker-robots-speed-1"
+    },
+    {
+      "source": "worker-robots-speed-1",
+      "target": "worker-robots-speed-2"
+    },
+    {
+      "source": "worker-robots-speed-2",
+      "target": "worker-robots-speed-3"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "worker-robots-speed-3"
+    },
+    {
+      "source": "worker-robots-speed-3",
+      "target": "worker-robots-speed-4"
+    },
+    {
+      "source": "worker-robots-speed-4",
+      "target": "worker-robots-speed-5"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "worker-robots-speed-5"
+    },
+    {
+      "source": "worker-robots-speed-5",
+      "target": "worker-robots-speed-6"
+    },
+    {
+      "source": "space-science-pack",
+      "target": "worker-robots-speed-6"
+    },
+    {
+      "source": "robotics",
+      "target": "worker-robots-storage-1"
+    },
+    {
+      "source": "worker-robots-storage-1",
+      "target": "worker-robots-storage-2"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "worker-robots-storage-2"
+    },
+    {
+      "source": "worker-robots-storage-2",
+      "target": "worker-robots-storage-3"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "worker-robots-storage-3"
+    },
+    {
+      "source": "solar-panel-equipment",
+      "target": "energy-shield-equipment"
+    },
+    {
+      "source": "military-science-pack",
+      "target": "energy-shield-equipment"
+    },
+    {
+      "source": "solar-panel-equipment",
+      "target": "night-vision-equipment"
+    },
+    {
+      "source": "solar-panel-equipment",
+      "target": "belt-immunity-equipment"
+    },
+    {
+      "source": "energy-shield-equipment",
+      "target": "energy-shield-mk2-equipment"
+    },
+    {
+      "source": "military-3",
+      "target": "energy-shield-mk2-equipment"
+    },
+    {
+      "source": "low-density-structure",
+      "target": "energy-shield-mk2-equipment"
+    },
+    {
+      "source": "power-armor",
+      "target": "energy-shield-mk2-equipment"
+    },
+    {
+      "source": "battery",
+      "target": "battery-equipment"
+    },
+    {
+      "source": "solar-panel-equipment",
+      "target": "battery-equipment"
+    },
+    {
+      "source": "battery-equipment",
+      "target": "battery-mk2-equipment"
+    },
+    {
+      "source": "low-density-structure",
+      "target": "battery-mk2-equipment"
+    },
+    {
+      "source": "power-armor",
+      "target": "battery-mk2-equipment"
+    },
+    {
+      "source": "modular-armor",
+      "target": "solar-panel-equipment"
+    },
+    {
+      "source": "solar-energy",
+      "target": "solar-panel-equipment"
+    },
+    {
+      "source": "laser-turret",
+      "target": "personal-laser-defense-equipment"
+    },
+    {
+      "source": "military-3",
+      "target": "personal-laser-defense-equipment"
+    },
+    {
+      "source": "low-density-structure",
+      "target": "personal-laser-defense-equipment"
+    },
+    {
+      "source": "power-armor",
+      "target": "personal-laser-defense-equipment"
+    },
+    {
+      "source": "solar-panel-equipment",
+      "target": "personal-laser-defense-equipment"
+    },
+    {
+      "source": "laser-turret",
+      "target": "discharge-defense-equipment"
+    },
+    {
+      "source": "military-3",
+      "target": "discharge-defense-equipment"
+    },
+    {
+      "source": "power-armor",
+      "target": "discharge-defense-equipment"
+    },
+    {
+      "source": "solar-panel-equipment",
+      "target": "discharge-defense-equipment"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "fission-reactor-equipment"
+    },
+    {
+      "source": "power-armor",
+      "target": "fission-reactor-equipment"
+    },
+    {
+      "source": "military-science-pack",
+      "target": "fission-reactor-equipment"
+    },
+    {
+      "source": "nuclear-power",
+      "target": "fission-reactor-equipment"
+    },
+    {
+      "source": "processing-unit",
+      "target": "exoskeleton-equipment"
+    },
+    {
+      "source": "electric-engine",
+      "target": "exoskeleton-equipment"
+    },
+    {
+      "source": "solar-panel-equipment",
+      "target": "exoskeleton-equipment"
+    },
+    {
+      "source": "construction-robotics",
+      "target": "personal-roboport-equipment"
+    },
+    {
+      "source": "solar-panel-equipment",
+      "target": "personal-roboport-equipment"
+    },
+    {
+      "source": "personal-roboport-equipment",
+      "target": "personal-roboport-mk2-equipment"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "personal-roboport-mk2-equipment"
+    },
+    {
+      "source": "automation-2",
+      "target": "fluid-handling"
+    },
+    {
+      "source": "engine",
+      "target": "fluid-handling"
+    },
+    {
+      "source": "fluid-handling",
+      "target": "oil-gathering"
+    },
+    {
+      "source": "oil-gathering",
+      "target": "oil-processing"
+    },
+    {
+      "source": "chemical-science-pack",
+      "target": "advanced-oil-processing"
+    },
+    {
+      "source": "advanced-oil-processing",
+      "target": "coal-liquefaction"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "coal-liquefaction"
+    },
+    {
+      "source": "oil-processing",
+      "target": "sulfur-processing"
+    },
+    {
+      "source": "oil-processing",
+      "target": "plastics"
+    },
+    {
+      "source": "advanced-circuit",
+      "target": "modules"
+    },
+    {
+      "source": "modules",
+      "target": "speed-module"
+    },
+    {
+      "source": "speed-module",
+      "target": "speed-module-2"
+    },
+    {
+      "source": "processing-unit",
+      "target": "speed-module-2"
+    },
+    {
+      "source": "speed-module-2",
+      "target": "speed-module-3"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "speed-module-3"
+    },
+    {
+      "source": "modules",
+      "target": "productivity-module"
+    },
+    {
+      "source": "productivity-module",
+      "target": "productivity-module-2"
+    },
+    {
+      "source": "processing-unit",
+      "target": "productivity-module-2"
+    },
+    {
+      "source": "productivity-module-2",
+      "target": "productivity-module-3"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "productivity-module-3"
+    },
+    {
+      "source": "modules",
+      "target": "efficiency-module"
+    },
+    {
+      "source": "efficiency-module",
+      "target": "efficiency-module-2"
+    },
+    {
+      "source": "processing-unit",
+      "target": "efficiency-module-2"
+    },
+    {
+      "source": "efficiency-module-2",
+      "target": "efficiency-module-3"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "efficiency-module-3"
+    },
+    {
+      "source": "military-science-pack",
+      "target": "defender"
+    },
+    {
+      "source": "defender",
+      "target": "distractor"
+    },
+    {
+      "source": "military-3",
+      "target": "distractor"
+    },
+    {
+      "source": "laser",
+      "target": "distractor"
+    },
+    {
+      "source": "military-4",
+      "target": "destroyer"
+    },
+    {
+      "source": "distractor",
+      "target": "destroyer"
+    },
+    {
+      "source": "speed-module",
+      "target": "destroyer"
+    },
+    {
+      "source": "chemical-science-pack",
+      "target": "uranium-mining"
+    },
+    {
+      "source": "concrete",
+      "target": "uranium-mining"
+    },
+    {
+      "source": "uranium-mining",
+      "target": "uranium-processing"
+    },
+    {
+      "source": "uranium-processing",
+      "target": "nuclear-power"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "kovarex-enrichment-process"
+    },
+    {
+      "source": "uranium-processing",
+      "target": "kovarex-enrichment-process"
+    },
+    {
+      "source": "rocket-fuel",
+      "target": "kovarex-enrichment-process"
+    },
+    {
+      "source": "nuclear-power",
+      "target": "nuclear-fuel-reprocessing"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "nuclear-fuel-reprocessing"
+    },
+    {
+      "source": "advanced-circuit",
+      "target": "mining-productivity-1"
+    },
+    {
+      "source": "mining-productivity-1",
+      "target": "mining-productivity-2"
+    },
+    {
+      "source": "chemical-science-pack",
+      "target": "mining-productivity-2"
+    },
+    {
+      "source": "mining-productivity-2",
+      "target": "mining-productivity-3"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "mining-productivity-3"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "mining-productivity-3"
+    },
+    {
+      "source": "mining-productivity-3",
+      "target": "mining-productivity-4"
+    },
+    {
+      "source": "space-science-pack",
+      "target": "mining-productivity-4"
+    },
+    {
+      "source": "military-4",
+      "target": "artillery"
+    },
+    {
+      "source": "tank",
+      "target": "artillery"
+    },
+    {
+      "source": "concrete",
+      "target": "artillery"
+    },
+    {
+      "source": "radar",
+      "target": "artillery"
+    },
+    {
+      "source": "military-4",
+      "target": "spidertron"
+    },
+    {
+      "source": "exoskeleton-equipment",
+      "target": "spidertron"
+    },
+    {
+      "source": "fission-reactor-equipment",
+      "target": "spidertron"
+    },
+    {
+      "source": "rocketry",
+      "target": "spidertron"
+    },
+    {
+      "source": "efficiency-module-3",
+      "target": "spidertron"
+    },
+    {
+      "source": "radar",
+      "target": "spidertron"
+    },
+    {
+      "source": "logistic-science-pack",
+      "target": "circuit-network"
+    },
+    {
+      "source": "circuit-network",
+      "target": "advanced-combinators"
+    },
+    {
+      "source": "chemical-science-pack",
+      "target": "advanced-combinators"
+    },
+    {
+      "source": "rocket-silo",
+      "target": "space-platform"
+    },
+    {
+      "source": "destroyer",
+      "target": "electric-weapons-damage-1"
+    },
+    {
+      "source": "electric-weapons-damage-1",
+      "target": "electric-weapons-damage-2"
+    },
+    {
+      "source": "space-science-pack",
+      "target": "electric-weapons-damage-2"
+    },
+    {
+      "source": "electric-weapons-damage-2",
+      "target": "electric-weapons-damage-3"
+    },
+    {
+      "source": "tesla-weapons",
+      "target": "electric-weapons-damage-3"
+    },
+    {
+      "source": "electric-weapons-damage-3",
+      "target": "electric-weapons-damage-4"
+    },
+    {
+      "source": "artillery",
+      "target": "artillery-shell-damage-1"
+    },
+    {
+      "source": "railgun",
+      "target": "railgun-shooting-speed-1"
+    },
+    {
+      "source": "railgun",
+      "target": "railgun-damage-1"
+    },
+    {
+      "source": "space-science-pack",
+      "target": "space-platform-thruster"
+    },
+    {
+      "source": "space-platform-thruster",
+      "target": "planet-discovery-vulcanus"
+    },
+    {
+      "source": "space-platform-thruster",
+      "target": "planet-discovery-gleba"
+    },
+    {
+      "source": "landfill",
+      "target": "planet-discovery-gleba"
+    },
+    {
+      "source": "space-platform-thruster",
+      "target": "planet-discovery-fulgora"
+    },
+    {
+      "source": "electric-energy-accumulators",
+      "target": "planet-discovery-fulgora"
+    },
+    {
+      "source": "rocket-turret",
+      "target": "planet-discovery-aquilo"
+    },
+    {
+      "source": "advanced-asteroid-processing",
+      "target": "planet-discovery-aquilo"
+    },
+    {
+      "source": "heating-tower",
+      "target": "planet-discovery-aquilo"
+    },
+    {
+      "source": "asteroid-reprocessing",
+      "target": "planet-discovery-aquilo"
+    },
+    {
+      "source": "electromagnetic-science-pack",
+      "target": "planet-discovery-aquilo"
+    },
+    {
+      "source": "worker-robots-speed-6",
+      "target": "worker-robots-speed-7"
+    },
+    {
+      "source": "electromagnetic-science-pack",
+      "target": "worker-robots-speed-7"
+    },
+    {
+      "source": "battery-mk2-equipment",
+      "target": "battery-mk3-equipment"
+    },
+    {
+      "source": "electromagnetic-science-pack",
+      "target": "battery-mk3-equipment"
+    },
+    {
+      "source": "rocketry",
+      "target": "rocket-turret"
+    },
+    {
+      "source": "carbon-fiber",
+      "target": "rocket-turret"
+    },
+    {
+      "source": "stronger-explosives-2",
+      "target": "rocket-turret"
+    },
+    {
+      "source": "power-armor",
+      "target": "toolbelt-equipment"
+    },
+    {
+      "source": "toolbelt",
+      "target": "toolbelt-equipment"
+    },
+    {
+      "source": "carbon-fiber",
+      "target": "toolbelt-equipment"
+    },
+    {
+      "source": "planet-discovery-vulcanus",
+      "target": "calcite-processing"
+    },
+    {
+      "source": "planet-discovery-vulcanus",
+      "target": "tungsten-carbide"
+    },
+    {
+      "source": "foundry",
+      "target": "big-mining-drill"
+    },
+    {
+      "source": "electric-mining-drill",
+      "target": "big-mining-drill"
+    },
+    {
+      "source": "calcite-processing",
+      "target": "foundry"
+    },
+    {
+      "source": "tungsten-carbide",
+      "target": "foundry"
+    },
+    {
+      "source": "big-mining-drill",
+      "target": "tungsten-steel"
+    },
+    {
+      "source": "metallurgic-science-pack",
+      "target": "turbo-transport-belt"
+    },
+    {
+      "source": "logistics-3",
+      "target": "turbo-transport-belt"
+    },
+    {
+      "source": "tungsten-steel",
+      "target": "metallurgic-science-pack"
+    },
+    {
+      "source": "quantum-processor",
+      "target": "railgun"
+    },
+    {
+      "source": "electromagnetic-science-pack",
+      "target": "mech-armor"
+    },
+    {
+      "source": "power-armor-mk2",
+      "target": "mech-armor"
+    },
+    {
+      "source": "planet-discovery-gleba",
+      "target": "agriculture"
+    },
+    {
+      "source": "agriculture",
+      "target": "yumako"
+    },
+    {
+      "source": "yumako",
+      "target": "biochamber"
+    },
+    {
+      "source": "jellynut",
+      "target": "biochamber"
+    },
+    {
+      "source": "agriculture",
+      "target": "jellynut"
+    },
+    {
+      "source": "biochamber",
+      "target": "bioflux"
+    },
+    {
+      "source": "yumako",
+      "target": "artificial-soil"
+    },
+    {
+      "source": "jellynut",
+      "target": "artificial-soil"
+    },
+    {
+      "source": "bioflux",
+      "target": "bacteria-cultivation"
+    },
+    {
+      "source": "bioflux",
+      "target": "bioflux-processing"
+    },
+    {
+      "source": "bioflux-processing",
+      "target": "agricultural-science-pack"
+    },
+    {
+      "source": "bacteria-cultivation",
+      "target": "agricultural-science-pack"
+    },
+    {
+      "source": "artificial-soil",
+      "target": "agricultural-science-pack"
+    },
+    {
+      "source": "agricultural-science-pack",
+      "target": "tree-seeding"
+    },
+    {
+      "source": "carbon-fiber",
+      "target": "stack-inserter"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "stack-inserter"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "stack-inserter"
+    },
+    {
+      "source": "bulk-inserter",
+      "target": "stack-inserter"
+    },
+    {
+      "source": "stack-inserter",
+      "target": "transport-belt-capacity-1"
+    },
+    {
+      "source": "transport-belt-capacity-1",
+      "target": "transport-belt-capacity-2"
+    },
+    {
+      "source": "agricultural-science-pack",
+      "target": "captivity"
+    },
+    {
+      "source": "military-3",
+      "target": "captivity"
+    },
+    {
+      "source": "rocketry",
+      "target": "captivity"
+    },
+    {
+      "source": "biter-egg-handling",
+      "target": "biolab"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "biolab"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "biolab"
+    },
+    {
+      "source": "uranium-processing",
+      "target": "biolab"
+    },
+    {
+      "source": "captivity",
+      "target": "biter-egg-handling"
+    },
+    {
+      "source": "biter-egg-handling",
+      "target": "overgrowth-soil"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "overgrowth-soil"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "overgrowth-soil"
+    },
+    {
+      "source": "agricultural-science-pack",
+      "target": "carbon-fiber"
+    },
+    {
+      "source": "agricultural-science-pack",
+      "target": "health"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "health"
+    },
+    {
+      "source": "military-science-pack",
+      "target": "health"
+    },
+    {
+      "source": "tree-seeding",
+      "target": "fish-breeding"
+    },
+    {
+      "source": "recycling",
+      "target": "holmium-processing"
+    },
+    {
+      "source": "holmium-processing",
+      "target": "electromagnetic-plant"
+    },
+    {
+      "source": "electromagnetic-plant",
+      "target": "electromagnetic-science-pack"
+    },
+    {
+      "source": "electromagnetic-science-pack",
+      "target": "lightning-collector"
+    },
+    {
+      "source": "electromagnetic-science-pack",
+      "target": "rail-support-foundations"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "rail-support-foundations"
+    },
+    {
+      "source": "metallurgic-science-pack",
+      "target": "rail-support-foundations"
+    },
+    {
+      "source": "electromagnetic-science-pack",
+      "target": "tesla-weapons"
+    },
+    {
+      "source": "military-4",
+      "target": "tesla-weapons"
+    },
+    {
+      "source": "planet-discovery-gleba",
+      "target": "heating-tower"
+    },
+    {
+      "source": "planet-discovery-aquilo",
+      "target": "lithium-processing"
+    },
+    {
+      "source": "lithium-processing",
+      "target": "cryogenic-plant"
+    },
+    {
+      "source": "metallurgic-science-pack",
+      "target": "asteroid-reprocessing"
+    },
+    {
+      "source": "agricultural-science-pack",
+      "target": "advanced-asteroid-processing"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "advanced-asteroid-processing"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "advanced-asteroid-processing"
+    },
+    {
+      "source": "cryogenic-science-pack",
+      "target": "quantum-processor"
+    },
+    {
+      "source": "cryogenic-plant",
+      "target": "cryogenic-science-pack"
+    },
+    {
+      "source": "quantum-processor",
+      "target": "fusion-reactor"
+    },
+    {
+      "source": "fusion-reactor",
+      "target": "fusion-reactor-equipment"
+    },
+    {
+      "source": "fission-reactor-equipment",
+      "target": "fusion-reactor-equipment"
+    },
+    {
+      "source": "cryogenic-science-pack",
+      "target": "captive-biter-spawner"
+    },
+    {
+      "source": "biter-egg-handling",
+      "target": "captive-biter-spawner"
+    },
+    {
+      "source": "kovarex-enrichment-process",
+      "target": "captive-biter-spawner"
+    },
+    {
+      "source": "biter-egg-handling",
+      "target": "promethium-science-pack"
+    },
+    {
+      "source": "fusion-reactor",
+      "target": "promethium-science-pack"
+    },
+    {
+      "source": "cryogenic-science-pack",
+      "target": "foundation"
+    },
+    {
+      "source": "advanced-asteroid-processing",
+      "target": "asteroid-productivity"
+    },
+    {
+      "source": "promethium-science-pack",
+      "target": "research-productivity"
+    },
+    {
+      "source": "electromagnetic-science-pack",
+      "target": "processing-unit-productivity"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "processing-unit-productivity"
+    },
+    {
+      "source": "electromagnetic-science-pack",
+      "target": "scrap-recycling-productivity"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "scrap-recycling-productivity"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "steel-plate-productivity"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "low-density-structure-productivity"
+    },
+    {
+      "source": "metallurgic-science-pack",
+      "target": "low-density-structure-productivity"
+    },
+    {
+      "source": "agricultural-science-pack",
+      "target": "plastic-bar-productivity"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "plastic-bar-productivity"
+    },
+    {
+      "source": "agricultural-science-pack",
+      "target": "rocket-fuel-productivity"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "rocket-fuel-productivity"
+    },
+    {
+      "source": "cryogenic-science-pack",
+      "target": "rocket-part-productivity"
+    },
+    {
+      "source": "modules",
+      "target": "quality-module"
+    },
+    {
+      "source": "quality-module",
+      "target": "quality-module-2"
+    },
+    {
+      "source": "processing-unit",
+      "target": "quality-module-2"
+    },
+    {
+      "source": "quality-module-2",
+      "target": "quality-module-3"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "quality-module-3"
+    },
+    {
+      "source": "quality-module",
+      "target": "epic-quality"
+    },
+    {
+      "source": "utility-science-pack",
+      "target": "epic-quality"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "epic-quality"
+    },
+    {
+      "source": "space-science-pack",
+      "target": "legendary-quality"
+    },
+    {
+      "source": "epic-quality",
+      "target": "legendary-quality"
+    },
+    {
+      "source": "production-science-pack",
+      "target": "recycling"
+    },
+    {
+      "source": "processing-unit",
+      "target": "recycling"
+    },
+    {
+      "source": "concrete",
+      "target": "recycling"
+    }
+  ]
+}
