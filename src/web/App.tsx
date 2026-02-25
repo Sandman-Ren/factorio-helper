@@ -9,6 +9,7 @@ import { ProductionChain } from './components/ProductionChain.js';
 import { Summary } from './components/Summary.js';
 import { ItemIcon } from './components/ItemIcon.js';
 import {
+  Button,
   Label,
   Select,
   SelectTrigger,
@@ -266,8 +267,12 @@ export function App() {
                   timeUnit={timeUnit}
                   integerMultiplier={findIntegerMultiplier(plan)}
                   onApplyMultiplier={(k) => setAmount(prev => prev * k)}
-                  onApplyToPower={handleApplyToPower}
                 />
+                <div className="flex items-center gap-3 mb-4">
+                  <Button variant="outline" size="sm" onClick={handleApplyToPower}>
+                    Open in Power Calculator
+                  </Button>
+                </div>
                 <ProductionChain
                   node={plan.root}
                   timeUnit={timeUnit}

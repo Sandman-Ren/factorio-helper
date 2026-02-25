@@ -13,6 +13,9 @@ interface Props {
   fuels: Fuel[];
 }
 
+const hasBurner = (entries: ComputedEntry[]) =>
+  entries.some(e => e.entity.energy_type === 'burner');
+
 export function EntityList({ entries, onUpdateCount, onUpdateFuel, onRemove, defaultFuel, fuels }: Props) {
   if (entries.length === 0) {
     return (
@@ -22,21 +25,30 @@ export function EntityList({ entries, onUpdateCount, onUpdateFuel, onRemove, def
     );
   }
 
+  const showFuelColumns = hasBurner(entries);
+
   return (
-    <div>
+    <div
+      className="grid items-center gap-x-3 gap-y-0"
+      style={{
+        gridTemplateColumns: showFuelColumns
+          ? '24px 1fr 80px 96px 130px auto 24px'
+          : '24px 1fr 80px 96px 24px',
+      }}
+    >
       {entries.map((entry, i) => {
         const fuelCategories = entry.entity.fuel_categories;
         const availableFuels = fuelCategories
           ? fuels.filter(f => fuelCategories.includes(f.fuel_category))
           : [];
+        const isBurner = entry.entity.energy_type === 'burner' && availableFuels.length > 0;
+        const borderClass = i < entries.length - 1 ? 'border-b border-border' : '';
 
         return (
-          <div
-            key={entry.id}
-            className={`flex items-center gap-3 py-2 ${i < entries.length - 1 ? 'border-b border-border' : ''}`}
-          >
+          <div key={entry.id} className={`grid grid-cols-subgrid col-span-full items-center py-2 ${borderClass}`}>
             <ItemIcon name={entry.entityName} size={24} />
-            <span className="flex-1 text-sm min-w-0 truncate">
+
+            <span className="text-sm min-w-0 truncate">
               {entry.entityName.replace(/-/g, ' ')}
             </span>
 
@@ -47,42 +59,47 @@ export function EntityList({ entries, onUpdateCount, onUpdateFuel, onRemove, def
               aria-label={`${entry.entityName.replace(/-/g, ' ')} count`}
               value={entry.count}
               onChange={e => onUpdateCount(entry.id, parseFloat(e.target.value) || 0)}
-              className="w-20 tabular-nums text-right"
+              className="w-full tabular-nums text-right"
             />
 
-            <span className="text-sm font-medium tabular-nums w-24 text-right shrink-0">
+            <span className="text-sm font-medium tabular-nums text-right">
               {entry.displayPower}
+              {entry.displayPeak ? (
+                <span className="block text-xs text-muted-foreground">
+                  peak: {entry.displayPeak}
+                </span>
+              ) : null}
             </span>
 
-            {entry.entity.energy_type === 'burner' && availableFuels.length > 0 && (
-              <Select
-                value={entry.fuel || defaultFuel}
-                onValueChange={v => onUpdateFuel(entry.id, v)}
-              >
-                <SelectTrigger className="w-[130px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableFuels.map(f => (
-                    <SelectItem key={f.name} value={f.name}>
-                      <ItemIcon name={f.name} size={16} /> {f.name.replace(/-/g, ' ')}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-
-            {entry.displayFuel && (
-              <span className="text-xs text-muted-foreground tabular-nums shrink-0">
-                {entry.displayFuel}
-              </span>
-            )}
-
-            {entry.displayPeak && (
-              <span className="text-xs text-muted-foreground tabular-nums shrink-0">
-                (peak: {entry.displayPeak})
-              </span>
-            )}
+            {showFuelColumns ? (
+              isBurner ? (
+                <>
+                  <Select
+                    value={entry.fuel || defaultFuel}
+                    onValueChange={v => onUpdateFuel(entry.id, v)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableFuels.map(f => (
+                        <SelectItem key={f.name} value={f.name}>
+                          <ItemIcon name={f.name} size={16} /> {f.name.replace(/-/g, ' ')}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <span className="text-xs text-muted-foreground tabular-nums">
+                    {entry.displayFuel ?? ''}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span />
+                  <span />
+                </>
+              )
+            ) : null}
 
             <Button
               variant="ghost"
