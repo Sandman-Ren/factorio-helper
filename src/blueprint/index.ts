@@ -31,6 +31,7 @@ export {
   addEntity,
   addWire,
   cloneEntities,
+  downgradeEntities,
   getEntityNames,
   moveEntities,
   removeByType,
@@ -40,6 +41,7 @@ export {
   rotateEntities,
   toggleWire,
   updateEntity,
+  upgradeEntities,
 } from "./entity-ops";
 
 // Tile operations

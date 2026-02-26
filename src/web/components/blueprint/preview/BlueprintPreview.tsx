@@ -7,8 +7,9 @@ import { BlueprintTileLayer } from './BlueprintTileLayer.js';
 import { BlueprintEntityLayer } from './BlueprintEntityLayer.js';
 import { BlueprintWireLayer } from './BlueprintWireLayer.js';
 import { WireToolOverlay } from './WireToolOverlay.js';
-import { PlacementGhost, screenToWorld } from './PlacementGhost.js';
+import { PlacementGhost, screenToWorld, snapToGrid } from './PlacementGhost.js';
 import { exportPreviewPng } from './exportImage.js';
+import { getEntitySize } from '../../../../data/entity-sizes.js';
 import { TILE_SIZE } from './constants.js';
 import { Button } from '../../../ui/index.js';
 import MaximizeIcon from 'lucide-react/dist/esm/icons/maximize';
@@ -30,6 +31,7 @@ interface BlueprintPreviewProps {
   selectedEntityNumbers: ReadonlySet<number>;
   onEntitySelect: (entity: Entity, ctrlKey: boolean) => void;
   onClearSelection: () => void;
+  onBoxSelect?: (entityNumbers: number[]) => void;
   onEntityHover?: (entity: Entity | null) => void;
   editorMode?: EditorMode;
   onPlaceEntity?: (name: string, x: number, y: number, direction: number) => void;
@@ -41,6 +43,7 @@ export function BlueprintPreview({
   selectedEntityNumbers,
   onEntitySelect,
   onClearSelection,
+  onBoxSelect,
   onEntityHover: onEntityHoverProp,
   editorMode,
   onPlaceEntity,
@@ -116,11 +119,46 @@ export function BlueprintPreview({
     if (!isWiring) setWireSourceEntity(null);
   }, [isWiring]);
 
+  const entities = blueprint.entities ?? [];
+  const tiles = blueprint.tiles ?? [];
+
+  // Box-select: drag rectangle in select mode
+  const isSelectMode = !isPlacing && !isWiring;
+  const boxStartRef = useRef<{ sx: number; sy: number; wx: number; wy: number } | null>(null);
+  const [boxRect, setBoxRect] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
+
+  const handleViewportMouseDown = useCallback((e: React.MouseEvent) => {
+    onMouseDown(e);
+    // Start box-select on left click (no Alt) in select mode
+    if (e.button === 0 && !e.altKey && isSelectMode && viewportRef.current) {
+      const rect = viewportRef.current.getBoundingClientRect();
+      const world = screenToWorld(e.clientX, e.clientY, rect, panX, panY, zoom);
+      boxStartRef.current = { sx: e.clientX, sy: e.clientY, wx: world.x, wy: world.y };
+    }
+  }, [onMouseDown, isSelectMode, panX, panY, zoom]);
+
   const handleViewportMouseMove = useCallback((e: React.MouseEvent) => {
     onMouseMove(e);
     if ((isPlacing || (isWiring && wireSourceEntity !== null)) && viewportRef.current) {
       const rect = viewportRef.current.getBoundingClientRect();
       setCursorWorld(screenToWorld(e.clientX, e.clientY, rect, panX, panY, zoom));
+    }
+    // Update box-select rectangle
+    if (boxStartRef.current && viewportRef.current) {
+      const start = boxStartRef.current;
+      const dx = Math.abs(e.clientX - start.sx);
+      const dy = Math.abs(e.clientY - start.sy);
+      // Only show box after 5px drag threshold
+      if (dx > 5 || dy > 5) {
+        const rect = viewportRef.current.getBoundingClientRect();
+        const end = screenToWorld(e.clientX, e.clientY, rect, panX, panY, zoom);
+        setBoxRect({
+          x: Math.min(start.wx, end.x),
+          y: Math.min(start.wy, end.y),
+          w: Math.abs(end.x - start.wx),
+          h: Math.abs(end.y - start.wy),
+        });
+      }
     }
   }, [onMouseMove, isPlacing, isWiring, wireSourceEntity, panX, panY, zoom]);
 
@@ -139,11 +177,32 @@ export function BlueprintPreview({
     onEntitySelect(entity, ctrlKey);
   }, [isWiring, wireSourceEntity, onWireConnect, onEntitySelect]);
 
+  const handleViewportMouseUp = useCallback((_e: React.MouseEvent) => {
+    onMouseUp();
+    // Complete box-select
+    if (boxRect && onBoxSelect) {
+      const selected = entities
+        .filter(ent =>
+          ent.position.x >= boxRect.x &&
+          ent.position.x <= boxRect.x + boxRect.w &&
+          ent.position.y >= boxRect.y &&
+          ent.position.y <= boxRect.y + boxRect.h,
+        )
+        .map(ent => ent.entity_number);
+      if (selected.length > 0) onBoxSelect(selected);
+    }
+    boxStartRef.current = null;
+    setBoxRect(null);
+  }, [onMouseUp, boxRect, entities, onBoxSelect]);
+
   const handleViewportClick = useCallback((e: React.MouseEvent) => {
+    // Skip click if we just completed a box-select drag
+    if (boxRect) return;
     if (isPlacing && editorMode.type === 'place' && cursorWorld && onPlaceEntity) {
       e.stopPropagation();
-      const snappedX = Math.round(cursorWorld.x - 0.5) + 0.5;
-      const snappedY = Math.round(cursorWorld.y - 0.5) + 0.5;
+      const [tw, th] = getEntitySize(editorMode.entityName);
+      const snappedX = snapToGrid(cursorWorld.x, tw);
+      const snappedY = snapToGrid(cursorWorld.y, th);
       onPlaceEntity(editorMode.entityName, snappedX, snappedY, editorMode.direction);
       return;
     }
@@ -154,16 +213,15 @@ export function BlueprintPreview({
       return;
     }
     onClearSelection();
-  }, [isPlacing, isWiring, wireSourceEntity, editorMode, cursorWorld, onPlaceEntity, onClearSelection]);
+  }, [boxRect, isPlacing, isWiring, wireSourceEntity, editorMode, cursorWorld, onPlaceEntity, onClearSelection]);
 
   const handleViewportLeave = useCallback(() => {
     onMouseUp();
     setCursorWorld(null);
     if (isWiring) setWireSourceEntity(null);
+    boxStartRef.current = null;
+    setBoxRect(null);
   }, [onMouseUp, isWiring]);
-
-  const entities = blueprint.entities ?? [];
-  const tiles = blueprint.tiles ?? [];
 
   return (
     <div className="rounded-lg border border-border bg-card overflow-hidden">
@@ -239,9 +297,9 @@ export function BlueprintPreview({
           backgroundColor: 'var(--background)',
         }}
         onWheel={onWheel}
-        onMouseDown={onMouseDown}
+        onMouseDown={handleViewportMouseDown}
         onMouseMove={handleViewportMouseMove}
-        onMouseUp={onMouseUp}
+        onMouseUp={handleViewportMouseUp}
         onMouseLeave={handleViewportLeave}
         onClick={handleViewportClick}
       >
@@ -306,6 +364,24 @@ export function BlueprintPreview({
               />
             ) : null;
           })()}
+
+          {/* Box-select rectangle */}
+          {boxRect && (
+            <div
+              style={{
+                position: 'absolute',
+                left: boxRect.x * TILE_SIZE,
+                top: boxRect.y * TILE_SIZE,
+                width: boxRect.w * TILE_SIZE,
+                height: boxRect.h * TILE_SIZE,
+                border: '1.5px dashed var(--primary)',
+                backgroundColor: 'var(--primary)',
+                opacity: 0.15,
+                pointerEvents: 'none',
+                borderRadius: 2,
+              }}
+            />
+          )}
 
           {/* Placement ghost */}
           {isPlacing && editorMode.type === 'place' && cursorWorld && (

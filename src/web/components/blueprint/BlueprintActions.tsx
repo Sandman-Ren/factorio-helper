@@ -10,6 +10,8 @@ import {
   getEntityNames,
   removeByType,
   replaceEntity,
+  upgradeEntities,
+  downgradeEntities,
   getTileNames,
   addTilesUnderEntities,
   addTilesFillBounds,
@@ -24,6 +26,8 @@ import FlipHorizontal2Icon from 'lucide-react/dist/esm/icons/flip-horizontal-2';
 import FlipVertical2Icon from 'lucide-react/dist/esm/icons/flip-vertical-2';
 import Trash2Icon from 'lucide-react/dist/esm/icons/trash-2';
 import ArrowRightLeftIcon from 'lucide-react/dist/esm/icons/arrow-right-left';
+import ArrowUpIcon from 'lucide-react/dist/esm/icons/arrow-up';
+import ArrowDownIcon from 'lucide-react/dist/esm/icons/arrow-down';
 import GridIcon from 'lucide-react/dist/esm/icons/grid-3x3';
 import SquareIcon from 'lucide-react/dist/esm/icons/square';
 import XIcon from 'lucide-react/dist/esm/icons/x';
@@ -110,6 +114,20 @@ export function BlueprintActions({ node, nodeType, onUpdate }: BlueprintActionsP
     });
   }, [onUpdate]);
 
+  const handleUpgrade = useCallback(() => {
+    onUpdate((n, type) => {
+      if (type !== 'blueprint') return n;
+      return upgradeEntities(n as Blueprint).bp;
+    });
+  }, [onUpdate]);
+
+  const handleDowngrade = useCallback(() => {
+    onUpdate((n, type) => {
+      if (type !== 'blueprint') return n;
+      return downgradeEntities(n as Blueprint).bp;
+    });
+  }, [onUpdate]);
+
   if (!isBlueprint || !hasEntities) return null;
 
   return (
@@ -143,6 +161,15 @@ export function BlueprintActions({ node, nodeType, onUpdate }: BlueprintActionsP
       {entityNames.length > 0 && (
         <div className="flex items-end gap-2 flex-wrap">
           <span className="text-xs text-muted-foreground mr-1 self-center">Entities</span>
+
+          <Button variant="outline" size="sm" onClick={handleUpgrade} title="Upgrade all entities one tier (belts, inserters, assemblers, etc.)">
+            <ArrowUpIcon className="size-3.5 mr-1.5" />
+            Upgrade
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleDowngrade} title="Downgrade all entities one tier">
+            <ArrowDownIcon className="size-3.5 mr-1.5" />
+            Downgrade
+          </Button>
 
           <div className="flex items-end gap-1">
             <div>

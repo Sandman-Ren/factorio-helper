@@ -1,10 +1,10 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import type { useBlueprintEditor } from '../../hooks/useBlueprintEditor.js';
 import { useHotkeys } from '../../hooks/useHotkeys.js';
 import { useEntitySelection } from '../../hooks/useEntitySelection.js';
 import type { Blueprint, BlueprintBook, Entity, WireConnection } from '../../../blueprint/index.js';
 import { WireConnectorId } from '../../../blueprint/index.js';
-import { addEntity, removeEntities, rotateEntities, toggleWire } from '../../../blueprint/index.js';
+import { addEntity, removeEntities, rotateEntities, moveEntities, cloneEntities, toggleWire } from '../../../blueprint/index.js';
 import { BlueprintImport } from './BlueprintImport.js';
 import { BlueprintMetadata } from './BlueprintMetadata.js';
 import { BlueprintMetadataEditor } from './BlueprintMetadataEditor.js';
@@ -117,6 +117,14 @@ export function BlueprintTab(props: BlueprintEditorState) {
     handleBlueprintUpdate(b => toggleWire(b, wire));
   }, [_editorMode.mode, handleBlueprintUpdate]);
 
+  // Box-select from preview drag
+  const handleBoxSelect = useCallback((entityNumbers: number[]) => {
+    selection.selectBox(entityNumbers);
+  }, [selection.selectBox]);
+
+  // Clipboard for copy/paste
+  const clipboardRef = useRef<ReadonlySet<number>>(new Set());
+
   // Keyboard shortcuts
   const hotkeys = useMemo(() => ({
     'ctrl+z': () => undo(),
@@ -149,6 +157,41 @@ export function BlueprintTab(props: BlueprintEditorState) {
     'ctrl+a': () => {
       if (bp?.entities) {
         selection.selectAll(bp.entities.map(e => e.entity_number));
+      }
+    },
+    'arrowup': () => {
+      if (selection.selected.size > 0 && bp) {
+        handleBlueprintUpdate(b => moveEntities(b, selection.selected, 0, -1));
+      }
+    },
+    'arrowdown': () => {
+      if (selection.selected.size > 0 && bp) {
+        handleBlueprintUpdate(b => moveEntities(b, selection.selected, 0, 1));
+      }
+    },
+    'arrowleft': () => {
+      if (selection.selected.size > 0 && bp) {
+        handleBlueprintUpdate(b => moveEntities(b, selection.selected, -1, 0));
+      }
+    },
+    'arrowright': () => {
+      if (selection.selected.size > 0 && bp) {
+        handleBlueprintUpdate(b => moveEntities(b, selection.selected, 1, 0));
+      }
+    },
+    'ctrl+c': () => {
+      if (selection.selected.size > 0) {
+        clipboardRef.current = new Set(selection.selected);
+      }
+    },
+    'ctrl+v': () => {
+      if (clipboardRef.current.size > 0 && bp) {
+        handleBlueprintUpdate(b => cloneEntities(b, clipboardRef.current, 1, 1));
+      }
+    },
+    'ctrl+d': () => {
+      if (selection.selected.size > 0 && bp) {
+        handleBlueprintUpdate(b => cloneEntities(b, selection.selected, 1, 1));
       }
     },
   }), [undo, redo, _editorMode.resetMode, selection, bp, handleBlueprintUpdate]);
@@ -305,6 +348,7 @@ export function BlueprintTab(props: BlueprintEditorState) {
                   selectedEntityNumbers={selection.selected}
                   onEntitySelect={handleEntitySelect}
                   onClearSelection={selection.clearSelection}
+                  onBoxSelect={handleBoxSelect}
                   editorMode={_editorMode.mode}
                   onPlaceEntity={handlePlaceEntity}
                   onWireConnect={handleWireConnect}

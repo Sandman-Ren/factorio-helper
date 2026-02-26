@@ -3,6 +3,7 @@ import type { DecodedResult } from '../../hooks/useBlueprintEditor.js';
 import { Card, CardContent, CardHeader, CardTitle, Button } from '../../ui/index.js';
 import CopyIcon from 'lucide-react/dist/esm/icons/copy';
 import CheckIcon from 'lucide-react/dist/esm/icons/check';
+import LinkIcon from 'lucide-react/dist/esm/icons/link';
 
 interface BlueprintExportProps {
   reEncodedString: string | null;
@@ -12,6 +13,7 @@ interface BlueprintExportProps {
 
 export function BlueprintExport({ reEncodedString, reEncodeError, decoded }: BlueprintExportProps) {
   const [copied, setCopied] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const handleCopy = useCallback(async () => {
     if (!reEncodedString) return;
@@ -19,6 +21,18 @@ export function BlueprintExport({ reEncodedString, reEncodeError, decoded }: Blu
       await navigator.clipboard.writeText(reEncodedString);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // clipboard API unavailable
+    }
+  }, [reEncodedString]);
+
+  const handleCopyLink = useCallback(async () => {
+    if (!reEncodedString) return;
+    try {
+      const url = `${window.location.origin}${window.location.pathname}#blueprint=${encodeURIComponent(reEncodedString)}`;
+      await navigator.clipboard.writeText(url);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2000);
     } catch {
       // clipboard API unavailable
     }
@@ -35,18 +49,33 @@ export function BlueprintExport({ reEncodedString, reEncodeError, decoded }: Blu
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm">Export</CardTitle>
-          <Button
-            variant="default"
-            size="sm"
-            onClick={handleCopy}
-            disabled={!reEncodedString}
-          >
-            {copied ? (
-              <><CheckIcon className="size-3 mr-1" />Copied</>
-            ) : (
-              <><CopyIcon className="size-3 mr-1" />Copy to Clipboard</>
-            )}
-          </Button>
+          <div className="flex items-center gap-1.5">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCopyLink}
+              disabled={!reEncodedString}
+              title="Copy shareable URL"
+            >
+              {linkCopied ? (
+                <><CheckIcon className="size-3 mr-1" />Link Copied</>
+              ) : (
+                <><LinkIcon className="size-3 mr-1" />Copy Link</>
+              )}
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
+              onClick={handleCopy}
+              disabled={!reEncodedString}
+            >
+              {copied ? (
+                <><CheckIcon className="size-3 mr-1" />Copied</>
+              ) : (
+                <><CopyIcon className="size-3 mr-1" />Copy to Clipboard</>
+              )}
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent>

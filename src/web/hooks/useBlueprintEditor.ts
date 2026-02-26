@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { decode, encode, formatVersion } from '../../blueprint/index.js';
 import type {
   BlueprintString,
@@ -187,6 +187,11 @@ export function useBlueprintEditor() {
       history.reset();
       editorMode.resetMode();
 
+      // Update URL hash with blueprint string for sharing
+      try {
+        window.history.replaceState(null, '', `#blueprint=${encodeURIComponent(raw)}`);
+      } catch { /* ignore hash update failures */ }
+
       // Auto-select: for books, select the active_index child; otherwise root
       if (type === 'blueprint_book' && 'blueprint_book' in data) {
         const book = data.blueprint_book;
@@ -211,7 +216,21 @@ export function useBlueprintEditor() {
     setSelectedPath([]);
     history.reset();
     editorMode.resetMode();
+    try { window.history.replaceState(null, '', window.location.pathname); } catch { /* ignore */ }
   }, [history.reset, editorMode.resetMode]);
+
+  // Auto-decode from URL hash on initial load
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash.startsWith('#blueprint=')) return;
+    const bpStr = decodeURIComponent(hash.slice('#blueprint='.length));
+    if (bpStr) {
+      setInputString(bpStr);
+      // Defer decode so state is settled
+      setTimeout(() => handleDecode(bpStr), 0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /** Apply an updater function to the currently selected node (raw, no history). */
   const applyNodeUpdate = useCallback((

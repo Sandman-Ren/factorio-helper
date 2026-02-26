@@ -3,6 +3,7 @@ import {
   addEntity,
   addWire,
   cloneEntities,
+  downgradeEntities,
   getEntityNames,
   moveEntities,
   removeByType,
@@ -12,6 +13,7 @@ import {
   rotateEntities,
   toggleWire,
   updateEntity,
+  upgradeEntities,
 } from "../entity-ops";
 import type { Blueprint, WireConnection } from "../types";
 import { WireConnectorId } from "../types";
@@ -346,5 +348,49 @@ describe("toggleWire", () => {
     const reversed: WireConnection = [2, WireConnectorId.CircuitRed, 1, WireConnectorId.CircuitRed];
     const result = toggleWire(bp, reversed);
     expect(result.wires).toBeUndefined();
+  });
+});
+
+// ── Upgrade / Downgrade ───────────────────────────────────────────────────
+
+describe("upgradeEntities", () => {
+  it("upgrades belt entities one tier", () => {
+    const bp = makeBlueprint(["transport-belt", "inserter", "transport-belt"]);
+    const { bp: result, count } = upgradeEntities(bp);
+    expect(count).toBe(3);
+    expect(result.entities![0]!.name).toBe("fast-transport-belt");
+    expect(result.entities![1]!.name).toBe("long-handed-inserter");
+    expect(result.entities![2]!.name).toBe("fast-transport-belt");
+  });
+
+  it("returns same bp if nothing can be upgraded", () => {
+    const bp = makeBlueprint(["unknown-entity"]);
+    const { bp: result, count } = upgradeEntities(bp);
+    expect(count).toBe(0);
+    expect(result).toBe(bp);
+  });
+
+  it("does not upgrade entities already at max tier", () => {
+    const bp = makeBlueprint(["assembling-machine-3"]);
+    const { bp: result, count } = upgradeEntities(bp);
+    expect(count).toBe(0);
+    expect(result).toBe(bp);
+  });
+});
+
+describe("downgradeEntities", () => {
+  it("downgrades belt entities one tier", () => {
+    const bp = makeBlueprint(["fast-transport-belt", "fast-inserter"]);
+    const { bp: result, count } = downgradeEntities(bp);
+    expect(count).toBe(2);
+    expect(result.entities![0]!.name).toBe("transport-belt");
+    expect(result.entities![1]!.name).toBe("long-handed-inserter");
+  });
+
+  it("returns same bp if nothing can be downgraded", () => {
+    const bp = makeBlueprint(["transport-belt", "burner-inserter"]);
+    const { bp: result, count } = downgradeEntities(bp);
+    expect(count).toBe(0);
+    expect(result).toBe(bp);
   });
 });

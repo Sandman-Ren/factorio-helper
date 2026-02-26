@@ -1,4 +1,5 @@
 import type { Blueprint, Entity, WireConnection } from "./types";
+import { getUpgrade, getDowngrade } from "../data/entity-sizes";
 
 /**
  * Get a sorted array of unique entity names in the blueprint.
@@ -234,4 +235,38 @@ export function toggleWire(
     return removeWire(bp, wire);
   }
   return addWire(bp, wire);
+}
+
+// ── Upgrade / Downgrade ───────────────────────────────────────────────────
+
+/**
+ * Upgrade all entities one tier (e.g. transport-belt → fast-transport-belt).
+ * Entities without an upgrade path are left unchanged.
+ * Returns the number of entities upgraded via the optional counter.
+ */
+export function upgradeEntities(bp: Blueprint): { bp: Blueprint; count: number } {
+  if (!bp.entities) return { bp, count: 0 };
+  let count = 0;
+  const entities = bp.entities.map((e) => {
+    const up = getUpgrade(e.name);
+    if (!up) return e;
+    count++;
+    return { ...e, name: up };
+  });
+  return count > 0 ? { bp: { ...bp, entities }, count } : { bp, count: 0 };
+}
+
+/**
+ * Downgrade all entities one tier (e.g. fast-transport-belt → transport-belt).
+ */
+export function downgradeEntities(bp: Blueprint): { bp: Blueprint; count: number } {
+  if (!bp.entities) return { bp, count: 0 };
+  let count = 0;
+  const entities = bp.entities.map((e) => {
+    const down = getDowngrade(e.name);
+    if (!down) return e;
+    count++;
+    return { ...e, name: down };
+  });
+  return count > 0 ? { bp: { ...bp, entities }, count } : { bp, count: 0 };
 }

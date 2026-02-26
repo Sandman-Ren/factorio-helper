@@ -42,7 +42,9 @@ const BlueprintTab = lazy(() =>
 const ASSEMBLER_CATEGORIES = ['crafting', 'basic-crafting', 'advanced-crafting', 'crafting-with-fluid'];
 
 export function App() {
-  const [activeTab, setActiveTab] = useState('calculator');
+  const [activeTab, setActiveTab] = useState(() =>
+    window.location.hash.startsWith('#blueprint=') ? 'blueprint' : 'calculator',
+  );
   const [pendingTech, setPendingTech] = useState<string | null>(null);
 
   const {

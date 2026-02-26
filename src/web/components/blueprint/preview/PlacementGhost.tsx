@@ -1,4 +1,5 @@
 import { getIconUrl } from '../../ItemIcon.js';
+import { getEntitySize } from '../../../../data/entity-sizes.js';
 import { TILE_SIZE } from './constants.js';
 
 interface PlacementGhostProps {
@@ -8,13 +9,25 @@ interface PlacementGhostProps {
   direction: number;
 }
 
+/** Snap world coordinate to entity grid center based on tile size. */
+export function snapToGrid(world: number, tileSize: number): number {
+  if (tileSize % 2 === 1) {
+    // Odd-width entities center on half-tile: snap to x.5
+    return Math.round(world - 0.5) + 0.5;
+  }
+  // Even-width entities center on tile edge: snap to integer
+  return Math.round(world);
+}
+
 export function PlacementGhost({ entityName, worldX, worldY, direction }: PlacementGhostProps) {
   const deg = direction * 22.5;
-  // Snap to 0.5 grid (center of 1x1 entity)
-  const snappedX = Math.round(worldX - 0.5) + 0.5;
-  const snappedY = Math.round(worldY - 0.5) + 0.5;
-  const left = (snappedX - 0.5) * TILE_SIZE;
-  const top = (snappedY - 0.5) * TILE_SIZE;
+  const [tw, th] = getEntitySize(entityName);
+  const pixW = tw * TILE_SIZE;
+  const pixH = th * TILE_SIZE;
+  const snappedX = snapToGrid(worldX, tw);
+  const snappedY = snapToGrid(worldY, th);
+  const left = (snappedX - tw / 2) * TILE_SIZE;
+  const top = (snappedY - th / 2) * TILE_SIZE;
 
   return (
     <div
@@ -22,8 +35,8 @@ export function PlacementGhost({ entityName, worldX, worldY, direction }: Placem
         position: 'absolute',
         left,
         top,
-        width: TILE_SIZE,
-        height: TILE_SIZE,
+        width: pixW,
+        height: pixH,
         opacity: 0.5,
         pointerEvents: 'none',
         outline: '2px solid var(--primary)',
@@ -34,8 +47,8 @@ export function PlacementGhost({ entityName, worldX, worldY, direction }: Placem
       <img
         src={getIconUrl(entityName)}
         alt=""
-        width={TILE_SIZE}
-        height={TILE_SIZE}
+        width={pixW}
+        height={pixH}
         style={{
           imageRendering: 'pixelated',
           transform: deg ? `rotate(${deg}deg)` : undefined,

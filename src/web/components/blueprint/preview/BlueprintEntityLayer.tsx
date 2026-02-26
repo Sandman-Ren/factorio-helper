@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Entity } from '../../../../blueprint/types.js';
 import { getIconUrl } from '../../ItemIcon.js';
+import { getEntitySize } from '../../../../data/entity-sizes.js';
 import { TILE_SIZE } from './constants.js';
 
 interface BlueprintEntityLayerProps {
@@ -22,8 +23,11 @@ function EntityIcon({ entity, isSelected, onSelect, onHover }: {
 }) {
   const [failed, setFailed] = useState(false);
   const deg = directionToDegrees(entity.direction);
-  const left = (entity.position.x - 0.5) * TILE_SIZE;
-  const top = (entity.position.y - 0.5) * TILE_SIZE;
+  const [tw, th] = getEntitySize(entity.name);
+  const pixW = tw * TILE_SIZE;
+  const pixH = th * TILE_SIZE;
+  const left = (entity.position.x - tw / 2) * TILE_SIZE;
+  const top = (entity.position.y - th / 2) * TILE_SIZE;
 
   return (
     <div
@@ -31,8 +35,8 @@ function EntityIcon({ entity, isSelected, onSelect, onHover }: {
         position: 'absolute',
         left,
         top,
-        width: TILE_SIZE,
-        height: TILE_SIZE,
+        width: pixW,
+        height: pixH,
         cursor: 'pointer',
         outline: isSelected ? '2px solid var(--primary)' : undefined,
         outlineOffset: -1,
@@ -66,8 +70,8 @@ function EntityIcon({ entity, isSelected, onSelect, onHover }: {
         <img
           src={getIconUrl(entity.name)}
           alt={entity.name.replace(/-/g, ' ')}
-          width={TILE_SIZE}
-          height={TILE_SIZE}
+          width={pixW}
+          height={pixH}
           style={{
             imageRendering: 'pixelated',
             transform: deg ? `rotate(${deg}deg)` : undefined,
