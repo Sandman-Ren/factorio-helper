@@ -29,13 +29,16 @@ export {
 // Entity operations
 export {
   addEntity,
+  addWire,
   cloneEntities,
   getEntityNames,
   moveEntities,
   removeByType,
   removeEntities,
+  removeWire,
   replaceEntity,
   rotateEntities,
+  toggleWire,
   updateEntity,
 } from "./entity-ops";
 

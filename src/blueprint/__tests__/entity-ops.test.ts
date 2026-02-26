@@ -1,13 +1,16 @@
 import { describe, it, expect } from "vitest";
 import {
   addEntity,
+  addWire,
   cloneEntities,
   getEntityNames,
   moveEntities,
   removeByType,
   removeEntities,
+  removeWire,
   replaceEntity,
   rotateEntities,
+  toggleWire,
   updateEntity,
 } from "../entity-ops";
 import type { Blueprint, WireConnection } from "../types";
@@ -246,5 +249,102 @@ describe("updateEntity", () => {
     const bp = makeBlueprint(["a", "b"]);
     const result = updateEntity(bp, 1, { direction: 8 });
     expect(result.entities![1]!.direction).toBeUndefined();
+  });
+});
+
+// ── Wire Operations ───────────────────────────────────────────────────────
+
+describe("addWire", () => {
+  it("adds a wire to a blueprint with no wires", () => {
+    const bp = makeBlueprint(["a", "b"]);
+    const wire: WireConnection = [1, WireConnectorId.CircuitRed, 2, WireConnectorId.CircuitRed];
+    const result = addWire(bp, wire);
+    expect(result.wires).toHaveLength(1);
+    expect(result.wires![0]).toEqual(wire);
+  });
+
+  it("adds a wire to a blueprint with existing wires", () => {
+    const existing: WireConnection = [1, WireConnectorId.CircuitRed, 2, WireConnectorId.CircuitRed];
+    const bp = makeBlueprintWithWires(["a", "b", "c"], [existing]);
+    const newWire: WireConnection = [2, WireConnectorId.CircuitGreen, 3, WireConnectorId.CircuitGreen];
+    const result = addWire(bp, newWire);
+    expect(result.wires).toHaveLength(2);
+  });
+
+  it("returns same blueprint if wire already exists", () => {
+    const wire: WireConnection = [1, WireConnectorId.CircuitRed, 2, WireConnectorId.CircuitRed];
+    const bp = makeBlueprintWithWires(["a", "b"], [wire]);
+    expect(addWire(bp, wire)).toBe(bp);
+  });
+
+  it("detects duplicate wire regardless of endpoint order", () => {
+    const wire: WireConnection = [1, WireConnectorId.CircuitRed, 2, WireConnectorId.CircuitRed];
+    const bp = makeBlueprintWithWires(["a", "b"], [wire]);
+    const reversed: WireConnection = [2, WireConnectorId.CircuitRed, 1, WireConnectorId.CircuitRed];
+    expect(addWire(bp, reversed)).toBe(bp);
+  });
+});
+
+describe("removeWire", () => {
+  it("removes a matching wire", () => {
+    const wire: WireConnection = [1, WireConnectorId.CircuitRed, 2, WireConnectorId.CircuitRed];
+    const bp = makeBlueprintWithWires(["a", "b"], [wire]);
+    const result = removeWire(bp, wire);
+    expect(result.wires).toBeUndefined();
+  });
+
+  it("removes wire regardless of endpoint order", () => {
+    const wire: WireConnection = [1, WireConnectorId.CircuitGreen, 2, WireConnectorId.CircuitGreen];
+    const bp = makeBlueprintWithWires(["a", "b"], [wire]);
+    const reversed: WireConnection = [2, WireConnectorId.CircuitGreen, 1, WireConnectorId.CircuitGreen];
+    const result = removeWire(bp, reversed);
+    expect(result.wires).toBeUndefined();
+  });
+
+  it("returns same blueprint if wire not found", () => {
+    const wire: WireConnection = [1, WireConnectorId.CircuitRed, 2, WireConnectorId.CircuitRed];
+    const bp = makeBlueprintWithWires(["a", "b"], [wire]);
+    const other: WireConnection = [1, WireConnectorId.CircuitGreen, 2, WireConnectorId.CircuitGreen];
+    expect(removeWire(bp, other)).toBe(bp);
+  });
+
+  it("returns same blueprint if no wires exist", () => {
+    const bp = makeBlueprint(["a", "b"]);
+    const wire: WireConnection = [1, WireConnectorId.CircuitRed, 2, WireConnectorId.CircuitRed];
+    expect(removeWire(bp, wire)).toBe(bp);
+  });
+
+  it("preserves other wires when removing one", () => {
+    const wire1: WireConnection = [1, WireConnectorId.CircuitRed, 2, WireConnectorId.CircuitRed];
+    const wire2: WireConnection = [2, WireConnectorId.CircuitGreen, 3, WireConnectorId.CircuitGreen];
+    const bp = makeBlueprintWithWires(["a", "b", "c"], [wire1, wire2]);
+    const result = removeWire(bp, wire1);
+    expect(result.wires).toHaveLength(1);
+    expect(result.wires![0]).toEqual(wire2);
+  });
+});
+
+describe("toggleWire", () => {
+  it("adds wire if not present", () => {
+    const bp = makeBlueprint(["a", "b"]);
+    const wire: WireConnection = [1, WireConnectorId.CircuitRed, 2, WireConnectorId.CircuitRed];
+    const result = toggleWire(bp, wire);
+    expect(result.wires).toHaveLength(1);
+    expect(result.wires![0]).toEqual(wire);
+  });
+
+  it("removes wire if already present", () => {
+    const wire: WireConnection = [1, WireConnectorId.CircuitRed, 2, WireConnectorId.CircuitRed];
+    const bp = makeBlueprintWithWires(["a", "b"], [wire]);
+    const result = toggleWire(bp, wire);
+    expect(result.wires).toBeUndefined();
+  });
+
+  it("toggles with reversed endpoint order", () => {
+    const wire: WireConnection = [1, WireConnectorId.CircuitRed, 2, WireConnectorId.CircuitRed];
+    const bp = makeBlueprintWithWires(["a", "b"], [wire]);
+    const reversed: WireConnection = [2, WireConnectorId.CircuitRed, 1, WireConnectorId.CircuitRed];
+    const result = toggleWire(bp, reversed);
+    expect(result.wires).toBeUndefined();
   });
 });

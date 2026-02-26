@@ -6,6 +6,7 @@ import { useBlueprintLayout } from './useBlueprintLayout.js';
 import { BlueprintTileLayer } from './BlueprintTileLayer.js';
 import { BlueprintEntityLayer } from './BlueprintEntityLayer.js';
 import { BlueprintWireLayer } from './BlueprintWireLayer.js';
+import { WireToolOverlay } from './WireToolOverlay.js';
 import { PlacementGhost, screenToWorld } from './PlacementGhost.js';
 import { exportPreviewPng } from './exportImage.js';
 import { TILE_SIZE } from './constants.js';
@@ -32,6 +33,7 @@ interface BlueprintPreviewProps {
   onEntityHover?: (entity: Entity | null) => void;
   editorMode?: EditorMode;
   onPlaceEntity?: (name: string, x: number, y: number, direction: number) => void;
+  onWireConnect?: (fromEntityNumber: number, toEntityNumber: number) => void;
 }
 
 export function BlueprintPreview({
@@ -42,6 +44,7 @@ export function BlueprintPreview({
   onEntityHover: onEntityHoverProp,
   editorMode,
   onPlaceEntity,
+  onWireConnect,
 }: BlueprintPreviewProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const { panX, panY, zoom, isPanning, onWheel, onMouseDown, onMouseMove, onMouseUp, fitToBounds } = useViewport();
@@ -102,15 +105,39 @@ export function BlueprintPreview({
 
   // Place mode: track cursor world position
   const isPlacing = editorMode?.type === 'place';
+  const isWiring = editorMode?.type === 'wire';
   const [cursorWorld, setCursorWorld] = useState<{ x: number; y: number } | null>(null);
+
+  // Wire mode: track the source entity for in-progress wire
+  const [wireSourceEntity, setWireSourceEntity] = useState<number | null>(null);
+
+  // Reset wire source when leaving wire mode
+  useEffect(() => {
+    if (!isWiring) setWireSourceEntity(null);
+  }, [isWiring]);
 
   const handleViewportMouseMove = useCallback((e: React.MouseEvent) => {
     onMouseMove(e);
-    if (isPlacing && viewportRef.current) {
+    if ((isPlacing || (isWiring && wireSourceEntity !== null)) && viewportRef.current) {
       const rect = viewportRef.current.getBoundingClientRect();
       setCursorWorld(screenToWorld(e.clientX, e.clientY, rect, panX, panY, zoom));
     }
-  }, [onMouseMove, isPlacing, panX, panY, zoom]);
+  }, [onMouseMove, isPlacing, isWiring, wireSourceEntity, panX, panY, zoom]);
+
+  // In wire mode, entity clicks start/complete a wire instead of selecting
+  const handleEntitySelectOrWire = useCallback((entity: Entity, ctrlKey: boolean) => {
+    if (isWiring && onWireConnect) {
+      if (wireSourceEntity === null) {
+        setWireSourceEntity(entity.entity_number);
+      } else if (entity.entity_number !== wireSourceEntity) {
+        onWireConnect(wireSourceEntity, entity.entity_number);
+        setWireSourceEntity(null);
+        setCursorWorld(null);
+      }
+      return;
+    }
+    onEntitySelect(entity, ctrlKey);
+  }, [isWiring, wireSourceEntity, onWireConnect, onEntitySelect]);
 
   const handleViewportClick = useCallback((e: React.MouseEvent) => {
     if (isPlacing && editorMode.type === 'place' && cursorWorld && onPlaceEntity) {
@@ -120,13 +147,20 @@ export function BlueprintPreview({
       onPlaceEntity(editorMode.entityName, snappedX, snappedY, editorMode.direction);
       return;
     }
+    // In wire mode, clicking empty space cancels the in-progress wire
+    if (isWiring && wireSourceEntity !== null) {
+      setWireSourceEntity(null);
+      setCursorWorld(null);
+      return;
+    }
     onClearSelection();
-  }, [isPlacing, editorMode, cursorWorld, onPlaceEntity, onClearSelection]);
+  }, [isPlacing, isWiring, wireSourceEntity, editorMode, cursorWorld, onPlaceEntity, onClearSelection]);
 
   const handleViewportLeave = useCallback(() => {
     onMouseUp();
     setCursorWorld(null);
-  }, [onMouseUp]);
+    if (isWiring) setWireSourceEntity(null);
+  }, [onMouseUp, isWiring]);
 
   const entities = blueprint.entities ?? [];
   const tiles = blueprint.tiles ?? [];
@@ -201,7 +235,7 @@ export function BlueprintPreview({
           position: 'relative',
           height: 400,
           overflow: 'hidden',
-          cursor: isPanning ? 'grabbing' : isPlacing ? 'crosshair' : 'grab',
+          cursor: isPanning ? 'grabbing' : (isPlacing || isWiring) ? 'crosshair' : 'grab',
           backgroundColor: 'var(--background)',
         }}
         onWheel={onWheel}
@@ -256,10 +290,22 @@ export function BlueprintPreview({
             <BlueprintEntityLayer
               entities={entities}
               selectedEntityNumbers={selectedEntityNumbers}
-              onEntitySelect={onEntitySelect}
+              onEntitySelect={handleEntitySelectOrWire}
               onEntityHover={handleEntityHover}
             />
           )}
+
+          {/* Wire tool in-progress line */}
+          {isWiring && wireSourceEntity !== null && cursorWorld && (() => {
+            const sourceEntity = entities.find(e => e.entity_number === wireSourceEntity);
+            return sourceEntity && editorMode.type === 'wire' ? (
+              <WireToolOverlay
+                fromPos={sourceEntity.position}
+                cursorWorld={cursorWorld}
+                color={editorMode.color}
+              />
+            ) : null;
+          })()}
 
           {/* Placement ghost */}
           {isPlacing && editorMode.type === 'place' && cursorWorld && (

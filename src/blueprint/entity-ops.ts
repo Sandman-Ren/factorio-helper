@@ -184,3 +184,54 @@ export function updateEntity(
   });
   return { ...bp, entities };
 }
+
+// ── Wire Operations ───────────────────────────────────────────────────────
+
+/** Check if two wire connections are the same (order-independent). */
+function wiresEqual(a: WireConnection, b: WireConnection): boolean {
+  return (
+    (a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3]) ||
+    (a[0] === b[2] && a[1] === b[3] && a[2] === b[0] && a[3] === b[1])
+  );
+}
+
+/**
+ * Add a wire connection between two entities.
+ * Returns the same blueprint if the wire already exists.
+ */
+export function addWire(
+  bp: Blueprint,
+  wire: WireConnection,
+): Blueprint {
+  const existing = bp.wires ?? [];
+  if (existing.some(w => wiresEqual(w, wire))) return bp;
+  return { ...bp, wires: [...existing, wire] };
+}
+
+/**
+ * Remove a specific wire connection.
+ * Matches regardless of endpoint order.
+ */
+export function removeWire(
+  bp: Blueprint,
+  wire: WireConnection,
+): Blueprint {
+  if (!bp.wires) return bp;
+  const filtered = bp.wires.filter(w => !wiresEqual(w, wire));
+  if (filtered.length === bp.wires.length) return bp;
+  return { ...bp, wires: filtered.length > 0 ? filtered : undefined };
+}
+
+/**
+ * Toggle a wire connection — add if absent, remove if present.
+ */
+export function toggleWire(
+  bp: Blueprint,
+  wire: WireConnection,
+): Blueprint {
+  const existing = bp.wires ?? [];
+  if (existing.some(w => wiresEqual(w, wire))) {
+    return removeWire(bp, wire);
+  }
+  return addWire(bp, wire);
+}

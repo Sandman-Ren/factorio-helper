@@ -2,8 +2,9 @@ import { useState, useMemo, useCallback } from 'react';
 import type { useBlueprintEditor } from '../../hooks/useBlueprintEditor.js';
 import { useHotkeys } from '../../hooks/useHotkeys.js';
 import { useEntitySelection } from '../../hooks/useEntitySelection.js';
-import type { Blueprint, BlueprintBook, Entity } from '../../../blueprint/index.js';
-import { addEntity, removeEntities, rotateEntities } from '../../../blueprint/index.js';
+import type { Blueprint, BlueprintBook, Entity, WireConnection } from '../../../blueprint/index.js';
+import { WireConnectorId } from '../../../blueprint/index.js';
+import { addEntity, removeEntities, rotateEntities, toggleWire } from '../../../blueprint/index.js';
 import { BlueprintImport } from './BlueprintImport.js';
 import { BlueprintMetadata } from './BlueprintMetadata.js';
 import { BlueprintMetadataEditor } from './BlueprintMetadataEditor.js';
@@ -95,6 +96,26 @@ export function BlueprintTab(props: BlueprintEditorState) {
   const handlePlaceEntity = useCallback((name: string, x: number, y: number, direction: number) => {
     handleBlueprintUpdate(b => addEntity(b, { name, position: { x, y }, direction }));
   }, [handleBlueprintUpdate]);
+
+  // Wire connect: toggle wire between two entities
+  const handleWireConnect = useCallback((fromEntity: number, toEntity: number) => {
+    if (_editorMode.mode.type !== 'wire') return;
+    const color = _editorMode.mode.color;
+    let c1: WireConnectorId;
+    let c2: WireConnectorId;
+    if (color === 'red') {
+      c1 = WireConnectorId.CircuitRed;
+      c2 = WireConnectorId.CircuitRed;
+    } else if (color === 'green') {
+      c1 = WireConnectorId.CircuitGreen;
+      c2 = WireConnectorId.CircuitGreen;
+    } else {
+      c1 = WireConnectorId.PoleCopperOrPowerSwitchLeft;
+      c2 = WireConnectorId.PoleCopperOrPowerSwitchLeft;
+    }
+    const wire: WireConnection = [fromEntity, c1, toEntity, c2];
+    handleBlueprintUpdate(b => toggleWire(b, wire));
+  }, [_editorMode.mode, handleBlueprintUpdate]);
 
   // Keyboard shortcuts
   const hotkeys = useMemo(() => ({
@@ -204,6 +225,44 @@ export function BlueprintTab(props: BlueprintEditorState) {
                 >
                   <RedoIcon className="size-3.5" />
                 </Button>
+                {isBlueprint && (
+                  <>
+                    <span className="w-px h-4 bg-border mx-0.5" />
+                    <Button
+                      variant={_editorMode.mode.type === 'wire' && _editorMode.mode.color === 'red' ? 'secondary' : 'ghost'}
+                      size="sm"
+                      className="h-7 px-1.5"
+                      onClick={() => _editorMode.mode.type === 'wire' && _editorMode.mode.color === 'red'
+                        ? _editorMode.resetMode()
+                        : _editorMode.startWiring('red')}
+                      title="Red wire tool"
+                    >
+                      <span className="size-3 rounded-full" style={{ backgroundColor: '#ff8e8e' }} />
+                    </Button>
+                    <Button
+                      variant={_editorMode.mode.type === 'wire' && _editorMode.mode.color === 'green' ? 'secondary' : 'ghost'}
+                      size="sm"
+                      className="h-7 px-1.5"
+                      onClick={() => _editorMode.mode.type === 'wire' && _editorMode.mode.color === 'green'
+                        ? _editorMode.resetMode()
+                        : _editorMode.startWiring('green')}
+                      title="Green wire tool"
+                    >
+                      <span className="size-3 rounded-full" style={{ backgroundColor: '#87d88b' }} />
+                    </Button>
+                    <Button
+                      variant={_editorMode.mode.type === 'wire' && _editorMode.mode.color === 'copper' ? 'secondary' : 'ghost'}
+                      size="sm"
+                      className="h-7 px-1.5"
+                      onClick={() => _editorMode.mode.type === 'wire' && _editorMode.mode.color === 'copper'
+                        ? _editorMode.resetMode()
+                        : _editorMode.startWiring('copper')}
+                      title="Copper wire tool"
+                    >
+                      <span className="size-3 rounded-full" style={{ backgroundColor: '#f0a040' }} />
+                    </Button>
+                  </>
+                )}
                 <span className="w-px h-4 bg-border mx-0.5" />
                 <Button
                   variant="ghost"
@@ -248,6 +307,7 @@ export function BlueprintTab(props: BlueprintEditorState) {
                   onClearSelection={selection.clearSelection}
                   editorMode={_editorMode.mode}
                   onPlaceEntity={handlePlaceEntity}
+                  onWireConnect={handleWireConnect}
                 />
               </div>
             )}
