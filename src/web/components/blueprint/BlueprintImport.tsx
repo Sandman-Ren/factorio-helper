@@ -1,6 +1,6 @@
 import { useCallback, useRef, useEffect } from 'react';
 import type { DecodedResult, BlueprintType } from '../../hooks/useBlueprintEditor.js';
-import { Button, Badge } from '../../ui/index.js';
+import { Button, Badge, Textarea } from '../../ui/index.js';
 import ClipboardPasteIcon from 'lucide-react/dist/esm/icons/clipboard-paste';
 import XIcon from 'lucide-react/dist/esm/icons/x';
 
@@ -46,8 +46,8 @@ export function BlueprintImport({
     <div className="space-y-3">
       <div className="flex gap-2">
         <div className="flex-1">
-          <textarea
-            className="bg-input/30 border-input text-foreground placeholder:text-muted-foreground w-full rounded-md border px-3 py-2 text-sm font-mono focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none resize-y"
+          <Textarea
+            className="text-sm font-mono"
             rows={3}
             placeholder="Paste a Factorio blueprint string here…"
             value={inputString}

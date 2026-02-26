@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { DecodedResult } from '../../hooks/useBlueprintEditor.js';
-import { Card, CardContent, CardHeader, CardTitle, Button } from '../../ui/index.js';
+import { Card, CardContent, CardHeader, CardTitle, Button, Textarea } from '../../ui/index.js';
 import CopyIcon from 'lucide-react/dist/esm/icons/copy';
 import CheckIcon from 'lucide-react/dist/esm/icons/check';
 import LinkIcon from 'lucide-react/dist/esm/icons/link';
@@ -86,8 +86,8 @@ export function BlueprintExport({ reEncodedString, reEncodeError, decoded }: Blu
         )}
         {reEncodedString && (
           <>
-            <textarea
-              className="bg-input/30 border-input text-foreground w-full rounded-md border px-3 py-2 text-xs font-mono focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none resize-y"
+            <Textarea
+              className="text-xs font-mono"
               rows={3}
               readOnly
               value={reEncodedString}

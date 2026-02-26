@@ -198,7 +198,7 @@ export function BlueprintTab(props: BlueprintEditorState) {
   useHotkeys(hotkeys, !!decoded);
 
   return (
-    <div style={{ maxWidth: 1100, margin: '0 auto', padding: 20 }}>
+    <div style={{ maxWidth: 1400, margin: '0 auto', padding: 20 }}>
       <BlueprintImport
         inputString={inputString}
         onInputChange={setInputString}
@@ -240,14 +240,10 @@ export function BlueprintTab(props: BlueprintEditorState) {
 
           {/* Main content */}
           <div className="space-y-4">
-            {/* Toolbar */}
-            <div className="flex items-center justify-between">
-              <BlueprintActions
-                node={selectedNode}
-                nodeType={selectedNodeType}
-                onUpdate={updateSelectedNode}
-              />
-              <div className="flex items-center gap-1">
+            {/* Toolbar card */}
+            <div className="rounded-lg border border-border bg-card">
+              {/* Mode bar */}
+              <div className="flex items-center gap-1 px-3 py-1.5">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -311,7 +307,7 @@ export function BlueprintTab(props: BlueprintEditorState) {
                     </Button>
                   </>
                 )}
-                <span className="w-px h-4 bg-border mx-0.5" />
+                <div className="flex-1" />
                 <Button
                   variant="ghost"
                   size="sm"
@@ -324,6 +320,13 @@ export function BlueprintTab(props: BlueprintEditorState) {
                   )}
                 </Button>
               </div>
+
+              {/* Blueprint actions (transforms, entities, tiles) */}
+              <BlueprintActions
+                node={selectedNode}
+                nodeType={selectedNodeType}
+                onUpdate={updateSelectedNode}
+              />
             </div>
 
             {editMode ? (

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import type { BlueprintType, BlueprintNode } from '../../hooks/useBlueprintEditor.js';
 import type { Blueprint, BlueprintBook, UpgradePlanner, DeconstructionPlanner } from '../../../blueprint/index.js';
-import { Card, CardContent, CardHeader, CardTitle, Badge, Input, Label } from '../../ui/index.js';
+import { Card, CardContent, CardHeader, CardTitle, Badge, Input, Label, Textarea, Switch, Checkbox } from '../../ui/index.js';
 
 const TYPE_LABELS: Record<BlueprintType, string> = {
   blueprint: 'Blueprint',
@@ -92,10 +92,10 @@ export function BlueprintMetadataEditor({ node, nodeType, onUpdate }: BlueprintM
     });
   }, [onUpdate]);
 
-  const handleToggleSnap = useCallback(() => {
+  const handleToggleSnap = useCallback((checked: boolean) => {
     onUpdate((n) => {
       const bp = { ...n } as Blueprint;
-      if (bp['snap-to-grid']) {
+      if (!checked) {
         delete bp['snap-to-grid'];
         delete bp['absolute-snapping'];
         delete bp['position-relative-to-grid'];
@@ -106,13 +106,13 @@ export function BlueprintMetadataEditor({ node, nodeType, onUpdate }: BlueprintM
     });
   }, [onUpdate]);
 
-  const handleToggleAbsolute = useCallback(() => {
+  const handleToggleAbsolute = useCallback((checked: boolean) => {
     onUpdate((n) => {
       const bp = { ...n } as Blueprint;
-      if (bp['absolute-snapping']) {
-        delete bp['absolute-snapping'];
-      } else {
+      if (checked) {
         bp['absolute-snapping'] = true;
+      } else {
+        delete bp['absolute-snapping'];
       }
       return bp;
     });
@@ -142,10 +142,10 @@ export function BlueprintMetadataEditor({ node, nodeType, onUpdate }: BlueprintM
 
         <div>
           <Label htmlFor="meta-description" className="text-xs text-muted-foreground">Description</Label>
-          <textarea
+          <Textarea
             id="meta-description"
             name="blueprint-description"
-            className="bg-input/30 border-input text-foreground placeholder:text-muted-foreground w-full rounded-md border px-3 py-2 text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none resize-y mt-1"
+            className="mt-1"
             rows={3}
             value={description}
             onChange={e => handleDescriptionChange(e.target.value)}
@@ -157,22 +157,13 @@ export function BlueprintMetadataEditor({ node, nodeType, onUpdate }: BlueprintM
         {nodeType === 'blueprint' && (
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <Label className="text-xs text-muted-foreground">Snap to Grid</Label>
-              <button
-                role="switch"
-                aria-checked={!!snap}
+              <Label htmlFor="snap-toggle" className="text-xs text-muted-foreground">Snap to Grid</Label>
+              <Switch
+                id="snap-toggle"
+                checked={!!snap}
+                onCheckedChange={handleToggleSnap}
                 aria-label="Toggle snap to grid"
-                onClick={handleToggleSnap}
-                className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-ring/50 outline-none ${
-                  snap ? 'bg-primary' : 'bg-input'
-                }`}
-              >
-                <span
-                  className={`inline-block h-3.5 w-3.5 rounded-full bg-foreground transition-transform ${
-                    snap ? 'translate-x-[18px]' : 'translate-x-[3px]'
-                  }`}
-                />
-              </button>
+              />
             </div>
             {snap && (
               <div className="flex items-center gap-2">
@@ -200,16 +191,16 @@ export function BlueprintMetadataEditor({ node, nodeType, onUpdate }: BlueprintM
                     className="w-16"
                   />
                 </div>
-                <label className="flex items-center gap-1 text-xs text-muted-foreground cursor-pointer">
-                  <input
-                    type="checkbox"
-                    name="absolute-snapping"
+                <div className="flex items-center gap-1.5">
+                  <Checkbox
+                    id="absolute-snapping"
                     checked={!!(node as Blueprint)['absolute-snapping']}
-                    onChange={handleToggleAbsolute}
-                    className="accent-primary"
+                    onCheckedChange={handleToggleAbsolute}
                   />
-                  Absolute
-                </label>
+                  <Label htmlFor="absolute-snapping" className="text-xs text-muted-foreground cursor-pointer">
+                    Absolute
+                  </Label>
+                </div>
               </div>
             )}
           </div>
