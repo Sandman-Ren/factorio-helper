@@ -79,6 +79,8 @@ export function BlueprintJsonEditor({ data, nodeType: _, onApply, onClose }: Blu
           value={editText}
           onChange={e => handleChange(e.target.value)}
           spellCheck={false}
+          aria-label="Blueprint JSON editor"
+          name="blueprint-json"
         />
         {parseError && (
           <p className="text-destructive text-xs mt-1.5">{parseError}</p>

@@ -53,6 +53,10 @@
     --color-factorio-blue: var(--factorio-blue);
     --color-factorio-selected: var(--factorio-selected);
 
+    /* JSON syntax colors */
+    --color-json-string: #87d88b;
+    --color-json-number: #80cef0;
+
     /* Science pack colors for tech tree pip indicators */
     --color-science-automation: #e05050;
     --color-science-logistic: #50c850;

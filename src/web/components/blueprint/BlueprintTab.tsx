@@ -117,71 +117,71 @@ export function BlueprintTab(props: BlueprintEditorState) {
     handleBlueprintUpdate(b => toggleWire(b, wire));
   }, [_editorMode.mode, handleBlueprintUpdate]);
 
-  // Box-select from preview drag
-  const handleBoxSelect = useCallback((entityNumbers: number[]) => {
-    selection.selectBox(entityNumbers);
-  }, [selection.selectBox]);
+  // Box-select from preview drag — pass stable ref directly
+  const handleBoxSelect = selection.selectBox;
 
   // Clipboard for copy/paste
   const clipboardRef = useRef<ReadonlySet<number>>(new Set());
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts — destructure stable refs to avoid new-object deps breaking useMemo
+  const { selected, clearSelection, selectAll } = selection;
+  const { mode: editorModeState, resetMode, rotatePlacementDirection } = _editorMode;
   const hotkeys = useMemo(() => ({
     'ctrl+z': () => undo(),
     'ctrl+shift+z': () => redo(),
     'ctrl+y': () => redo(),
     'escape': () => {
-      if (selection.selected.size > 0) selection.clearSelection();
-      else _editorMode.resetMode();
+      if (selected.size > 0) clearSelection();
+      else resetMode();
     },
     'delete': () => {
-      if (selection.selected.size > 0 && bp) {
-        handleBlueprintUpdate(b => removeEntities(b, selection.selected));
-        selection.clearSelection();
+      if (selected.size > 0 && bp) {
+        handleBlueprintUpdate(b => removeEntities(b, selected));
+        clearSelection();
       }
     },
     'r': () => {
-      if (_editorMode.mode.type === 'place') {
-        _editorMode.rotatePlacementDirection(true);
-      } else if (selection.selected.size > 0 && bp) {
-        handleBlueprintUpdate(b => rotateEntities(b, selection.selected, true));
+      if (editorModeState.type === 'place') {
+        rotatePlacementDirection(true);
+      } else if (selected.size > 0 && bp) {
+        handleBlueprintUpdate(b => rotateEntities(b, selected, true));
       }
     },
     'shift+r': () => {
-      if (_editorMode.mode.type === 'place') {
-        _editorMode.rotatePlacementDirection(false);
-      } else if (selection.selected.size > 0 && bp) {
-        handleBlueprintUpdate(b => rotateEntities(b, selection.selected, false));
+      if (editorModeState.type === 'place') {
+        rotatePlacementDirection(false);
+      } else if (selected.size > 0 && bp) {
+        handleBlueprintUpdate(b => rotateEntities(b, selected, false));
       }
     },
     'ctrl+a': () => {
       if (bp?.entities) {
-        selection.selectAll(bp.entities.map(e => e.entity_number));
+        selectAll(bp.entities.map(e => e.entity_number));
       }
     },
     'arrowup': () => {
-      if (selection.selected.size > 0 && bp) {
-        handleBlueprintUpdate(b => moveEntities(b, selection.selected, 0, -1));
+      if (selected.size > 0 && bp) {
+        handleBlueprintUpdate(b => moveEntities(b, selected, 0, -1));
       }
     },
     'arrowdown': () => {
-      if (selection.selected.size > 0 && bp) {
-        handleBlueprintUpdate(b => moveEntities(b, selection.selected, 0, 1));
+      if (selected.size > 0 && bp) {
+        handleBlueprintUpdate(b => moveEntities(b, selected, 0, 1));
       }
     },
     'arrowleft': () => {
-      if (selection.selected.size > 0 && bp) {
-        handleBlueprintUpdate(b => moveEntities(b, selection.selected, -1, 0));
+      if (selected.size > 0 && bp) {
+        handleBlueprintUpdate(b => moveEntities(b, selected, -1, 0));
       }
     },
     'arrowright': () => {
-      if (selection.selected.size > 0 && bp) {
-        handleBlueprintUpdate(b => moveEntities(b, selection.selected, 1, 0));
+      if (selected.size > 0 && bp) {
+        handleBlueprintUpdate(b => moveEntities(b, selected, 1, 0));
       }
     },
     'ctrl+c': () => {
-      if (selection.selected.size > 0) {
-        clipboardRef.current = new Set(selection.selected);
+      if (selected.size > 0) {
+        clipboardRef.current = new Set(selected);
       }
     },
     'ctrl+v': () => {
@@ -190,11 +190,11 @@ export function BlueprintTab(props: BlueprintEditorState) {
       }
     },
     'ctrl+d': () => {
-      if (selection.selected.size > 0 && bp) {
-        handleBlueprintUpdate(b => cloneEntities(b, selection.selected, 1, 1));
+      if (selected.size > 0 && bp) {
+        handleBlueprintUpdate(b => cloneEntities(b, selected, 1, 1));
       }
     },
-  }), [undo, redo, _editorMode.resetMode, selection, bp, handleBlueprintUpdate]);
+  }), [undo, redo, editorModeState, resetMode, rotatePlacementDirection, selected, clearSelection, selectAll, bp, handleBlueprintUpdate]);
   useHotkeys(hotkeys, !!decoded);
 
   return (
@@ -255,6 +255,7 @@ export function BlueprintTab(props: BlueprintEditorState) {
                   onClick={undo}
                   disabled={!canUndo}
                   title="Undo (Ctrl+Z)"
+                  aria-label="Undo"
                 >
                   <UndoIcon className="size-3.5" />
                 </Button>
@@ -265,6 +266,7 @@ export function BlueprintTab(props: BlueprintEditorState) {
                   onClick={redo}
                   disabled={!canRedo}
                   title="Redo (Ctrl+Shift+Z)"
+                  aria-label="Redo"
                 >
                   <RedoIcon className="size-3.5" />
                 </Button>
@@ -279,8 +281,9 @@ export function BlueprintTab(props: BlueprintEditorState) {
                         ? _editorMode.resetMode()
                         : _editorMode.startWiring('red')}
                       title="Red wire tool"
+                      aria-label="Red wire tool"
                     >
-                      <span className="size-3 rounded-full" style={{ backgroundColor: '#ff8e8e' }} />
+                      <span className="size-3 rounded-full" style={{ backgroundColor: 'var(--color-factorio-red)' }} aria-hidden="true" />
                     </Button>
                     <Button
                       variant={_editorMode.mode.type === 'wire' && _editorMode.mode.color === 'green' ? 'secondary' : 'ghost'}
@@ -290,8 +293,9 @@ export function BlueprintTab(props: BlueprintEditorState) {
                         ? _editorMode.resetMode()
                         : _editorMode.startWiring('green')}
                       title="Green wire tool"
+                      aria-label="Green wire tool"
                     >
-                      <span className="size-3 rounded-full" style={{ backgroundColor: '#87d88b' }} />
+                      <span className="size-3 rounded-full" style={{ backgroundColor: 'var(--color-factorio-green)' }} aria-hidden="true" />
                     </Button>
                     <Button
                       variant={_editorMode.mode.type === 'wire' && _editorMode.mode.color === 'copper' ? 'secondary' : 'ghost'}
@@ -301,8 +305,9 @@ export function BlueprintTab(props: BlueprintEditorState) {
                         ? _editorMode.resetMode()
                         : _editorMode.startWiring('copper')}
                       title="Copper wire tool"
+                      aria-label="Copper wire tool"
                     >
-                      <span className="size-3 rounded-full" style={{ backgroundColor: '#f0a040' }} />
+                      <span className="size-3 rounded-full" style={{ backgroundColor: 'var(--color-factorio-orange-bright)' }} aria-hidden="true" />
                     </Button>
                   </>
                 )}

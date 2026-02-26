@@ -67,19 +67,24 @@ export function EntityPalette({ activeEntity, onSelectEntity }: EntityPalettePro
     <div className="rounded-lg border border-border bg-card overflow-hidden" style={{ maxHeight: 440 }}>
       <div className="px-2 pt-2 pb-1">
         <Input
-          placeholder="Search entities..."
+          placeholder="Search entities…"
           value={search}
           onChange={e => setSearch(e.target.value)}
           className="h-7 text-xs"
+          aria-label="Search entities"
+          name="entity-search"
+          autoComplete="off"
         />
       </div>
 
       {/* Group tabs */}
       {!search && (
-        <div className="flex gap-0.5 px-2 pb-1">
+        <div className="flex gap-0.5 px-2 pb-1" role="tablist" aria-label="Entity groups">
           {GROUPS.map(g => (
             <button
               key={g}
+              role="tab"
+              aria-selected={g === activeGroup}
               className={`text-xs px-2 py-0.5 rounded ${
                 g === activeGroup
                   ? 'bg-accent text-foreground'

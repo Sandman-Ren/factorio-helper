@@ -66,9 +66,10 @@ export function EntityPropertyPanel({ entity, onUpdate }: EntityPropertyPanelPro
       {hasDirection && (
         <PropertyRow label="Direction">
           <select
-            className="bg-input/30 border border-border rounded px-1 py-0.5 text-xs"
+            className="bg-input/30 border border-border rounded px-1 py-0.5 text-xs focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none"
             value={entity.direction ?? 0}
             onChange={e => handleDirectionChange(Number(e.target.value))}
+            aria-label="Entity direction"
           >
             {Object.entries(DIRECTION_LABELS).map(([val, label]) => (
               <option key={val} value={val}>{label}</option>
@@ -81,10 +82,13 @@ export function EntityPropertyPanel({ entity, onUpdate }: EntityPropertyPanelPro
       {entity.recipe !== undefined && (
         <PropertyRow label="Recipe">
           <input
-            className="bg-input/30 border border-border rounded px-1.5 py-0.5 text-xs w-28"
+            className="bg-input/30 border border-border rounded px-1.5 py-0.5 text-xs w-28 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none"
             value={entity.recipe ?? ''}
             onChange={e => handleRecipeChange(e.target.value)}
             placeholder="none"
+            aria-label="Entity recipe"
+            name="entity-recipe"
+            autoComplete="off"
           />
         </PropertyRow>
       )}
@@ -112,9 +116,12 @@ export function EntityPropertyPanel({ entity, onUpdate }: EntityPropertyPanelPro
       {entity.station !== undefined && (
         <PropertyRow label="Station">
           <input
-            className="bg-input/30 border border-border rounded px-1.5 py-0.5 text-xs w-28"
+            className="bg-input/30 border border-border rounded px-1.5 py-0.5 text-xs w-28 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none"
             value={entity.station}
             onChange={e => handleStationChange(e.target.value)}
+            aria-label="Train station name"
+            name="station-name"
+            autoComplete="off"
           />
         </PropertyRow>
       )}

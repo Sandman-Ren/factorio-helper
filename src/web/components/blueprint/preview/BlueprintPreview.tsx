@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import type { Blueprint, Entity } from '../../../../blueprint/types.js';
 import type { EditorMode } from '../../../hooks/useEditorMode.js';
 import { useViewport } from './useViewport.js';
@@ -18,6 +18,8 @@ import GridIcon from 'lucide-react/dist/esm/icons/grid-3x3';
 import BoxIcon from 'lucide-react/dist/esm/icons/box';
 import SquareIcon from 'lucide-react/dist/esm/icons/square';
 import CableIcon from 'lucide-react/dist/esm/icons/cable';
+
+const EMPTY_POSITION_MAP = new Map<number, { x: number; y: number }>();
 
 interface LayerVisibility {
   grid: boolean;
@@ -227,6 +229,15 @@ export function BlueprintPreview({
     setBoxRect(null);
   }, [onMouseUp, isWiring]);
 
+  // Memoize wire tool overlay to avoid re-computing on unrelated renders
+  const wireOverlay = useMemo(() => {
+    if (!isWiring || wireSourceEntity === null || !cursorWorld || editorMode?.type !== 'wire') return null;
+    const sourceEntity = entities.find(e => e.entity_number === wireSourceEntity);
+    return sourceEntity
+      ? <WireToolOverlay fromPos={sourceEntity.position} cursorWorld={cursorWorld} color={editorMode.color} />
+      : null;
+  }, [isWiring, wireSourceEntity, cursorWorld, editorMode, entities]);
+
   return (
     <div className="rounded-lg border border-border bg-card overflow-hidden">
       {/* Controls bar */}
@@ -297,6 +308,9 @@ export function BlueprintPreview({
       {/* Viewport */}
       <div
         ref={viewportRef}
+        role="img"
+        aria-label="Blueprint preview — use mouse to pan and zoom"
+        tabIndex={0}
         style={{
           position: 'relative',
           height: 400,
@@ -347,7 +361,7 @@ export function BlueprintPreview({
             <BlueprintWireLayer
               wireSegments={wireSegments}
               highlightEntity={null}
-              entityPositions={new Map()}
+              entityPositions={EMPTY_POSITION_MAP}
             />
           )}
 
@@ -362,16 +376,7 @@ export function BlueprintPreview({
           )}
 
           {/* Wire tool in-progress line */}
-          {isWiring && wireSourceEntity !== null && cursorWorld && (() => {
-            const sourceEntity = entities.find(e => e.entity_number === wireSourceEntity);
-            return sourceEntity && editorMode.type === 'wire' ? (
-              <WireToolOverlay
-                fromPos={sourceEntity.position}
-                cursorWorld={cursorWorld}
-                color={editorMode.color}
-              />
-            ) : null;
-          })()}
+          {wireOverlay}
 
           {/* Box-select rectangle */}
           {boxRect && (

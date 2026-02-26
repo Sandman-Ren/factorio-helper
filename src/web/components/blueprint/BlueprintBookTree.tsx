@@ -85,10 +85,11 @@ function TreeNode({
           >
             <ChevronRightIcon
               className={`size-3 transition-transform ${isExpanded ? 'rotate-90' : ''}`}
+              aria-hidden="true"
             />
           </span>
         )}
-        <IconComponent className="size-4 flex-shrink-0 text-muted-foreground" />
+        <IconComponent className="size-4 flex-shrink-0 text-muted-foreground" aria-hidden="true" />
         <span className={`truncate flex-1 ${!getChildLabel(child) ? 'italic text-muted-foreground' : ''}`}>
           {label}
         </span>
@@ -203,9 +204,10 @@ export function BlueprintBookTree({ book, selectedPath, onSelectPath }: Blueprin
           >
             <ChevronRightIcon
               className={`size-3 transition-transform ${expanded.has('root') ? 'rotate-90' : ''}`}
+              aria-hidden="true"
             />
           </span>
-          <FolderOpenIcon className="size-4 flex-shrink-0 text-muted-foreground" />
+          <FolderOpenIcon className="size-4 flex-shrink-0 text-muted-foreground" aria-hidden="true" />
           <span className={`truncate flex-1 font-medium ${!book.label ? 'italic text-muted-foreground' : ''}`}>
             {book.label || 'Untitled Book'}
           </span>

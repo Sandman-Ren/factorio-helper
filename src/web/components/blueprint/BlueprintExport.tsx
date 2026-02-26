@@ -87,13 +87,14 @@ export function BlueprintExport({ reEncodedString, reEncodeError, decoded }: Blu
         {reEncodedString && (
           <>
             <textarea
-              className="bg-input/30 border-input text-foreground w-full rounded-md border px-3 py-2 text-xs font-mono outline-none resize-y"
+              className="bg-input/30 border-input text-foreground w-full rounded-md border px-3 py-2 text-xs font-mono focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none resize-y"
               rows={3}
               readOnly
               value={reEncodedString}
               onFocus={e => e.target.select()}
+              aria-label="Encoded blueprint string"
             />
-            <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+            <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground tabular-nums">
               <span>{reEncodedLength.toLocaleString()} chars ({sizeKB} KB)</span>
               {originalLength > 0 && originalLength !== reEncodedLength && (
                 <span>

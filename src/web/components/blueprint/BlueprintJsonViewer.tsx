@@ -11,8 +11,8 @@ interface BlueprintJsonViewerProps {
 
 function JsonValue({ value }: { value: unknown }) {
   if (value === null) return <span className="text-muted-foreground">null</span>;
-  if (typeof value === 'string') return <span className="text-[#87d88b]">"{value}"</span>;
-  if (typeof value === 'number') return <span className="text-[#80cef0] tabular-nums">{value}</span>;
+  if (typeof value === 'string') return <span style={{ color: 'var(--color-json-string, #87d88b)' }}>"{value}"</span>;
+  if (typeof value === 'number') return <span className="tabular-nums" style={{ color: 'var(--color-json-number, #80cef0)' }}>{value}</span>;
   if (typeof value === 'boolean') return <span className="text-primary">{String(value)}</span>;
   return <span className="text-muted-foreground">{String(value)}</span>;
 }
@@ -70,9 +70,12 @@ function JsonNode({ keyName, value, depth, maxDepth, isLast }: JsonNodeProps) {
   return (
     <div>
       <div
-        className="flex items-center cursor-pointer hover:bg-accent/30 rounded"
+        role="button"
+        tabIndex={0}
+        className="flex items-center cursor-pointer hover:bg-accent/30 rounded focus-visible:ring-2 focus-visible:ring-ring/50 outline-none"
         style={{ paddingLeft: depth * 16 }}
         onClick={() => setExpanded(!expanded)}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setExpanded(!expanded); } }}
       >
         <ChevronRightIcon
           className={`size-3 mr-1 flex-shrink-0 text-muted-foreground transition-transform ${expanded ? 'rotate-90' : ''}`}
@@ -118,7 +121,7 @@ function JsonNode({ keyName, value, depth, maxDepth, isLast }: JsonNodeProps) {
                 className="text-xs text-muted-foreground hover:text-foreground"
                 onClick={(e) => { e.stopPropagation(); setShowAll(true); }}
               >
-                ... {(value as unknown[]).length - ARRAY_TRUNCATE} more items
+                {(value as unknown[]).length - ARRAY_TRUNCATE} more items…
               </button>
             </div>
           )}
