@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import type { Entity, Blueprint } from '../../../blueprint/types.js';
 import { updateEntity } from '../../../blueprint/entity-ops.js';
 import { getIconUrl } from '../ItemIcon.js';
+import { Input, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../../ui/index.js';
 
 interface EntityPropertyPanelProps {
   entity: Entity;
@@ -23,8 +24,8 @@ function PropertyRow({ label, children }: { label: string; children: React.React
 }
 
 export function EntityPropertyPanel({ entity, onUpdate }: EntityPropertyPanelProps) {
-  const handleDirectionChange = useCallback((dir: number) => {
-    onUpdate(bp => updateEntity(bp, entity.entity_number, { direction: dir }));
+  const handleDirectionChange = useCallback((dir: string) => {
+    onUpdate(bp => updateEntity(bp, entity.entity_number, { direction: Number(dir) }));
   }, [entity.entity_number, onUpdate]);
 
   const handleRecipeChange = useCallback((recipe: string) => {
@@ -65,24 +66,24 @@ export function EntityPropertyPanel({ entity, onUpdate }: EntityPropertyPanelPro
       {/* Direction */}
       {hasDirection && (
         <PropertyRow label="Direction">
-          <select
-            className="bg-input/30 border border-border rounded px-1 py-0.5 text-xs focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none"
-            value={entity.direction ?? 0}
-            onChange={e => handleDirectionChange(Number(e.target.value))}
-            aria-label="Entity direction"
-          >
-            {Object.entries(DIRECTION_LABELS).map(([val, label]) => (
-              <option key={val} value={val}>{label}</option>
-            ))}
-          </select>
+          <Select value={String(entity.direction ?? 0)} onValueChange={handleDirectionChange}>
+            <SelectTrigger size="sm" className="h-7 text-xs min-w-[80px]" aria-label="Entity direction">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(DIRECTION_LABELS).map(([val, label]) => (
+                <SelectItem key={val} value={val}>{label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </PropertyRow>
       )}
 
       {/* Recipe (assemblers/furnaces) */}
       {entity.recipe !== undefined && (
         <PropertyRow label="Recipe">
-          <input
-            className="bg-input/30 border border-border rounded px-1.5 py-0.5 text-xs w-28 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none"
+          <Input
+            className="h-7 w-28 text-xs"
             value={entity.recipe ?? ''}
             onChange={e => handleRecipeChange(e.target.value)}
             placeholder="none"
@@ -115,8 +116,8 @@ export function EntityPropertyPanel({ entity, onUpdate }: EntityPropertyPanelPro
       {/* Train stop */}
       {entity.station !== undefined && (
         <PropertyRow label="Station">
-          <input
-            className="bg-input/30 border border-border rounded px-1.5 py-0.5 text-xs w-28 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none"
+          <Input
+            className="h-7 w-28 text-xs"
             value={entity.station}
             onChange={e => handleStationChange(e.target.value)}
             aria-label="Train station name"

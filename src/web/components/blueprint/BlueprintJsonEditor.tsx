@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { BlueprintType, BlueprintNode } from '../../hooks/useBlueprintEditor.js';
-import { Button, Card, CardContent, CardHeader, CardTitle } from '../../ui/index.js';
+import { Button, Card, CardContent, CardHeader, CardTitle, Textarea } from '../../ui/index.js';
 import CheckIcon from 'lucide-react/dist/esm/icons/check';
 import RotateCcwIcon from 'lucide-react/dist/esm/icons/rotate-ccw';
 
@@ -73,8 +73,8 @@ export function BlueprintJsonEditor({ data, nodeType: _, onApply, onClose }: Blu
         </div>
       </CardHeader>
       <CardContent>
-        <textarea
-          className="bg-input/30 border-input text-foreground placeholder:text-muted-foreground w-full rounded-md border px-3 py-2 font-mono text-xs focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none resize-y"
+        <Textarea
+          className="font-mono text-xs"
           style={{ minHeight: 300 }}
           value={editText}
           onChange={e => handleChange(e.target.value)}
