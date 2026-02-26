@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import type { Blueprint, Entity } from '../../../../blueprint/types.js';
 import type { EditorMode } from '../../../hooks/useEditorMode.js';
 import { useViewport } from './useViewport.js';
@@ -229,15 +229,14 @@ export function BlueprintPreview({
     setBoxRect(null);
   }, [onMouseUp, isWiring]);
 
-  // Pre-compute wire tool overlay to avoid IIFE in JSX
-  const wireOverlay = isWiring && wireSourceEntity !== null && cursorWorld && editorMode?.type === 'wire'
-    ? (() => {
-        const sourceEntity = entities.find(e => e.entity_number === wireSourceEntity);
-        return sourceEntity ? (
-          <WireToolOverlay fromPos={sourceEntity.position} cursorWorld={cursorWorld} color={editorMode.color} />
-        ) : null;
-      })()
-    : null;
+  // Memoize wire tool overlay to avoid re-computing on unrelated renders
+  const wireOverlay = useMemo(() => {
+    if (!isWiring || wireSourceEntity === null || !cursorWorld || editorMode?.type !== 'wire') return null;
+    const sourceEntity = entities.find(e => e.entity_number === wireSourceEntity);
+    return sourceEntity
+      ? <WireToolOverlay fromPos={sourceEntity.position} cursorWorld={cursorWorld} color={editorMode.color} />
+      : null;
+  }, [isWiring, wireSourceEntity, cursorWorld, editorMode, entities]);
 
   return (
     <div className="rounded-lg border border-border bg-card overflow-hidden">
@@ -309,8 +308,8 @@ export function BlueprintPreview({
       {/* Viewport */}
       <div
         ref={viewportRef}
-        role="application"
-        aria-label="Blueprint preview canvas"
+        role="img"
+        aria-label="Blueprint preview — use mouse to pan and zoom"
         tabIndex={0}
         style={{
           position: 'relative',
