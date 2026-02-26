@@ -52,7 +52,7 @@ export function BlueprintPreview({
   onWireConnect,
 }: BlueprintPreviewProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
-  const { panX, panY, zoom, isPanning, onWheel, onMouseDown, onMouseMove, onMouseUp, fitToBounds } = useViewport();
+  const { panX, panY, zoom, isPanning, onMouseDown, onMouseMove, onMouseUp, fitToBounds } = useViewport(viewportRef);
   const { bounds, wireSegments } = useBlueprintLayout(blueprint);
 
   const [layers, setLayers] = useState<LayerVisibility>({
@@ -318,7 +318,6 @@ export function BlueprintPreview({
           cursor: isPanning ? 'grabbing' : (isPlacing || isWiring) ? 'crosshair' : 'grab',
           backgroundColor: 'var(--background)',
         }}
-        onWheel={onWheel}
         onMouseDown={handleViewportMouseDown}
         onMouseMove={handleViewportMouseMove}
         onMouseUp={handleViewportMouseUp}

@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 
 const MIN_ZOOM = 0.1;
 const MAX_ZOOM = 5.0;
@@ -14,28 +14,34 @@ export interface ViewportState {
   zoom: number;
 }
 
-export function useViewport() {
+export function useViewport(containerRef: React.RefObject<HTMLDivElement | null>) {
   const [state, setState] = useState<ViewportState>({ panX: 0, panY: 0, zoom: 1 });
   const [isPanning, setIsPanning] = useState(false);
   const panStartRef = useRef<{ x: number; y: number; panX: number; panY: number } | null>(null);
 
-  const onWheel = useCallback((e: React.WheelEvent) => {
-    e.preventDefault();
-    const rect = e.currentTarget.getBoundingClientRect();
-    const cx = e.clientX - rect.left;
-    const cy = e.clientY - rect.top;
-    const factor = e.deltaY < 0 ? ZOOM_FACTOR : 1 / ZOOM_FACTOR;
-
-    setState(prev => {
-      const newZoom = clamp(prev.zoom * factor, MIN_ZOOM, MAX_ZOOM);
-      const ratio = newZoom / prev.zoom;
-      return {
-        zoom: newZoom,
-        panX: cx - (cx - prev.panX) * ratio,
-        panY: cy - (cy - prev.panY) * ratio,
-      };
-    });
-  }, []);
+  // Native wheel handler with { passive: false } to prevent page scroll
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const handler = (e: WheelEvent) => {
+      e.preventDefault();
+      const rect = el.getBoundingClientRect();
+      const cx = e.clientX - rect.left;
+      const cy = e.clientY - rect.top;
+      const factor = e.deltaY < 0 ? ZOOM_FACTOR : 1 / ZOOM_FACTOR;
+      setState(prev => {
+        const newZoom = clamp(prev.zoom * factor, MIN_ZOOM, MAX_ZOOM);
+        const ratio = newZoom / prev.zoom;
+        return {
+          zoom: newZoom,
+          panX: cx - (cx - prev.panX) * ratio,
+          panY: cy - (cy - prev.panY) * ratio,
+        };
+      });
+    };
+    el.addEventListener('wheel', handler, { passive: false });
+    return () => el.removeEventListener('wheel', handler);
+  }, [containerRef]);
 
   const onMouseDown = useCallback((e: React.MouseEvent) => {
     // Pan with middle mouse or left + alt
@@ -84,7 +90,6 @@ export function useViewport() {
   return {
     ...state,
     isPanning,
-    onWheel,
     onMouseDown,
     onMouseMove,
     onMouseUp,

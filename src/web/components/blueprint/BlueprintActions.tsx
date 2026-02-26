@@ -130,47 +130,48 @@ export function BlueprintActions({ node, nodeType, onUpdate }: BlueprintActionsP
 
   if (!isBlueprint || !hasEntities) return null;
 
+  const labelClass = "text-xs text-muted-foreground shrink-0 w-[70px]";
+
   return (
-    <div className="space-y-2">
-      {/* Transform buttons */}
+    <div className="border-t border-border px-3 py-2 space-y-1.5">
+      {/* Transforms */}
       <div className="flex items-center gap-2 flex-wrap">
-        <span className="text-xs text-muted-foreground mr-1">Transforms</span>
+        <span className={labelClass}>Transforms</span>
         <Button variant="outline" size="sm" onClick={makeTransformHandler(translateToOrigin)}>
-          <CrosshairIcon className="size-3.5 mr-1.5" />
+          <CrosshairIcon className="size-3.5 mr-1.5" aria-hidden="true" />
           Re-center
         </Button>
         <Button variant="outline" size="sm" onClick={makeTransformHandler(rotate90CW)}>
-          <RotateCwIcon className="size-3.5 mr-1.5" />
+          <RotateCwIcon className="size-3.5 mr-1.5" aria-hidden="true" />
           CW
         </Button>
         <Button variant="outline" size="sm" onClick={makeTransformHandler(rotate90CCW)}>
-          <RotateCcwIcon className="size-3.5 mr-1.5" />
+          <RotateCcwIcon className="size-3.5 mr-1.5" aria-hidden="true" />
           CCW
         </Button>
         <Button variant="outline" size="sm" onClick={makeTransformHandler(mirrorHorizontal)}>
-          <FlipHorizontal2Icon className="size-3.5 mr-1.5" />
+          <FlipHorizontal2Icon className="size-3.5 mr-1.5" aria-hidden="true" />
           Flip H
         </Button>
         <Button variant="outline" size="sm" onClick={makeTransformHandler(mirrorVertical)}>
-          <FlipVertical2Icon className="size-3.5 mr-1.5" />
+          <FlipVertical2Icon className="size-3.5 mr-1.5" aria-hidden="true" />
           Flip V
         </Button>
       </div>
 
-      {/* Entity operations */}
+      {/* Entities — row 1: upgrade/downgrade + remove */}
       {entityNames.length > 0 && (
         <div className="flex items-end gap-2 flex-wrap">
-          <span className="text-xs text-muted-foreground mr-1 self-center">Entities</span>
-
-          <Button variant="outline" size="sm" onClick={handleUpgrade} title="Upgrade all entities one tier (belts, inserters, assemblers, etc.)">
-            <ArrowUpIcon className="size-3.5 mr-1.5" />
+          <span className={`${labelClass} self-center`}>Entities</span>
+          <Button variant="outline" size="sm" className="self-center" onClick={handleUpgrade} title="Upgrade all entities one tier (belts, inserters, assemblers, etc.)">
+            <ArrowUpIcon className="size-3.5 mr-1.5" aria-hidden="true" />
             Upgrade
           </Button>
-          <Button variant="outline" size="sm" onClick={handleDowngrade} title="Downgrade all entities one tier">
-            <ArrowDownIcon className="size-3.5 mr-1.5" />
+          <Button variant="outline" size="sm" className="self-center" onClick={handleDowngrade} title="Downgrade all entities one tier">
+            <ArrowDownIcon className="size-3.5 mr-1.5" aria-hidden="true" />
             Downgrade
           </Button>
-
+          <span className="w-px h-5 bg-border self-center" />
           <div className="flex items-end gap-1">
             <div>
               <Label htmlFor="remove-entity" className="text-xs text-muted-foreground">Remove</Label>
@@ -182,11 +183,16 @@ export function BlueprintActions({ node, nodeType, onUpdate }: BlueprintActionsP
               </select>
             </div>
             <Button variant="outline" size="sm" onClick={handleRemove} disabled={!removeTarget}>
-              <Trash2Icon className="size-3.5 mr-1.5" />
+              <Trash2Icon className="size-3.5 mr-1.5" aria-hidden="true" />
               Remove
             </Button>
           </div>
+        </div>
+      )}
 
+      {/* Entities — row 2: replace */}
+      {entityNames.length > 0 && (
+        <div className="flex items-end gap-2 flex-wrap pl-[78px]">
           <div className="flex items-end gap-1">
             <div>
               <Label htmlFor="replace-from" className="text-xs text-muted-foreground">Replace</Label>
@@ -210,17 +216,16 @@ export function BlueprintActions({ node, nodeType, onUpdate }: BlueprintActionsP
               />
             </div>
             <Button variant="outline" size="sm" onClick={handleReplace} disabled={!replaceFrom || !replaceTo}>
-              <ArrowRightLeftIcon className="size-3.5 mr-1.5" />
+              <ArrowRightLeftIcon className="size-3.5 mr-1.5" aria-hidden="true" />
               Replace
             </Button>
           </div>
         </div>
       )}
 
-      {/* Tile operations */}
+      {/* Tiles — row 1: add */}
       <div className="flex items-end gap-2 flex-wrap">
-        <span className="text-xs text-muted-foreground mr-1 self-center">Tiles</span>
-
+        <span className={`${labelClass} self-center`}>Tiles</span>
         <div className="flex items-end gap-1">
           <div>
             <Label htmlFor="add-tile" className="text-xs text-muted-foreground">Add</Label>
@@ -231,16 +236,19 @@ export function BlueprintActions({ node, nodeType, onUpdate }: BlueprintActionsP
             </select>
           </div>
           <Button variant="outline" size="sm" onClick={handleAddTilesUnder} disabled={!bp?.entities?.length}>
-            <SquareIcon className="size-3.5 mr-1.5" />
+            <SquareIcon className="size-3.5 mr-1.5" aria-hidden="true" />
             Under entities
           </Button>
           <Button variant="outline" size="sm" onClick={handleAddTilesFill}>
-            <GridIcon className="size-3.5 mr-1.5" />
+            <GridIcon className="size-3.5 mr-1.5" aria-hidden="true" />
             Fill bounds
           </Button>
         </div>
+      </div>
 
-        {tileNames.length > 0 && (
+      {/* Tiles — row 2: remove (only when tiles exist) */}
+      {tileNames.length > 0 && (
+        <div className="flex items-end gap-2 flex-wrap pl-[78px]">
           <div className="flex items-end gap-1">
             <div>
               <Label htmlFor="remove-tile" className="text-xs text-muted-foreground">Remove</Label>
@@ -252,16 +260,16 @@ export function BlueprintActions({ node, nodeType, onUpdate }: BlueprintActionsP
               </select>
             </div>
             <Button variant="outline" size="sm" onClick={handleRemoveTiles} disabled={!removeTileTarget}>
-              <Trash2Icon className="size-3.5 mr-1.5" />
+              <Trash2Icon className="size-3.5 mr-1.5" aria-hidden="true" />
               Remove
             </Button>
             <Button variant="outline" size="sm" onClick={handleClearTiles}>
-              <XIcon className="size-3.5 mr-1.5" />
+              <XIcon className="size-3.5 mr-1.5" aria-hidden="true" />
               Clear all
             </Button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
