@@ -15,6 +15,54 @@ export { BlueprintBookBuilder, BlueprintBuilder } from "./builder";
 // Wire helpers
 export { connectGreen, connectPower, connectRed } from "./wire";
 
+// Transforms
+export {
+  computeBounds,
+  mirrorHorizontal,
+  mirrorVertical,
+  rotate90CCW,
+  rotate90CW,
+  translateBy,
+  translateToOrigin,
+} from "./transforms";
+
+// Entity operations
+export {
+  addEntity,
+  addWire,
+  cloneEntities,
+  downgradeEntities,
+  getEntityNames,
+  moveEntities,
+  removeByType,
+  removeEntities,
+  removeWire,
+  replaceEntity,
+  rotateEntities,
+  toggleWire,
+  updateEntity,
+  upgradeEntities,
+} from "./entity-ops";
+
+// Tile operations
+export {
+  addTilesFillBounds,
+  addTilesUnderEntities,
+  clearAllTiles,
+  getTileNames,
+  removeTilesByType,
+} from "./tile-ops";
+
+// Book operations
+export {
+  addEmptyBlueprint,
+  addEmptyBook,
+  duplicateChild,
+  moveChild,
+  removeChild,
+  setActiveIndex,
+} from "./book-ops";
+
 // Types
 export type {
   AlertParameters,

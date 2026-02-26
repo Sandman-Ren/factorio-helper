@@ -3,6 +3,7 @@ import { findIntegerMultiplier } from '../calculator/index.js';
 import { useCalculator } from './hooks/useCalculator.js';
 import { useRecipeTechMaps } from './hooks/use-recipe-tech-map.js';
 import { usePowerCalculator } from './hooks/usePowerCalculator.js';
+import { useBlueprintEditor } from './hooks/useBlueprintEditor.js';
 import { ItemSelector } from './components/ItemSelector.js';
 import { RateInput } from './components/RateInput.js';
 import { ProductionChain } from './components/ProductionChain.js';
@@ -33,11 +34,17 @@ const PowerCalculator = lazy(() =>
   import('./components/power-calculator/PowerCalculator.js').then(m => ({ default: m.PowerCalculator })),
 );
 
+const BlueprintTab = lazy(() =>
+  import('./components/blueprint/BlueprintTab.js').then(m => ({ default: m.BlueprintTab })),
+);
+
 /** All categories that assembling machines can handle. */
 const ASSEMBLER_CATEGORIES = ['crafting', 'basic-crafting', 'advanced-crafting', 'crafting-with-fluid'];
 
 export function App() {
-  const [activeTab, setActiveTab] = useState('calculator');
+  const [activeTab, setActiveTab] = useState(() =>
+    window.location.hash.startsWith('#blueprint=') ? 'blueprint' : 'calculator',
+  );
   const [pendingTech, setPendingTech] = useState<string | null>(null);
 
   const {
@@ -62,6 +69,7 @@ export function App() {
 
   const { itemToTech } = useRecipeTechMaps();
   const powerCalc = usePowerCalculator();
+  const blueprintEditor = useBlueprintEditor();
 
   const handleApplyToPower = useCallback(() => {
     if (!plan) return;
@@ -100,13 +108,14 @@ export function App() {
           <div style={{ marginBottom: 8 }}>
             <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0, lineHeight: 1.2 }}>Factorio Helper</h1>
             <p style={{ color: 'var(--muted-foreground)', fontSize: 13, margin: 0 }}>
-              Production calculator, tech tree &amp; power calculator for Factorio 2.0
+              Production calculator, tech tree, power calculator &amp; blueprint tools for Factorio 2.0
             </p>
           </div>
           <TabsList variant="line">
             <TabsTrigger value="calculator">Calculator</TabsTrigger>
             <TabsTrigger value="tech-tree">Tech Tree</TabsTrigger>
             <TabsTrigger value="power">Power</TabsTrigger>
+            <TabsTrigger value="blueprint">Blueprint</TabsTrigger>
           </TabsList>
         </div>
 
@@ -319,6 +328,18 @@ export function App() {
             }
           >
             <PowerCalculator {...powerCalc} />
+          </Suspense>
+        </TabsContent>
+
+        <TabsContent value="blueprint" style={{ overflow: 'auto', flex: 1 }}>
+          <Suspense
+            fallback={
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--muted-foreground)' }}>
+                Loading blueprint editor...
+              </div>
+            }
+          >
+            <BlueprintTab {...blueprintEditor} />
           </Suspense>
         </TabsContent>
       </Tabs>
