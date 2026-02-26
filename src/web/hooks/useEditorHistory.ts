@@ -21,34 +21,43 @@ export function useEditorHistory(
   const [, setVersion] = useState(0);
   const bump = useCallback(() => setVersion(v => v + 1), []);
 
+  // Keep refs in sync with latest state to avoid stale closures
+  const decodedRef = useRef(decoded);
+  decodedRef.current = decoded;
+  const selectedPathRef = useRef(selectedPath);
+  selectedPathRef.current = selectedPath;
+
   /** Push the current state onto the undo stack. Call before applying a mutation. */
   const pushSnapshot = useCallback(() => {
-    if (!decoded) return;
-    pastRef.current.push({ raw: decoded.raw, selectedPath });
+    const d = decodedRef.current;
+    if (!d) return;
+    pastRef.current.push({ raw: d.raw, selectedPath: selectedPathRef.current });
     if (pastRef.current.length > MAX_HISTORY) {
       pastRef.current.shift();
     }
     futureRef.current = [];
     bump();
-  }, [decoded, selectedPath, bump]);
+  }, [bump]);
 
   const undo = useCallback(() => {
-    if (!decoded || pastRef.current.length === 0) return;
+    const d = decodedRef.current;
+    if (!d || pastRef.current.length === 0) return;
     const prev = pastRef.current.pop()!;
-    futureRef.current.push({ raw: decoded.raw, selectedPath });
-    setDecoded(d => d ? { ...d, raw: prev.raw } : d);
+    futureRef.current.push({ raw: d.raw, selectedPath: selectedPathRef.current });
+    setDecoded(curr => curr ? { ...curr, raw: prev.raw } : curr);
     setSelectedPath(prev.selectedPath);
     bump();
-  }, [decoded, selectedPath, setDecoded, setSelectedPath, bump]);
+  }, [setDecoded, setSelectedPath, bump]);
 
   const redo = useCallback(() => {
-    if (!decoded || futureRef.current.length === 0) return;
+    const d = decodedRef.current;
+    if (!d || futureRef.current.length === 0) return;
     const next = futureRef.current.pop()!;
-    pastRef.current.push({ raw: decoded.raw, selectedPath });
-    setDecoded(d => d ? { ...d, raw: next.raw } : d);
+    pastRef.current.push({ raw: d.raw, selectedPath: selectedPathRef.current });
+    setDecoded(curr => curr ? { ...curr, raw: next.raw } : curr);
     setSelectedPath(next.selectedPath);
     bump();
-  }, [decoded, selectedPath, setDecoded, setSelectedPath, bump]);
+  }, [setDecoded, setSelectedPath, bump]);
 
   const reset = useCallback(() => {
     pastRef.current = [];

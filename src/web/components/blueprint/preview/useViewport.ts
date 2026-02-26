@@ -16,6 +16,7 @@ export interface ViewportState {
 
 export function useViewport() {
   const [state, setState] = useState<ViewportState>({ panX: 0, panY: 0, zoom: 1 });
+  const [isPanning, setIsPanning] = useState(false);
   const panStartRef = useRef<{ x: number; y: number; panX: number; panY: number } | null>(null);
 
   const onWheel = useCallback((e: React.WheelEvent) => {
@@ -44,6 +45,7 @@ export function useViewport() {
         panStartRef.current = { x: e.clientX, y: e.clientY, panX: prev.panX, panY: prev.panY };
         return prev;
       });
+      setIsPanning(true);
     }
   }, []);
 
@@ -59,6 +61,7 @@ export function useViewport() {
 
   const onMouseUp = useCallback(() => {
     panStartRef.current = null;
+    setIsPanning(false);
   }, []);
 
   const fitToBounds = useCallback((
@@ -77,8 +80,6 @@ export function useViewport() {
     const panY = (viewportHeight - worldH * zoom) / 2 - bounds.minY * tileSize * zoom;
     setState({ panX, panY, zoom });
   }, []);
-
-  const isPanning = panStartRef.current !== null;
 
   return {
     ...state,

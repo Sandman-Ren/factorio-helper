@@ -29,7 +29,7 @@ export function EntityPropertyPanel({ entity, onUpdate }: EntityPropertyPanelPro
 
   const handleRecipeChange = useCallback((recipe: string) => {
     onUpdate(bp => updateEntity(bp, entity.entity_number, {
-      recipe: recipe || null,
+      recipe: recipe || undefined,
     }));
   }, [entity.entity_number, onUpdate]);
 

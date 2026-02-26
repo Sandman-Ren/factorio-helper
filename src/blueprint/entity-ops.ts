@@ -163,7 +163,9 @@ export function cloneEntities(
  */
 export function addEntity(bp: Blueprint, entity: Omit<Entity, 'entity_number'>): Blueprint {
   const entities = bp.entities ?? [];
-  const nextNum = entities.length > 0 ? Math.max(...entities.map(e => e.entity_number)) + 1 : 1;
+  const nextNum = entities.length > 0
+    ? entities.reduce((max, e) => Math.max(max, e.entity_number), 0) + 1
+    : 1;
   return {
     ...bp,
     entities: [...entities, { ...entity, entity_number: nextNum } as Entity],

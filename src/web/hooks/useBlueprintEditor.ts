@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { decode, encode, formatVersion } from '../../blueprint/index.js';
 import type {
   BlueprintString,
@@ -220,17 +220,18 @@ export function useBlueprintEditor() {
   }, [history.reset, editorMode.resetMode]);
 
   // Auto-decode from URL hash on initial load
+  const hashLoadedRef = useRef(false);
   useEffect(() => {
+    if (hashLoadedRef.current) return;
+    hashLoadedRef.current = true;
     const hash = window.location.hash;
     if (!hash.startsWith('#blueprint=')) return;
     const bpStr = decodeURIComponent(hash.slice('#blueprint='.length));
     if (bpStr) {
       setInputString(bpStr);
-      // Defer decode so state is settled
-      setTimeout(() => handleDecode(bpStr), 0);
+      handleDecode(bpStr);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [handleDecode]);
 
   /** Apply an updater function to the currently selected node (raw, no history). */
   const applyNodeUpdate = useCallback((

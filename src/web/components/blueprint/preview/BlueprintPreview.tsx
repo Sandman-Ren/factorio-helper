@@ -181,13 +181,17 @@ export function BlueprintPreview({
     onMouseUp();
     // Complete box-select
     if (boxRect && onBoxSelect) {
+      const bx2 = boxRect.x + boxRect.w;
+      const by2 = boxRect.y + boxRect.h;
       const selected = entities
-        .filter(ent =>
-          ent.position.x >= boxRect.x &&
-          ent.position.x <= boxRect.x + boxRect.w &&
-          ent.position.y >= boxRect.y &&
-          ent.position.y <= boxRect.y + boxRect.h,
-        )
+        .filter(ent => {
+          const [tw, th] = getEntitySize(ent.name);
+          const eMinX = ent.position.x - tw / 2;
+          const eMaxX = ent.position.x + tw / 2;
+          const eMinY = ent.position.y - th / 2;
+          const eMaxY = ent.position.y + th / 2;
+          return eMaxX >= boxRect.x && eMinX <= bx2 && eMaxY >= boxRect.y && eMinY <= by2;
+        })
         .map(ent => ent.entity_number);
       if (selected.length > 0) onBoxSelect(selected);
     }
