@@ -232,10 +232,10 @@ export function BlueprintPreview({
       {/* Controls bar */}
       <div className="flex items-center gap-1 px-2 py-1.5 border-b border-border">
         <span className="text-xs text-muted-foreground mr-1">Preview</span>
-        <Button variant="ghost" size="sm" className="h-7 px-1.5" onClick={handleFit} title="Fit to view">
+        <Button variant="ghost" size="sm" className="h-7 px-1.5" onClick={handleFit} title="Fit to view" aria-label="Fit to view">
           <MaximizeIcon className="size-3.5" />
         </Button>
-        <Button variant="ghost" size="sm" className="h-7 px-1.5" onClick={handleExport} disabled={exporting} title="Export as PNG">
+        <Button variant="ghost" size="sm" className="h-7 px-1.5" onClick={handleExport} disabled={exporting} title="Export as PNG" aria-label="Export as PNG">
           <DownloadIcon className="size-3.5" />
         </Button>
         <span className="w-px h-4 bg-border mx-0.5" />
@@ -245,6 +245,7 @@ export function BlueprintPreview({
           className="h-7 px-1.5"
           onClick={() => toggleLayer('grid')}
           title="Toggle grid"
+          aria-label="Toggle grid"
         >
           <GridIcon className="size-3.5" />
         </Button>
@@ -254,6 +255,7 @@ export function BlueprintPreview({
           className="h-7 px-1.5"
           onClick={() => toggleLayer('tiles')}
           title="Toggle tiles"
+          aria-label="Toggle tiles"
         >
           <SquareIcon className="size-3.5" />
         </Button>
@@ -263,6 +265,7 @@ export function BlueprintPreview({
           className="h-7 px-1.5"
           onClick={() => toggleLayer('entities')}
           title="Toggle entities"
+          aria-label="Toggle entities"
         >
           <BoxIcon className="size-3.5" />
         </Button>
@@ -272,6 +275,7 @@ export function BlueprintPreview({
           className="h-7 px-1.5"
           onClick={() => toggleLayer('wires')}
           title="Toggle wires"
+          aria-label="Toggle wires"
         >
           <CableIcon className="size-3.5" />
         </Button>

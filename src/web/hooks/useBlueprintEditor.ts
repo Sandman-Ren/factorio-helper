@@ -76,8 +76,7 @@ export function resolveNodeAtPath(
   for (let i = 0; i < path.length; i++) {
     const childIndex = path[i]!;
     if (!currentBook.blueprints || childIndex >= currentBook.blueprints.length) return null;
-    const child = currentBook.blueprints[childIndex]!
-    if (!child) return null;
+    const child = currentBook.blueprints[childIndex]!;
 
     if (i === path.length - 1) {
       return { node: getChildNode(child), type: getChildType(child) };
@@ -187,10 +186,12 @@ export function useBlueprintEditor() {
       history.reset();
       editorMode.resetMode();
 
-      // Update URL hash with blueprint string for sharing
-      try {
-        window.history.replaceState(null, '', `#blueprint=${encodeURIComponent(raw)}`);
-      } catch { /* ignore hash update failures */ }
+      // Update URL hash with blueprint string for sharing (skip if too large for URL)
+      if (raw.length < 8000) {
+        try {
+          window.history.replaceState(null, '', `#blueprint=${encodeURIComponent(raw)}`);
+        } catch { /* ignore hash update failures */ }
+      }
 
       // Auto-select: for books, select the active_index child; otherwise root
       if (type === 'blueprint_book' && 'blueprint_book' in data) {

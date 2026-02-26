@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 import type { DecodedResult, BlueprintType } from '../../hooks/useBlueprintEditor.js';
 import { Button, Badge } from '../../ui/index.js';
 import ClipboardPasteIcon from 'lucide-react/dist/esm/icons/clipboard-paste';
@@ -31,6 +31,9 @@ export function BlueprintImport({
   formattedVersion,
 }: BlueprintImportProps) {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  // Cleanup debounce timer on unmount
+  useEffect(() => () => clearTimeout(debounceRef.current), []);
 
   const handlePaste = useCallback(() => {
     clearTimeout(debounceRef.current);

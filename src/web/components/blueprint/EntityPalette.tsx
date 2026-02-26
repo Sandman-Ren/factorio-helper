@@ -105,6 +105,7 @@ export function EntityPalette({ activeEntity, onSelectEntity }: EntityPalettePro
             <button
               key={entry.name}
               title={entry.name.replace(/-/g, ' ')}
+              aria-label={entry.name.replace(/-/g, ' ')}
               onClick={() => onSelectEntity(entry.name)}
               style={{
                 width: 32,
