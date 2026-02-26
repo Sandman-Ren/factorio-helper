@@ -32,7 +32,7 @@ function EntityIcon({ entity, isSelected, onSelect, onHover }: {
   return (
     <div
       role="button"
-      tabIndex={0}
+      tabIndex={-1}
       aria-label={entity.name.replace(/-/g, ' ')}
       style={{
         position: 'absolute',

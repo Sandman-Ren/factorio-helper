@@ -123,15 +123,16 @@ export function BlueprintTab(props: BlueprintEditorState) {
   // Clipboard for copy/paste
   const clipboardRef = useRef<ReadonlySet<number>>(new Set());
 
-  // Keyboard shortcuts — use stable method refs from selection to avoid re-creating on every render
+  // Keyboard shortcuts — destructure stable refs to avoid new-object deps breaking useMemo
   const { selected, clearSelection, selectAll } = selection;
+  const { mode: editorModeState, resetMode, rotatePlacementDirection } = _editorMode;
   const hotkeys = useMemo(() => ({
     'ctrl+z': () => undo(),
     'ctrl+shift+z': () => redo(),
     'ctrl+y': () => redo(),
     'escape': () => {
       if (selected.size > 0) clearSelection();
-      else _editorMode.resetMode();
+      else resetMode();
     },
     'delete': () => {
       if (selected.size > 0 && bp) {
@@ -140,15 +141,15 @@ export function BlueprintTab(props: BlueprintEditorState) {
       }
     },
     'r': () => {
-      if (_editorMode.mode.type === 'place') {
-        _editorMode.rotatePlacementDirection(true);
+      if (editorModeState.type === 'place') {
+        rotatePlacementDirection(true);
       } else if (selected.size > 0 && bp) {
         handleBlueprintUpdate(b => rotateEntities(b, selected, true));
       }
     },
     'shift+r': () => {
-      if (_editorMode.mode.type === 'place') {
-        _editorMode.rotatePlacementDirection(false);
+      if (editorModeState.type === 'place') {
+        rotatePlacementDirection(false);
       } else if (selected.size > 0 && bp) {
         handleBlueprintUpdate(b => rotateEntities(b, selected, false));
       }
@@ -193,7 +194,7 @@ export function BlueprintTab(props: BlueprintEditorState) {
         handleBlueprintUpdate(b => cloneEntities(b, selected, 1, 1));
       }
     },
-  }), [undo, redo, _editorMode, selected, clearSelection, selectAll, bp, handleBlueprintUpdate]);
+  }), [undo, redo, editorModeState, resetMode, rotatePlacementDirection, selected, clearSelection, selectAll, bp, handleBlueprintUpdate]);
   useHotkeys(hotkeys, !!decoded);
 
   return (
@@ -282,7 +283,7 @@ export function BlueprintTab(props: BlueprintEditorState) {
                       title="Red wire tool"
                       aria-label="Red wire tool"
                     >
-                      <span className="size-3 rounded-full" style={{ backgroundColor: '#ff8e8e' }} aria-hidden="true" />
+                      <span className="size-3 rounded-full" style={{ backgroundColor: 'var(--color-factorio-red)' }} aria-hidden="true" />
                     </Button>
                     <Button
                       variant={_editorMode.mode.type === 'wire' && _editorMode.mode.color === 'green' ? 'secondary' : 'ghost'}
@@ -294,7 +295,7 @@ export function BlueprintTab(props: BlueprintEditorState) {
                       title="Green wire tool"
                       aria-label="Green wire tool"
                     >
-                      <span className="size-3 rounded-full" style={{ backgroundColor: '#87d88b' }} aria-hidden="true" />
+                      <span className="size-3 rounded-full" style={{ backgroundColor: 'var(--color-factorio-green)' }} aria-hidden="true" />
                     </Button>
                     <Button
                       variant={_editorMode.mode.type === 'wire' && _editorMode.mode.color === 'copper' ? 'secondary' : 'ghost'}
@@ -306,7 +307,7 @@ export function BlueprintTab(props: BlueprintEditorState) {
                       title="Copper wire tool"
                       aria-label="Copper wire tool"
                     >
-                      <span className="size-3 rounded-full" style={{ backgroundColor: '#f0a040' }} aria-hidden="true" />
+                      <span className="size-3 rounded-full" style={{ backgroundColor: 'var(--color-factorio-orange-bright)' }} aria-hidden="true" />
                     </Button>
                   </>
                 )}

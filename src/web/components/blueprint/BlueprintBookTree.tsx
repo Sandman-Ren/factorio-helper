@@ -77,15 +77,11 @@ function TreeNode({
       >
         {isBookNode && (
           <span
-            role="button"
-            tabIndex={-1}
-            aria-label={isExpanded ? 'Collapse' : 'Expand'}
             className="flex-shrink-0 cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               onToggleExpand(key);
             }}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); onToggleExpand(key); } }}
           >
             <ChevronRightIcon
               className={`size-3 transition-transform ${isExpanded ? 'rotate-90' : ''}`}
@@ -200,15 +196,11 @@ export function BlueprintBookTree({ book, selectedPath, onSelectPath }: Blueprin
           onClick={() => onSelectPath([])}
         >
           <span
-            role="button"
-            tabIndex={-1}
-            aria-label={expanded.has('root') ? 'Collapse' : 'Expand'}
             className="flex-shrink-0 cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               onToggleExpand('root');
             }}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); onToggleExpand('root'); } }}
           >
             <ChevronRightIcon
               className={`size-3 transition-transform ${expanded.has('root') ? 'rotate-90' : ''}`}
