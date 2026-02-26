@@ -173,9 +173,9 @@ export function BlueprintActions({ node, nodeType, onUpdate }: BlueprintActionsP
 
           <div className="flex items-end gap-1">
             <div>
-              <Label className="text-xs text-muted-foreground">Remove</Label>
-              <select className={SELECT_CLASS} value={removeTarget} onChange={e => setRemoveTarget(e.target.value)}>
-                <option value="">Select entity...</option>
+              <Label htmlFor="remove-entity" className="text-xs text-muted-foreground">Remove</Label>
+              <select id="remove-entity" className={SELECT_CLASS} value={removeTarget} onChange={e => setRemoveTarget(e.target.value)}>
+                <option value="">Select entity…</option>
                 {entityNames.map(name => (
                   <option key={name} value={name}>{name}</option>
                 ))}
@@ -189,21 +189,24 @@ export function BlueprintActions({ node, nodeType, onUpdate }: BlueprintActionsP
 
           <div className="flex items-end gap-1">
             <div>
-              <Label className="text-xs text-muted-foreground">Replace</Label>
-              <select className={SELECT_CLASS} value={replaceFrom} onChange={e => setReplaceFrom(e.target.value)}>
-                <option value="">From...</option>
+              <Label htmlFor="replace-from" className="text-xs text-muted-foreground">Replace</Label>
+              <select id="replace-from" className={SELECT_CLASS} value={replaceFrom} onChange={e => setReplaceFrom(e.target.value)}>
+                <option value="">From…</option>
                 {entityNames.map(name => (
                   <option key={name} value={name}>{name}</option>
                 ))}
               </select>
             </div>
             <div>
-              <Label className="text-xs text-muted-foreground">With</Label>
+              <Label htmlFor="replace-to" className="text-xs text-muted-foreground">With</Label>
               <Input
+                id="replace-to"
+                name="replace-to"
                 className="h-8 w-40 text-xs"
                 value={replaceTo}
                 onChange={e => setReplaceTo(e.target.value)}
                 placeholder="fast-transport-belt"
+                autoComplete="off"
               />
             </div>
             <Button variant="outline" size="sm" onClick={handleReplace} disabled={!replaceFrom || !replaceTo}>
@@ -220,8 +223,8 @@ export function BlueprintActions({ node, nodeType, onUpdate }: BlueprintActionsP
 
         <div className="flex items-end gap-1">
           <div>
-            <Label className="text-xs text-muted-foreground">Add</Label>
-            <select className={SELECT_CLASS} value={addTileName} onChange={e => setAddTileName(e.target.value)}>
+            <Label htmlFor="add-tile" className="text-xs text-muted-foreground">Add</Label>
+            <select id="add-tile" className={SELECT_CLASS} value={addTileName} onChange={e => setAddTileName(e.target.value)}>
               {COMMON_TILES.map(name => (
                 <option key={name} value={name}>{name}</option>
               ))}
@@ -240,9 +243,9 @@ export function BlueprintActions({ node, nodeType, onUpdate }: BlueprintActionsP
         {tileNames.length > 0 && (
           <div className="flex items-end gap-1">
             <div>
-              <Label className="text-xs text-muted-foreground">Remove</Label>
-              <select className={SELECT_CLASS} value={removeTileTarget} onChange={e => setRemoveTileTarget(e.target.value)}>
-                <option value="">Select tile...</option>
+              <Label htmlFor="remove-tile" className="text-xs text-muted-foreground">Remove</Label>
+              <select id="remove-tile" className={SELECT_CLASS} value={removeTileTarget} onChange={e => setRemoveTileTarget(e.target.value)}>
+                <option value="">Select tile…</option>
                 {tileNames.map(name => (
                   <option key={name} value={name}>{name}</option>
                 ))}

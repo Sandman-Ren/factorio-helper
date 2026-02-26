@@ -49,10 +49,13 @@ export function BlueprintImport({
           <textarea
             className="bg-input/30 border-input text-foreground placeholder:text-muted-foreground w-full rounded-md border px-3 py-2 text-sm font-mono focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none resize-y"
             rows={3}
-            placeholder="Paste a Factorio blueprint string here..."
+            placeholder="Paste a Factorio blueprint string here…"
             value={inputString}
             onChange={e => onInputChange(e.target.value)}
             onPaste={handlePaste}
+            aria-label="Blueprint string input"
+            name="blueprint-string"
+            autoComplete="off"
           />
         </div>
         <div className="flex flex-col gap-2">

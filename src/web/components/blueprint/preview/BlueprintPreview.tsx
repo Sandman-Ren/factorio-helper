@@ -19,6 +19,8 @@ import BoxIcon from 'lucide-react/dist/esm/icons/box';
 import SquareIcon from 'lucide-react/dist/esm/icons/square';
 import CableIcon from 'lucide-react/dist/esm/icons/cable';
 
+const EMPTY_POSITION_MAP = new Map<number, { x: number; y: number }>();
+
 interface LayerVisibility {
   grid: boolean;
   tiles: boolean;
@@ -227,6 +229,16 @@ export function BlueprintPreview({
     setBoxRect(null);
   }, [onMouseUp, isWiring]);
 
+  // Pre-compute wire tool overlay to avoid IIFE in JSX
+  const wireOverlay = isWiring && wireSourceEntity !== null && cursorWorld && editorMode?.type === 'wire'
+    ? (() => {
+        const sourceEntity = entities.find(e => e.entity_number === wireSourceEntity);
+        return sourceEntity ? (
+          <WireToolOverlay fromPos={sourceEntity.position} cursorWorld={cursorWorld} color={editorMode.color} />
+        ) : null;
+      })()
+    : null;
+
   return (
     <div className="rounded-lg border border-border bg-card overflow-hidden">
       {/* Controls bar */}
@@ -297,6 +309,9 @@ export function BlueprintPreview({
       {/* Viewport */}
       <div
         ref={viewportRef}
+        role="application"
+        aria-label="Blueprint preview canvas"
+        tabIndex={0}
         style={{
           position: 'relative',
           height: 400,
@@ -347,7 +362,7 @@ export function BlueprintPreview({
             <BlueprintWireLayer
               wireSegments={wireSegments}
               highlightEntity={null}
-              entityPositions={new Map()}
+              entityPositions={EMPTY_POSITION_MAP}
             />
           )}
 
@@ -362,16 +377,7 @@ export function BlueprintPreview({
           )}
 
           {/* Wire tool in-progress line */}
-          {isWiring && wireSourceEntity !== null && cursorWorld && (() => {
-            const sourceEntity = entities.find(e => e.entity_number === wireSourceEntity);
-            return sourceEntity && editorMode.type === 'wire' ? (
-              <WireToolOverlay
-                fromPos={sourceEntity.position}
-                cursorWorld={cursorWorld}
-                color={editorMode.color}
-              />
-            ) : null;
-          })()}
+          {wireOverlay}
 
           {/* Box-select rectangle */}
           {boxRect && (

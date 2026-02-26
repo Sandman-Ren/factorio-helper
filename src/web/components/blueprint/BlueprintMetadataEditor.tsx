@@ -128,23 +128,29 @@ export function BlueprintMetadataEditor({ node, nodeType, onUpdate }: BlueprintM
       </CardHeader>
       <CardContent className="space-y-3">
         <div>
-          <Label className="text-xs text-muted-foreground">Label</Label>
+          <Label htmlFor="meta-label" className="text-xs text-muted-foreground">Label</Label>
           <Input
+            id="meta-label"
+            name="blueprint-label"
             value={label}
             onChange={e => handleLabelChange(e.target.value)}
-            placeholder="Blueprint name..."
+            placeholder="Blueprint name…"
             className="mt-1"
+            autoComplete="off"
           />
         </div>
 
         <div>
-          <Label className="text-xs text-muted-foreground">Description</Label>
+          <Label htmlFor="meta-description" className="text-xs text-muted-foreground">Description</Label>
           <textarea
+            id="meta-description"
+            name="blueprint-description"
             className="bg-input/30 border-input text-foreground placeholder:text-muted-foreground w-full rounded-md border px-3 py-2 text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none resize-y mt-1"
             rows={3}
             value={description}
             onChange={e => handleDescriptionChange(e.target.value)}
-            placeholder="Description..."
+            placeholder="Description…"
+            autoComplete="off"
           />
         </div>
 
@@ -153,8 +159,11 @@ export function BlueprintMetadataEditor({ node, nodeType, onUpdate }: BlueprintM
             <div className="flex items-center gap-2 mb-1">
               <Label className="text-xs text-muted-foreground">Snap to Grid</Label>
               <button
+                role="switch"
+                aria-checked={!!snap}
+                aria-label="Toggle snap to grid"
                 onClick={handleToggleSnap}
-                className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
+                className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-ring/50 outline-none ${
                   snap ? 'bg-primary' : 'bg-input'
                 }`}
               >
@@ -168,8 +177,10 @@ export function BlueprintMetadataEditor({ node, nodeType, onUpdate }: BlueprintM
             {snap && (
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-1">
-                  <Label className="text-xs text-muted-foreground">X</Label>
+                  <Label htmlFor="snap-x" className="text-xs text-muted-foreground">X</Label>
                   <Input
+                    id="snap-x"
+                    name="snap-x"
                     type="number"
                     min={1}
                     value={snap.x}
@@ -178,8 +189,10 @@ export function BlueprintMetadataEditor({ node, nodeType, onUpdate }: BlueprintM
                   />
                 </div>
                 <div className="flex items-center gap-1">
-                  <Label className="text-xs text-muted-foreground">Y</Label>
+                  <Label htmlFor="snap-y" className="text-xs text-muted-foreground">Y</Label>
                   <Input
+                    id="snap-y"
+                    name="snap-y"
                     type="number"
                     min={1}
                     value={snap.y}
@@ -190,6 +203,7 @@ export function BlueprintMetadataEditor({ node, nodeType, onUpdate }: BlueprintM
                 <label className="flex items-center gap-1 text-xs text-muted-foreground cursor-pointer">
                   <input
                     type="checkbox"
+                    name="absolute-snapping"
                     checked={!!(node as Blueprint)['absolute-snapping']}
                     onChange={handleToggleAbsolute}
                     className="accent-primary"

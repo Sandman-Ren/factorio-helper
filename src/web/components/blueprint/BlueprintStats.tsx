@@ -107,8 +107,11 @@ export function BlueprintStats({ blueprint }: BlueprintStatsProps) {
     );
   }
 
-  const defaultOpen = ['entities'];
-  if (stats.tileCounts.length > 0) defaultOpen.push('tiles');
+  const defaultOpen = useMemo(() => {
+    const open = ['entities'];
+    if (stats.tileCounts.length > 0) open.push('tiles');
+    return open;
+  }, [stats.tileCounts.length]);
 
   return (
     <div className="space-y-2">

@@ -31,6 +31,9 @@ function EntityIcon({ entity, isSelected, onSelect, onHover }: {
 
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label={entity.name.replace(/-/g, ' ')}
       style={{
         position: 'absolute',
         left,
@@ -44,8 +47,11 @@ function EntityIcon({ entity, isSelected, onSelect, onHover }: {
         zIndex: isSelected ? 10 : undefined,
       }}
       onClick={(e) => { e.stopPropagation(); onSelect(entity, e.ctrlKey || e.metaKey); }}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); onSelect(entity, e.ctrlKey || e.metaKey); } }}
       onMouseEnter={() => onHover(entity)}
       onMouseLeave={() => onHover(null)}
+      onFocus={() => onHover(entity)}
+      onBlur={() => onHover(null)}
     >
       {failed ? (
         <div
