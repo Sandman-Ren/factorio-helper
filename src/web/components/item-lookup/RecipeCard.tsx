@@ -1,6 +1,7 @@
 import type { Recipe, Machine, Technology } from '../../../data/schema.js';
 import { ItemIcon } from '../ItemIcon.js';
 import { Button } from '../../ui/index.js';
+import { formatName } from '../../utils/format-name.js';
 import CalculatorIcon from 'lucide-react/dist/esm/icons/calculator';
 import ArrowRightIcon from 'lucide-react/dist/esm/icons/arrow-right';
 
@@ -76,7 +77,7 @@ export function RecipeCard({ recipe, machines, techs, onItemClick, onCalculateIt
                 key={m.name}
                 onClick={() => onItemClick(m.name)}
                 className="inline-flex items-center gap-0.5 cursor-pointer bg-transparent border-none p-0 text-xs text-muted-foreground hover:text-foreground transition-colors duration-100"
-                title={m.name.replace(/-/g, ' ')}
+                title={formatName(m.name)}
               >
                 <ItemIcon name={m.name} size={16} />
               </button>
@@ -87,7 +88,7 @@ export function RecipeCard({ recipe, machines, techs, onItemClick, onCalculateIt
           <span className="flex items-center gap-1">
             Unlocked by:
             {techs.map(t => (
-              <span key={t.name} className="inline-flex items-center gap-0.5" title={t.name.replace(/-/g, ' ')}>
+              <span key={t.name} className="inline-flex items-center gap-0.5" title={formatName(t.name)}>
                 <ItemIcon name={t.name} size={16} category="technology" />
               </span>
             ))}
@@ -108,7 +109,7 @@ function RecipeItemChip({ name, type, amount, onClick }: {
     <button
       onClick={onClick}
       className="inline-flex items-center gap-1 rounded border border-border bg-accent/50 px-1.5 py-0.5 cursor-pointer hover:bg-accent transition-colors duration-100"
-      title={name.replace(/-/g, ' ')}
+      title={formatName(name)}
     >
       <ItemIcon name={name} size={20} category={type} />
       <span className="text-xs">{amount}x</span>
@@ -117,9 +118,8 @@ function RecipeItemChip({ name, type, amount, onClick }: {
 }
 
 function formatRecipeName(name: string): string {
-  if (name === 'water-pumping') return 'Water Pumping';
   if (name.endsWith('-mining')) {
-    return name.replace(/-mining$/, '').replace(/-/g, ' ') + ' (mining)';
+    return formatName(name.replace(/-mining$/, '')) + ' (mining)';
   }
-  return name.replace(/-/g, ' ');
+  return formatName(name);
 }

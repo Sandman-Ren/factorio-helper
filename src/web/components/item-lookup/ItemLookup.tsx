@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { ItemSelector } from '../ItemSelector.js';
 import { useItemLookupMaps } from '../../hooks/use-item-lookup-maps.js';
 import { RequiredTechnologies } from './RequiredTechnologies.js';
@@ -6,17 +6,18 @@ import { ProducedBy } from './ProducedBy.js';
 import { UsedIn } from './UsedIn.js';
 
 interface Props {
+  selectedItem: string;
+  onSelectItem: (itemName: string) => void;
   onCalculateItem: (itemName: string) => void;
   onViewTech: (techName: string) => void;
 }
 
-export function ItemLookup({ onCalculateItem, onViewTech }: Props) {
-  const [selectedItem, setSelectedItem] = useState('');
+export function ItemLookup({ selectedItem, onSelectItem, onCalculateItem, onViewTech }: Props) {
   const maps = useItemLookupMaps();
 
   const handleItemClick = useCallback((itemName: string) => {
-    setSelectedItem(itemName);
-  }, []);
+    onSelectItem(itemName);
+  }, [onSelectItem]);
 
   const producingRecipes = selectedItem ? maps.itemToProducingRecipes.get(selectedItem) ?? [] : [];
   const consumingRecipes = selectedItem ? maps.itemToConsumingRecipes.get(selectedItem) ?? [] : [];
@@ -39,7 +40,7 @@ export function ItemLookup({ onCalculateItem, onViewTech }: Props) {
         <ItemSelector
           items={maps.allLookupItems}
           value={selectedItem}
-          onChange={setSelectedItem}
+          onChange={onSelectItem}
           label="Look Up Item"
         />
       </div>

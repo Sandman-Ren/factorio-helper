@@ -1,4 +1,5 @@
-import { lazy, Suspense, useState, useCallback, useMemo } from 'react';
+import { lazy, Suspense, useState, useCallback, useEffect, useMemo } from 'react';
+import { useHashTab } from './hooks/useHashTab.js';
 import RotateCcwIcon from 'lucide-react/dist/esm/icons/rotate-ccw';
 import { findIntegerMultiplier } from '../calculator/index.js';
 import { useCalculator } from './hooks/useCalculator.js';
@@ -50,10 +51,32 @@ const ItemLookup = lazy(() =>
 const ASSEMBLER_CATEGORIES = ['crafting', 'basic-crafting', 'advanced-crafting', 'crafting-with-fluid'];
 
 export function App() {
-  const [activeTab, setActiveTab] = useState(() =>
-    window.location.hash.startsWith('#blueprint=') ? 'blueprint' : 'item-lookup',
-  );
+  const { tab: activeTab, subpath, setTab, navigate } = useHashTab();
   const [pendingTech, setPendingTech] = useState<string | null>(null);
+
+  // Persist the lookup item across tab switches
+  const [lookupItem, setLookupItem] = useState(() =>
+    activeTab === 'item-lookup' ? subpath : '',
+  );
+
+  // Sync from hash on back/forward within item-lookup
+  useEffect(() => {
+    if (activeTab === 'item-lookup') setLookupItem(subpath);
+  }, [activeTab, subpath]);
+
+  // When clicking the Item Lookup tab, restore the previous item in the URL
+  const setActiveTab = useCallback((tab: string) => {
+    if (tab === 'item-lookup' && lookupItem) {
+      navigate('item-lookup', lookupItem);
+    } else {
+      setTab(tab);
+    }
+  }, [lookupItem, navigate, setTab]);
+
+  const handleSelectLookupItem = useCallback((item: string) => {
+    setLookupItem(item);
+    navigate('item-lookup', item || undefined);
+  }, [navigate]);
 
   const {
     graph,
@@ -186,6 +209,8 @@ export function App() {
             }
           >
             <ItemLookup
+              selectedItem={lookupItem}
+              onSelectItem={handleSelectLookupItem}
               onCalculateItem={handleCalculateItem}
               onViewTech={handleViewTech}
             />

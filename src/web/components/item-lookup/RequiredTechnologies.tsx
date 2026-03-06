@@ -1,6 +1,7 @@
 import type { Technology } from '../../../data/schema.js';
 import { ItemIcon } from '../ItemIcon.js';
 import { Button } from '../../ui/index.js';
+import { formatName } from '../../utils/format-name.js';
 import ExternalLinkIcon from 'lucide-react/dist/esm/icons/external-link';
 
 interface Props {
@@ -27,7 +28,7 @@ export function RequiredTechnologies({ technologies, onViewTech }: Props) {
           >
             <ItemIcon name={tech.name} size={32} category="technology" />
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-medium">{tech.name.replace(/-/g, ' ')}</div>
+              <div className="text-sm font-medium">{formatName(tech.name)}</div>
               {tech.unit && (
                 <div className="flex items-center gap-1.5 mt-0.5">
                   {tech.unit.ingredients.map(ing => (

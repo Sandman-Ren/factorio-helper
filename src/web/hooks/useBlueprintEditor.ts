@@ -217,7 +217,7 @@ export function useBlueprintEditor() {
     setSelectedPath([]);
     history.reset();
     editorMode.resetMode();
-    try { window.history.replaceState(null, '', window.location.pathname); } catch { /* ignore */ }
+    try { window.history.replaceState(null, '', '#blueprint'); } catch { /* ignore */ }
   }, [history.reset, editorMode.resetMode]);
 
   // Auto-decode from URL hash on initial load

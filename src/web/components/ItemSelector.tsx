@@ -3,6 +3,7 @@ import itemsData from '../../data/generated/items.json';
 import fluidsData from '../../data/generated/fluids.json';
 import itemGroupsData from '../../data/generated/item-groups.json';
 import { getIconUrl } from './ItemIcon.js';
+import { formatName } from '../utils/format-name.js';
 import { Label, Input, Button } from '../ui/index.js';
 import XIcon from 'lucide-react/dist/esm/icons/x';
 
@@ -143,14 +144,14 @@ export function ItemSelector({ items: allItems, value, onChange, label = 'Target
         >
           <img
             src={getIconUrl(value)}
-            alt={value.replace(/-/g, ' ')}
+            alt={formatName(value)}
             width={24}
             height={24}
             className="shrink-0"
             style={{ imageRendering: 'pixelated' }}
           />
           <span className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap">
-            {value.replace(/-/g, ' ')}
+            {formatName(value)}
           </span>
           <Button
             variant="ghost"
@@ -251,7 +252,7 @@ function IconCell({ item, selected, onClick }: {
 }) {
   const [imgFailed, setImgFailed] = useState(false);
 
-  const label = item.replace(/-/g, ' ');
+  const label = formatName(item);
 
   return (
     <div
