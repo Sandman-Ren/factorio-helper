@@ -42,6 +42,10 @@ const BlueprintTab = lazy(() =>
   import('./components/blueprint/BlueprintTab.js').then(m => ({ default: m.BlueprintTab })),
 );
 
+const ItemLookup = lazy(() =>
+  import('./components/item-lookup/ItemLookup.js').then(m => ({ default: m.ItemLookup })),
+);
+
 /** All categories that assembling machines can handle. */
 const ASSEMBLER_CATEGORIES = ['crafting', 'basic-crafting', 'advanced-crafting', 'crafting-with-fluid'];
 
@@ -101,6 +105,15 @@ export function App() {
     [],
   );
 
+  const handleCalculateItem = useCallback(
+    (itemName: string) => {
+      if (!graph.allProducts.includes(itemName)) return;
+      setTargetItem(itemName);
+      setActiveTab('calculator');
+    },
+    [graph, setTargetItem],
+  );
+
   const smeltingMachines = graph.categoryToMachines.get('smelting') ?? [];
   const assemblingMachines = graph.categoryToMachines.get('crafting') ?? [];
   const miningDrills = graph.categoryToMachines.get('basic-solid') ?? [];
@@ -152,11 +165,12 @@ export function App() {
           <div style={{ marginBottom: 8 }}>
             <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0, lineHeight: 1.2 }}>Factorio Helper</h1>
             <p style={{ color: 'var(--muted-foreground)', fontSize: 13, margin: 0 }}>
-              Production calculator, tech tree, power calculator &amp; blueprint tools for Factorio 2.0
+              Production calculator, item lookup, tech tree, power &amp; blueprint tools for Factorio 2.0
             </p>
           </div>
           <TabsList variant="line">
             <TabsTrigger value="calculator">Calculator</TabsTrigger>
+            <TabsTrigger value="item-lookup">Item Lookup</TabsTrigger>
             <TabsTrigger value="tech-tree">Tech Tree</TabsTrigger>
             <TabsTrigger value="power">Power</TabsTrigger>
             <TabsTrigger value="blueprint">Blueprint</TabsTrigger>
@@ -411,6 +425,21 @@ export function App() {
               </>
             )}
           </div>
+        </TabsContent>
+
+        <TabsContent value="item-lookup" style={{ overflow: 'auto', flex: 1 }}>
+          <Suspense
+            fallback={
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--muted-foreground)' }}>
+                Loading item lookup...
+              </div>
+            }
+          >
+            <ItemLookup
+              onCalculateItem={handleCalculateItem}
+              onViewTech={handleViewTech}
+            />
+          </Suspense>
         </TabsContent>
 
         <TabsContent value="tech-tree" style={{ flex: 1, minHeight: 0 }}>

@@ -42,9 +42,10 @@ interface Props {
   items: string[];
   value: string;
   onChange: (item: string) => void;
+  label?: string;
 }
 
-export function ItemSelector({ items: allItems, value, onChange }: Props) {
+export function ItemSelector({ items: allItems, value, onChange, label = 'Target Item' }: Props) {
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [activeGroup, setActiveGroup] = useState('intermediate-products');
@@ -132,7 +133,7 @@ export function ItemSelector({ items: allItems, value, onChange }: Props) {
 
   return (
     <div ref={containerRef} className="relative flex-[1_1_300px]">
-      <Label className="mb-1">Target Item</Label>
+      <Label className="mb-1">{label}</Label>
 
       {/* Selected chip or search input */}
       {value && !isOpen ? (
