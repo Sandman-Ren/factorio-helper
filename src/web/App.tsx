@@ -51,7 +51,7 @@ const ASSEMBLER_CATEGORIES = ['crafting', 'basic-crafting', 'advanced-crafting',
 
 export function App() {
   const [activeTab, setActiveTab] = useState(() =>
-    window.location.hash.startsWith('#blueprint=') ? 'blueprint' : 'calculator',
+    window.location.hash.startsWith('#blueprint=') ? 'blueprint' : 'item-lookup',
   );
   const [pendingTech, setPendingTech] = useState<string | null>(null);
 
@@ -169,13 +169,28 @@ export function App() {
             </p>
           </div>
           <TabsList variant="line">
-            <TabsTrigger value="calculator">Calculator</TabsTrigger>
             <TabsTrigger value="item-lookup">Item Lookup</TabsTrigger>
+            <TabsTrigger value="calculator">Calculator</TabsTrigger>
             <TabsTrigger value="tech-tree">Tech Tree</TabsTrigger>
             <TabsTrigger value="power">Power</TabsTrigger>
             <TabsTrigger value="blueprint">Blueprint</TabsTrigger>
           </TabsList>
         </div>
+
+        <TabsContent value="item-lookup" style={{ overflow: 'auto', flex: 1 }}>
+          <Suspense
+            fallback={
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--muted-foreground)' }}>
+                Loading item lookup...
+              </div>
+            }
+          >
+            <ItemLookup
+              onCalculateItem={handleCalculateItem}
+              onViewTech={handleViewTech}
+            />
+          </Suspense>
+        </TabsContent>
 
         <TabsContent value="calculator" style={{ overflow: 'auto', flex: 1 }}>
           <div style={{ maxWidth: 900, margin: '0 auto', padding: 20 }}>
@@ -425,21 +440,6 @@ export function App() {
               </>
             )}
           </div>
-        </TabsContent>
-
-        <TabsContent value="item-lookup" style={{ overflow: 'auto', flex: 1 }}>
-          <Suspense
-            fallback={
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--muted-foreground)' }}>
-                Loading item lookup...
-              </div>
-            }
-          >
-            <ItemLookup
-              onCalculateItem={handleCalculateItem}
-              onViewTech={handleViewTech}
-            />
-          </Suspense>
         </TabsContent>
 
         <TabsContent value="tech-tree" style={{ flex: 1, minHeight: 0 }}>
