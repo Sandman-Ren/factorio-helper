@@ -12,11 +12,13 @@ import {
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   Tooltip,
   TooltipTrigger,
   TooltipContent,
 } from '../ui/index.js';
 import ChevronDownIcon from 'lucide-react/dist/esm/icons/chevron-down';
+import XIcon from 'lucide-react/dist/esm/icons/x';
 
 interface Props {
   node: ProductionNode;
@@ -24,9 +26,11 @@ interface Props {
   categoryMachines?: Map<string, Machine[]>;
   machineOverrides?: MachineOverrides;
   onMachineChange?: (item: string, machineName: string) => void;
+  onMachineReset?: (item: string) => void;
   fuels?: Fuel[];
   fuelOverrides?: FuelOverrides;
   onFuelChange?: (item: string, fuelName: string) => void;
+  onFuelReset?: (item: string) => void;
   itemToTech?: Map<string, Technology>;
   onTechClick?: (techName: string) => void;
 }
@@ -46,10 +50,12 @@ function formatMachines(n: number): string {
   return rounded.toFixed(2).replace(/\.?0+$/, '');
 }
 
-function FuelSelector({ current, fuels, onSelect }: {
+function FuelSelector({ current, fuels, isOverridden, onSelect, onReset }: {
   current: string;
   fuels: Fuel[];
+  isOverridden: boolean;
   onSelect: (name: string) => void;
+  onReset?: () => void;
 }) {
   return (
     <DropdownMenu>
@@ -61,6 +67,16 @@ function FuelSelector({ current, fuels, onSelect }: {
         <ChevronDownIcon className="size-3 text-muted-foreground" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" onClick={e => e.stopPropagation()}>
+        {isOverridden && onReset && (
+          <>
+            <DropdownMenuRadioGroup value="" onValueChange={() => onReset()}>
+              <DropdownMenuRadioItem value="__default__" className="text-xs text-muted-foreground">
+                Use default fuel
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+            <DropdownMenuSeparator />
+          </>
+        )}
         <DropdownMenuRadioGroup value={current} onValueChange={onSelect}>
           {fuels.map(f => (
             <DropdownMenuRadioItem key={f.name} value={f.name}>
@@ -79,10 +95,12 @@ function FuelSelector({ current, fuels, onSelect }: {
   );
 }
 
-function MachineSelector({ current, alternatives, onSelect }: {
+function MachineSelector({ current, alternatives, isOverridden, onSelect, onReset }: {
   current: Machine;
   alternatives: Machine[];
+  isOverridden: boolean;
   onSelect: (name: string) => void;
+  onReset?: () => void;
 }) {
   return (
     <DropdownMenu>
@@ -94,6 +112,16 @@ function MachineSelector({ current, alternatives, onSelect }: {
         <ChevronDownIcon className="size-3 text-muted-foreground" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" onClick={e => e.stopPropagation()}>
+        {isOverridden && onReset && (
+          <>
+            <DropdownMenuRadioGroup value="" onValueChange={() => onReset()}>
+              <DropdownMenuRadioItem value="__default__" className="text-xs text-muted-foreground">
+                Use default machine
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+            <DropdownMenuSeparator />
+          </>
+        )}
         <DropdownMenuRadioGroup value={current.name} onValueChange={onSelect}>
           {alternatives.map(m => (
             <DropdownMenuRadioItem key={m.name} value={m.name}>
@@ -136,14 +164,17 @@ function TechBadge({ tech, onTechClick }: { tech: Technology; onTechClick?: (nam
 }
 
 /** Machine badge content shared between root and node rows. */
-function MachineBadge({ node, timeUnit, categoryMachines, onMachineChange, fuels, fuelOverrides, onFuelChange }: {
+function MachineBadge({ node, timeUnit, categoryMachines, machineOverrides, onMachineChange, onMachineReset, fuels, fuelOverrides, onFuelChange, onFuelReset }: {
   node: ProductionNode;
   timeUnit: TimeUnit;
   categoryMachines?: Map<string, Machine[]>;
+  machineOverrides?: MachineOverrides;
   onMachineChange?: (item: string, machineName: string) => void;
+  onMachineReset?: (item: string) => void;
   fuels?: Fuel[];
   fuelOverrides?: FuelOverrides;
   onFuelChange?: (item: string, fuelName: string) => void;
+  onFuelReset?: (item: string) => void;
 }) {
   if (!node.machine) return null;
 
@@ -156,11 +187,16 @@ function MachineBadge({ node, timeUnit, categoryMachines, onMachineChange, fuels
     return cats ? cats.includes(f.fuel_category) : f.fuel_category === 'chemical';
   }) ?? [];
 
+  const hasMachineOverride = !!machineOverrides?.[node.item];
+  const hasFuelOverride = !!fuelOverrides?.[node.item];
+  const isOverridden = hasMachineOverride || hasFuelOverride;
+
   return (
     <span style={{
       fontSize: 13,
       color: 'var(--foreground)',
-      background: 'var(--accent)',
+      background: isOverridden ? 'var(--color-factorio-selected)' : 'var(--accent)',
+      borderLeft: isOverridden ? '2px solid var(--color-factorio-orange-dim)' : undefined,
       padding: '2px 8px',
       borderRadius: 4,
       display: 'flex',
@@ -172,7 +208,9 @@ function MachineBadge({ node, timeUnit, categoryMachines, onMachineChange, fuels
         <MachineSelector
           current={node.machine}
           alternatives={alternatives}
+          isOverridden={hasMachineOverride}
           onSelect={name => onMachineChange?.(node.item, name)}
+          onReset={onMachineReset ? () => onMachineReset(node.item) : undefined}
         />
       ) : (
         <ItemIcon name={node.machine.name} size={24} />
@@ -189,7 +227,9 @@ function MachineBadge({ node, timeUnit, categoryMachines, onMachineChange, fuels
             <FuelSelector
               current={fuelOverrides?.[node.item] ?? node.fuel}
               fuels={compatibleFuels}
+              isOverridden={hasFuelOverride}
               onSelect={name => onFuelChange(node.item, name)}
+              onReset={onFuelReset ? () => onFuelReset(node.item) : undefined}
             />
           ) : (
             <ItemIcon name={node.fuel} size={20} />
@@ -199,12 +239,27 @@ function MachineBadge({ node, timeUnit, categoryMachines, onMachineChange, fuels
           </span>
         </span>
       )}
+      {isOverridden && (
+        <button
+          type="button"
+          aria-label="Reset overrides"
+          onClick={e => {
+            e.stopPropagation();
+            if (hasMachineOverride) onMachineReset?.(node.item);
+            if (hasFuelOverride) onFuelReset?.(node.item);
+          }}
+          className="inline-flex items-center justify-center rounded-sm cursor-pointer hover:bg-accent/80"
+          style={{ width: 16, height: 16, marginLeft: 2, flexShrink: 0 }}
+        >
+          <XIcon className="size-3 text-muted-foreground" />
+        </button>
+      )}
     </span>
   );
 }
 
 /** Internal recursive node that renders as grid items (row + children) via subgrid. */
-function ProductionChainNode({ node, timeUnit, depth, categoryMachines, onMachineChange, fuels, fuelOverrides, onFuelChange, itemToTech, onTechClick }: Props & { depth: number }) {
+function ProductionChainNode({ node, timeUnit, depth, categoryMachines, machineOverrides, onMachineChange, onMachineReset, fuels, fuelOverrides, onFuelChange, onFuelReset, itemToTech, onTechClick }: Props & { depth: number }) {
   const [expanded, setExpanded] = useState(depth < 3);
   const hasChildren = node.children.length > 0;
   const isRaw = !node.recipe;
@@ -253,10 +308,13 @@ function ProductionChainNode({ node, timeUnit, depth, categoryMachines, onMachin
               node={node}
               timeUnit={timeUnit}
               categoryMachines={categoryMachines}
+              machineOverrides={machineOverrides}
               onMachineChange={onMachineChange}
+              onMachineReset={onMachineReset}
               fuels={fuels}
               fuelOverrides={fuelOverrides}
               onFuelChange={onFuelChange}
+              onFuelReset={onFuelReset}
             />
           ) : isRaw ? (
             <span style={{ fontSize: 13, color: 'var(--primary)', fontStyle: 'italic' }}>
@@ -286,10 +344,13 @@ function ProductionChainNode({ node, timeUnit, depth, categoryMachines, onMachin
               depth={depth + 1}
               timeUnit={timeUnit}
               categoryMachines={categoryMachines}
+              machineOverrides={machineOverrides}
               onMachineChange={onMachineChange}
+              onMachineReset={onMachineReset}
               fuels={fuels}
               fuelOverrides={fuelOverrides}
               onFuelChange={onFuelChange}
+              onFuelReset={onFuelReset}
               itemToTech={itemToTech}
               onTechClick={onTechClick}
             />
@@ -300,7 +361,7 @@ function ProductionChainNode({ node, timeUnit, depth, categoryMachines, onMachin
   );
 }
 
-export function ProductionChain({ node, timeUnit, categoryMachines, onMachineChange, fuels, fuelOverrides, onFuelChange, itemToTech, onTechClick }: Props) {
+export function ProductionChain({ node, timeUnit, categoryMachines, machineOverrides, onMachineChange, onMachineReset, fuels, fuelOverrides, onFuelChange, onFuelReset, itemToTech, onTechClick }: Props) {
   const [expanded, setExpanded] = useState(true);
   const hasChildren = node.children.length > 0;
   const isRaw = !node.recipe;
@@ -344,10 +405,13 @@ export function ProductionChain({ node, timeUnit, categoryMachines, onMachineCha
               node={node}
               timeUnit={timeUnit}
               categoryMachines={categoryMachines}
+              machineOverrides={machineOverrides}
               onMachineChange={onMachineChange}
+              onMachineReset={onMachineReset}
               fuels={fuels}
               fuelOverrides={fuelOverrides}
               onFuelChange={onFuelChange}
+              onFuelReset={onFuelReset}
             />
           </span>
         )}
@@ -381,10 +445,13 @@ export function ProductionChain({ node, timeUnit, categoryMachines, onMachineCha
               depth={1}
               timeUnit={timeUnit}
               categoryMachines={categoryMachines}
+              machineOverrides={machineOverrides}
               onMachineChange={onMachineChange}
+              onMachineReset={onMachineReset}
               fuels={fuels}
               fuelOverrides={fuelOverrides}
               onFuelChange={onFuelChange}
+              onFuelReset={onFuelReset}
               itemToTech={itemToTech}
               onTechClick={onTechClick}
             />

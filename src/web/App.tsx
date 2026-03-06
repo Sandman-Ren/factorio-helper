@@ -1,4 +1,5 @@
-import { lazy, Suspense, useState, useCallback } from 'react';
+import { lazy, Suspense, useState, useCallback, useMemo } from 'react';
+import RotateCcwIcon from 'lucide-react/dist/esm/icons/rotate-ccw';
 import { findIntegerMultiplier } from '../calculator/index.js';
 import { useCalculator } from './hooks/useCalculator.js';
 import { useRecipeTechMaps } from './hooks/use-recipe-tech-map.js';
@@ -23,6 +24,9 @@ import {
   TabsList,
   TabsTrigger,
   TabsContent,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
   TooltipProvider,
 } from './ui/index.js';
 
@@ -101,6 +105,46 @@ export function App() {
   const assemblingMachines = graph.categoryToMachines.get('crafting') ?? [];
   const miningDrills = graph.categoryToMachines.get('basic-solid') ?? [];
 
+  // Count per-item overrides by category type for global reset buttons
+  const overrideCounts = useMemo(() => {
+    const counts = { smelting: 0, assembler: 0, miner: 0, fuel: Object.keys(fuelOverrides).length };
+    for (const item of Object.keys(machineOverrides)) {
+      const recipe = graph.itemToRecipe.get(item);
+      if (!recipe) continue;
+      if (recipe.category === 'smelting') counts.smelting++;
+      else if (recipe.category === 'basic-solid') counts.miner++;
+      else if (ASSEMBLER_CATEGORIES.includes(recipe.category)) counts.assembler++;
+    }
+    return counts;
+  }, [machineOverrides, fuelOverrides, graph]);
+
+  const handleMachineReset = useCallback((item: string) => {
+    setMachineOverrides(prev => {
+      const next = { ...prev };
+      delete next[item];
+      return next;
+    });
+  }, [setMachineOverrides]);
+
+  const handleFuelReset = useCallback((item: string) => {
+    setFuelOverrides(prev => {
+      const next = { ...prev };
+      delete next[item];
+      return next;
+    });
+  }, [setFuelOverrides]);
+
+  const resetMachineOverridesByCategory = useCallback((categoryTest: (cat: string) => boolean) => {
+    setMachineOverrides(prev => {
+      const next = { ...prev };
+      for (const item of Object.keys(next)) {
+        const recipe = graph.itemToRecipe.get(item);
+        if (recipe && categoryTest(recipe.category)) delete next[item];
+      }
+      return next;
+    });
+  }, [setMachineOverrides, graph]);
+
   return (
     <TooltipProvider>
       <Tabs value={activeTab} onValueChange={setActiveTab} style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -168,6 +212,22 @@ export function App() {
                         ))}
                       </SelectContent>
                     </Select>
+                    {overrideCounts.smelting > 0 && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            onClick={() => resetMachineOverridesByCategory(c => c === 'smelting')}
+                            className="flex items-center gap-1 mt-1 text-xs cursor-pointer"
+                            style={{ color: 'var(--color-factorio-orange-bright)' }}
+                          >
+                            <RotateCcwIcon className="size-3" />
+                            {overrideCounts.smelting} item override{overrideCounts.smelting > 1 ? 's' : ''}
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>Reset all per-item furnace overrides</TooltipContent>
+                      </Tooltip>
+                    )}
                   </div>
                 )}
                 {assemblingMachines.length > 0 && (
@@ -203,6 +263,22 @@ export function App() {
                         ))}
                       </SelectContent>
                     </Select>
+                    {overrideCounts.assembler > 0 && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            onClick={() => resetMachineOverridesByCategory(c => ASSEMBLER_CATEGORIES.includes(c))}
+                            className="flex items-center gap-1 mt-1 text-xs cursor-pointer"
+                            style={{ color: 'var(--color-factorio-orange-bright)' }}
+                          >
+                            <RotateCcwIcon className="size-3" />
+                            {overrideCounts.assembler} item override{overrideCounts.assembler > 1 ? 's' : ''}
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>Reset all per-item assembler overrides</TooltipContent>
+                      </Tooltip>
+                    )}
                   </div>
                 )}
                 {miningDrills.length > 0 && (
@@ -233,6 +309,22 @@ export function App() {
                         ))}
                       </SelectContent>
                     </Select>
+                    {overrideCounts.miner > 0 && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            onClick={() => resetMachineOverridesByCategory(c => c === 'basic-solid')}
+                            className="flex items-center gap-1 mt-1 text-xs cursor-pointer"
+                            style={{ color: 'var(--color-factorio-orange-bright)' }}
+                          >
+                            <RotateCcwIcon className="size-3" />
+                            {overrideCounts.miner} item override{overrideCounts.miner > 1 ? 's' : ''}
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>Reset all per-item mining drill overrides</TooltipContent>
+                      </Tooltip>
+                    )}
                   </div>
                 )}
                 {fuels.length > 0 && (
@@ -264,6 +356,22 @@ export function App() {
                         ))}
                       </SelectContent>
                     </Select>
+                    {overrideCounts.fuel > 0 && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            onClick={() => setFuelOverrides({})}
+                            className="flex items-center gap-1 mt-1 text-xs cursor-pointer"
+                            style={{ color: 'var(--color-factorio-orange-bright)' }}
+                          >
+                            <RotateCcwIcon className="size-3" />
+                            {overrideCounts.fuel} item override{overrideCounts.fuel > 1 ? 's' : ''}
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>Reset all per-item fuel overrides</TooltipContent>
+                      </Tooltip>
+                    )}
                   </div>
                 )}
               </div>
@@ -290,6 +398,7 @@ export function App() {
                   onMachineChange={(item, machine) =>
                     setMachineOverrides(prev => ({ ...prev, [item]: machine }))
                   }
+                  onMachineReset={handleMachineReset}
                   itemToTech={itemToTech}
                   onTechClick={handleViewTech}
                   fuels={fuels}
@@ -297,6 +406,7 @@ export function App() {
                   onFuelChange={(item, fuel) =>
                     setFuelOverrides(prev => ({ ...prev, [item]: fuel }))
                   }
+                  onFuelReset={handleFuelReset}
                 />
               </>
             )}
