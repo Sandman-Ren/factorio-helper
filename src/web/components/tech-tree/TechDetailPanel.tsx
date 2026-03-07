@@ -11,9 +11,11 @@ import {
 import CalculatorIcon from 'lucide-react/dist/esm/icons/calculator';
 import LocateIcon from 'lucide-react/dist/esm/icons/locate';
 import { formatName } from './format.js';
+import { getTechResearchTime, getCumulativeResearchTime, formatDuration } from './research-time.js';
 
 interface Props {
   technology: Technology | null;
+  techMap: Map<string, Technology>;
   open: boolean;
   onClose: () => void;
   onCalculateRecipe?: (recipeName: string) => void;
@@ -21,12 +23,14 @@ interface Props {
   onSelectTech?: (techName: string) => void;
 }
 
-export function TechDetailPanel({ technology, open, onClose, onCalculateRecipe, onZoomToTech, onSelectTech }: Props) {
+export function TechDetailPanel({ technology, techMap, open, onClose, onCalculateRecipe, onZoomToTech, onSelectTech }: Props) {
   if (!technology) return null;
 
   const label = formatName(technology.name);
   const recipeEffects = technology.effects.filter(e => e.type === 'unlock-recipe');
   const otherEffects = technology.effects.filter(e => e.type !== 'unlock-recipe');
+  const researchTime = getTechResearchTime(technology);
+  const cumulativeTime = getCumulativeResearchTime(technology, techMap);
 
   return (
     <Sheet open={open} modal={false} onOpenChange={v => { if (!v) onClose(); }}>
@@ -103,6 +107,21 @@ export function TechDetailPanel({ technology, open, onClose, onCalculateRecipe, 
                       </span>
                     </div>
                   ))}
+                </div>
+              )}
+
+              {/* Research time */}
+              {(researchTime != null || cumulativeTime != null) && (
+                <div style={{ marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: 11, color: 'var(--muted-foreground)', marginBottom: 4 }}>
+                    Research time (1 lab)
+                  </div>
+                  {researchTime != null && (
+                    <Row label="This tech" value={formatDuration(researchTime)} />
+                  )}
+                  {cumulativeTime != null && (
+                    <Row label="Total to unlock" value={formatDuration(cumulativeTime)} />
+                  )}
                 </div>
               )}
             </Section>

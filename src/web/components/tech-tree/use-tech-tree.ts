@@ -140,5 +140,6 @@ export function useTechTree() {
     clearSelection,
     searchQuery,
     updateSearch,
+    techMap,
   };
 }

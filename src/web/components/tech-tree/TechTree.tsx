@@ -37,6 +37,7 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
     clearSelection,
     searchQuery,
     updateSearch,
+    techMap,
   } = useTechTree();
 
   const searchRef = useRef<HTMLInputElement>(null);
@@ -169,6 +170,7 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
 
       <TechDetailPanel
         technology={selectedTech}
+        techMap={techMap}
         open={selectedTech != null}
         onClose={clearSelection}
         onCalculateRecipe={onCalculateRecipe}
