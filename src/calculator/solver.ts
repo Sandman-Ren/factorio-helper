@@ -190,6 +190,66 @@ function collectMachinesNeeded(node: ProductionNode): number[] {
   return values;
 }
 
+function gcd(a: number, b: number): number {
+  a = Math.abs(a);
+  b = Math.abs(b);
+  while (b) { [a, b] = [b, a % b]; }
+  return a;
+}
+
+function lcm(a: number, b: number): number {
+  return a && b ? Math.abs(a) / gcd(a, b) * Math.abs(b) : 0;
+}
+
+/**
+ * Find the smallest denominator q (1..maxDenom) such that v×q ≈ integer.
+ */
+function findDenominator(v: number, maxDenom = 10000, eps = 0.001): number {
+  for (let q = 1; q <= maxDenom; q++) {
+    if (Math.abs(v * q - Math.round(v * q)) < eps) return q;
+  }
+  return 1;
+}
+
+/**
+ * Find the smallest positive integer k such that every value,
+ * when multiplied by k, is an integer (within tolerance).
+ *
+ * Uses per-value fraction detection + LCM (handles large multipliers
+ * that brute-force would miss). Returns null if the resulting k
+ * exceeds maxK.
+ */
+export function findIntegerMultiplierForValues(
+  values: number[],
+  maxK = 100_000,
+): number | null {
+  if (values.length === 0) return 1;
+
+  let k = 1;
+  for (const v of values) {
+    const q = findDenominator(v);
+    k = lcm(k, q);
+    if (k > maxK) return null;
+  }
+  return k;
+}
+
+/**
+ * Compute minimal integer ratios for an array of values.
+ * Returns integers divided by their GCD, or null if no multiplier is found.
+ */
+export function computeIntegerRatios(values: number[]): number[] | null {
+  if (values.length === 0) return [];
+  const k = findIntegerMultiplierForValues(values);
+  if (k === null) return null;
+
+  const ints = values.map(v => Math.round(v * k));
+  let d = ints[0]!;
+  for (let i = 1; i < ints.length; i++) d = gcd(d, ints[i]!);
+  if (d > 1) return ints.map(v => v / d);
+  return ints;
+}
+
 /**
  * Find the smallest positive integer k such that every machine count
  * in the plan, when multiplied by k, is an integer (within tolerance).
@@ -197,15 +257,8 @@ function collectMachinesNeeded(node: ProductionNode): number[] {
  */
 export function findIntegerMultiplier(
   plan: ProductionPlan,
-  maxK = 1000,
+  maxK = 100_000,
 ): number | null {
   const values = collectMachinesNeeded(plan.root);
-  if (values.length === 0) return 1;
-
-  for (let k = 1; k <= maxK; k++) {
-    if (values.every(v => Math.abs(v * k - Math.round(v * k)) < 0.001)) {
-      return k;
-    }
-  }
-  return null;
+  return findIntegerMultiplierForValues(values, maxK);
 }

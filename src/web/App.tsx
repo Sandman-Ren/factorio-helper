@@ -10,6 +10,7 @@ import { ItemSelector } from './components/ItemSelector.js';
 import { RateInput } from './components/RateInput.js';
 import { ProductionChain } from './components/ProductionChain.js';
 import { Summary } from './components/Summary.js';
+import { RatioStrip } from './components/RatioStrip.js';
 import { ItemIcon } from './components/ItemIcon.js';
 import {
   Button,
@@ -444,6 +445,7 @@ export function App() {
                     Open in Power Calculator
                   </Button>
                 </div>
+                <RatioStrip plan={plan} />
                 <ProductionChain
                   node={plan.root}
                   timeUnit={timeUnit}
