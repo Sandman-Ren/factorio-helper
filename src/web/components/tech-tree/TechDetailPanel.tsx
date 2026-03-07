@@ -145,7 +145,7 @@ export function TechDetailPanel({ technology, open, onClose, onCalculateRecipe, 
                   }}
                   className="hover:bg-accent/50"
                 >
-                  <ItemIcon name={p} size={16} />
+                  <ItemIcon name={p} size={16} category="technology" />
                   <span style={{ fontSize: 13 }}>{formatName(p)}</span>
                 </div>
               ))}
