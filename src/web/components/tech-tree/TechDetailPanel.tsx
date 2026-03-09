@@ -10,6 +10,8 @@ import {
 } from '../../ui/index.js';
 import CalculatorIcon from 'lucide-react/dist/esm/icons/calculator';
 import LocateIcon from 'lucide-react/dist/esm/icons/locate';
+import Minimize2Icon from 'lucide-react/dist/esm/icons/minimize-2';
+import Maximize2Icon from 'lucide-react/dist/esm/icons/maximize-2';
 import { formatName } from './format.js';
 import { getTechResearchTime, getCumulativeResearchTime, formatDuration } from './research-time.js';
 
@@ -21,9 +23,12 @@ interface Props {
   onCalculateRecipe?: (recipeName: string) => void;
   onZoomToTech?: (techName: string) => void;
   onSelectTech?: (techName: string) => void;
+  isSubtreeFocused?: boolean;
+  onFocusSubtree?: () => void;
+  onUnfocusSubtree?: () => void;
 }
 
-export function TechDetailPanel({ technology, techMap, open, onClose, onCalculateRecipe, onZoomToTech, onSelectTech }: Props) {
+export function TechDetailPanel({ technology, techMap, open, onClose, onCalculateRecipe, onZoomToTech, onSelectTech, isSubtreeFocused, onFocusSubtree, onUnfocusSubtree }: Props) {
   if (!technology) return null;
 
   const label = formatName(technology.name);
@@ -56,16 +61,41 @@ export function TechDetailPanel({ technology, techMap, open, onClose, onCalculat
               ? 'Infinite research'
               : `Technology: ${label}`}
           </SheetDescription>
-          {onZoomToTech && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onZoomToTech(technology.name)}
-            >
-              <LocateIcon />
-              Focus in tree
-            </Button>
-          )}
+          <div style={{ display: 'flex', gap: 6 }}>
+            {onZoomToTech && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onZoomToTech(technology.name)}
+              >
+                <LocateIcon />
+                Focus in tree
+              </Button>
+            )}
+            {isSubtreeFocused ? (
+              onUnfocusSubtree && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onUnfocusSubtree}
+                >
+                  <Maximize2Icon />
+                  Show full tree
+                </Button>
+              )
+            ) : (
+              onFocusSubtree && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onFocusSubtree}
+                >
+                  <Minimize2Icon />
+                  Focus subtree
+                </Button>
+              )
+            )}
+          </div>
         </SheetHeader>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '0 16px 16px' }}>

@@ -38,6 +38,9 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
     searchQuery,
     updateSearch,
     techMap,
+    isSubtreeFocused,
+    focusSubtree,
+    unfocusSubtree,
   } = useTechTree();
 
   const searchRef = useRef<HTMLInputElement>(null);
@@ -65,6 +68,20 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
     const y = node.position.y + (node.measured?.height ?? 60) / 2;
     instance.setCenter(x, y, { zoom: 1.2, duration: 400 });
   }, []);
+
+  const handleFocusSubtree = useCallback(() => {
+    focusSubtree();
+    setTimeout(() => {
+      rfInstance.current?.fitView({ padding: 0.15, duration: 400 });
+    }, 50);
+  }, [focusSubtree]);
+
+  const handleUnfocusSubtree = useCallback(() => {
+    unfocusSubtree();
+    setTimeout(() => {
+      rfInstance.current?.fitView({ padding: 0.15, duration: 400 });
+    }, 50);
+  }, [unfocusSubtree]);
 
   const handledPendingRef = useRef<string | null>(null);
   useEffect(() => {
@@ -176,6 +193,9 @@ export function TechTree({ onCalculateRecipe, pendingTechSelect, onPendingHandle
         onCalculateRecipe={onCalculateRecipe}
         onZoomToTech={zoomToTech}
         onSelectTech={navigateToTech}
+        isSubtreeFocused={isSubtreeFocused}
+        onFocusSubtree={handleFocusSubtree}
+        onUnfocusSubtree={handleUnfocusSubtree}
       />
     </div>
   );

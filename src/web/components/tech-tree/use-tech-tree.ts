@@ -24,6 +24,7 @@ export function useTechTree() {
 
   const [selectedTech, setSelectedTech] = useState<Technology | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSubtreeFocused, setIsSubtreeFocused] = useState(false);
 
   const applyHighlights = useCallback(
     (selected: string | null, search: string) => {
@@ -117,10 +118,44 @@ export function useTechTree() {
     [techMap, searchQuery, applyHighlights],
   );
 
+  const unfocusSubtree = useCallback(() => {
+    setNodes(prev => {
+      if (!prev.some(n => n.hidden)) return prev;
+      return prev.map(node => node.hidden ? { ...node, hidden: false } : node);
+    });
+    setEdges(prev => {
+      if (!prev.some(e => e.hidden)) return prev;
+      return prev.map(edge => edge.hidden ? { ...edge, hidden: false } : edge);
+    });
+    setIsSubtreeFocused(false);
+  }, [setNodes, setEdges]);
+
+  const focusSubtree = useCallback(() => {
+    if (!selectedTech) return;
+    const chain = getPrerequisiteChain(selectedTech.name, techMap);
+
+    setNodes(prev =>
+      prev.map(node => {
+        const shouldHide = !chain.has(node.id);
+        if (node.hidden === shouldHide) return node;
+        return { ...node, hidden: shouldHide };
+      }),
+    );
+    setEdges(prev =>
+      prev.map(edge => {
+        const shouldHide = !chain.has(edge.source) || !chain.has(edge.target);
+        if (edge.hidden === shouldHide) return edge;
+        return { ...edge, hidden: shouldHide };
+      }),
+    );
+    setIsSubtreeFocused(true);
+  }, [selectedTech, techMap, setNodes, setEdges]);
+
   const clearSelection = useCallback(() => {
     setSelectedTech(null);
     applyHighlights(null, searchQuery);
-  }, [searchQuery, applyHighlights]);
+    unfocusSubtree();
+  }, [searchQuery, applyHighlights, unfocusSubtree]);
 
   const updateSearch = useCallback(
     (query: string) => {
@@ -141,5 +176,8 @@ export function useTechTree() {
     searchQuery,
     updateSearch,
     techMap,
+    isSubtreeFocused,
+    focusSubtree,
+    unfocusSubtree,
   };
 }
